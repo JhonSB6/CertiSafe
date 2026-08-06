@@ -1,0 +1,45 @@
+package com.CertiSafe.secu.Service.impl;
+
+import com.CertiSafe.secu.Service.ServiceUsuario;
+import com.CertiSafe.secu.Repository.RepositoryUsuario;
+import com.CertiSafe.secu.Entity.Usuario;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class ServiceUsuarioimpl implements ServiceUsuario {
+    private final RepositoryUsuario repositoryUsuario;
+    @Override
+    public List<Usuario> listarUsuarios() {
+        return repositoryUsuario.findAll();
+    }
+
+    @Override
+    public Optional<Usuario> buscarPorId(Long id) {
+        return repositoryUsuario.findById(id);
+    }
+
+    @Override
+    public Usuario guardar(Usuario usuario) {
+        return repositoryUsuario.save(usuario);
+    }
+
+    @Override
+    public Usuario actualizar(Long id, Usuario usuario) {
+        return repositoryUsuario.save(usuario);
+    }
+
+    @Override
+    public void desactivar(Long id) {
+        Optional<Usuario> optional = repositoryUsuario.findById(id);
+        if (optional.isPresent()) {
+            Usuario usuario = optional.get();
+            usuario.setEstado(false);
+            repositoryUsuario.save(usuario);
+        }
+    }
+}

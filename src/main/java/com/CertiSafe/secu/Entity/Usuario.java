@@ -16,16 +16,16 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Long idusuario;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 20)
     private String documento;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String apellido;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 150)
     private String correo;
 
     @Column(nullable = false)

@@ -1,0 +1,19 @@
+package com.CertiSafe.secu.Service;
+
+import com.CertiSafe.secu.Entity.Rol;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface ServiceRol {
+    List<Rol> listarRoles();
+
+    Optional<Rol> buscarPorId(Long id);
+
+    Rol guardar(Rol rol);
+
+    Rol actualizar(Long id, Rol rol);
+
+    //void eliminar(Long id); // VALIDAR SI ES NECESARIO ELIMINAR EL ROL
+
+}
