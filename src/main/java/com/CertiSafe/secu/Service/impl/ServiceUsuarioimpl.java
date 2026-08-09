@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Enum.EstadoUsuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 import com.CertiSafe.secu.Entity.Usuario;
@@ -38,7 +39,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
         Optional<Usuario> optional = repositoryUsuario.findById(id);
         if (optional.isPresent()) {
             Usuario usuario = optional.get();
-            usuario.setEstado(false);
+            usuario.setEstado(EstadoUsuario.INACTIVO);
             repositoryUsuario.save(usuario);
         }
     }

@@ -1,5 +1,7 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoUsuario;
+import com.CertiSafe.secu.Enum.EstadoCertificacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,8 +33,13 @@ public class Usuario {
     @Column(nullable = false)
     private String contraseña;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean estado;
+    private EstadoUsuario estado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoCertificacion estadoCertifiacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol", nullable = false)

@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoAsistencia;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,8 @@ public class AsistenciaTaller {
     @Column(nullable = false)
     private java.sql.Date fechafin;
 
-    @Column(nullable = false)
-    private Boolean cumplimiento;
+    @Enumerated(EnumType.STRING)
+    private EstadoAsistencia estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_taller", nullable = false)

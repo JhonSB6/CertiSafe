@@ -14,5 +14,9 @@ public interface ServiceTaller {
 
     Taller actualizar(Long id, Taller taller);
 
-    void desactivar(Long id);
+    void iniciarTaller(Long id);
+
+    void finalizarTaller(Long id);
+
+    void cancelar(Long id);
 }

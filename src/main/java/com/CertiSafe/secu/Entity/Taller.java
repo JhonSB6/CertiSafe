@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoTaller;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class Taller {
     @Column(nullable = false)
     private Integer aforo;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean estado;
+    private EstadoTaller estado;
 }

@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoCertificacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,10 +23,11 @@ public class HistorialCertificacion {
     @Column(nullable = false)
     private java.sql.Date fechaVigencia;
 
-    @Column(nullable = false)
-    private Boolean estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoCertificacion estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_asistencia", nullable = false)
-    private AsistenciaTaller asistencia;
+    @JoinColumn(name = "id_certificacion", nullable = false)
+    private Certificacion certificacion;
+
 }

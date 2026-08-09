@@ -1,7 +1,10 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoInscripcion;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
 
 @Entity
 @Data
@@ -13,11 +16,15 @@ public class InscripcionTaller {
     @Column(name = "id_inscripcion")
     private Long idinscripcion;
 
-    @Column(nullable = false)
-    private Boolean estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoInscripcion estado;
 
     @Column(nullable = false)
-    private java.sql.Date fecha;
+    private Date fechaInscripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_taller", nullable = false)
+    private Taller taller;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)

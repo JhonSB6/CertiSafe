@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Entity;
 
+import com.CertiSafe.secu.Enum.EstadoIngreso;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +17,17 @@ public class IngresoProduccion {
     private Long idingreso;
 
     @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
     private Date fechaingreso;
 
     @Column(nullable = false)
     private Date fechasalida;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoIngreso autorizar;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
