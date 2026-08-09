@@ -10,8 +10,4 @@ public interface ServiceHistorialCertificacion {
 
     HistorialCertificacion guardar(HistorialCertificacion certificacion);
 
-    HistorialCertificacion actualizar(Long id, HistorialCertificacion certificacion);
-
-    void estado(Long id);
-
 }

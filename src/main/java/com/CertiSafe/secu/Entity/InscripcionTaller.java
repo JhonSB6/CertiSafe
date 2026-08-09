@@ -1,6 +1,7 @@
 package com.CertiSafe.secu.Entity;
 
 import com.CertiSafe.secu.Enum.EstadoInscripcion;
+import com.CertiSafe.secu.Enum.EstadoTipoProgramacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,9 @@ public class InscripcionTaller {
 
     @Column(nullable = false)
     private Date fechaInscripcion;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoTipoProgramacion estadoTipoProgramacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_taller", nullable = false)

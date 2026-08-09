@@ -29,31 +29,4 @@ public class ServiceHistorialCertificacionimpl implements ServiceHistorialCertif
         return repositoryHistorialCertificacion.save(historialCertificacion);
     }
 
-    @Override
-    public HistorialCertificacion actualizar(Long id, HistorialCertificacion historialCertificacion){
-        HistorialCertificacion existente =  repositoryHistorialCertificacion.findById(id).orElseThrow(() ->
-                new RuntimeException(
-                        "Certificación no encontrada con id: " + id));
-        existente.setNombre(historialCertificacion.getNombre());
-        existente.setFechaExpedicion(historialCertificacion.getFechaExpedicion());
-        existente.setFechaVigencia(
-                historialCertificacion.getFechaVigencia());
-        existente.setEstado(historialCertificacion.getEstado());
-        existente.setEstado(historialCertificacion.getEstado());
-        return repositoryHistorialCertificacion.save(existente);
-    }
-
-    @Override
-    public void estado(Long id){
-        HistorialCertificacion certificacion =
-                repositoryHistorialCertificacion.findById(id)
-                        .orElseThrow(() ->
-                                new RuntimeException("Certificación no encontrada con id: "+ id));
-
-        certificacion.setEstado(
-                EstadoCertificacion.VIGENTE
-        );
-
-        repositoryHistorialCertificacion.save(certificacion);
-    }
 }

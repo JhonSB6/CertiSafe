@@ -1,6 +1,7 @@
 package com.CertiSafe.secu.Service;
 
 import com.CertiSafe.secu.Entity.Taller;
+import com.CertiSafe.secu.Entity.Usuario;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,10 @@ public interface ServiceTaller {
 
     void iniciarTaller(Long id);
 
-    void finalizarTaller(Long id);
+    void desactivar(Long id);
 
-    void cancelar(Long id);
+    List<Usuario> buscarOperariosDisponibles(Long idTaller);
+
+    void revisarAforo(Long id);
+
 }

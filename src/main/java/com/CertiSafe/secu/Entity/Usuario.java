@@ -37,10 +37,6 @@ public class Usuario {
     @Column(nullable = false)
     private EstadoUsuario estado;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EstadoCertificacion estadoCertifiacion;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;

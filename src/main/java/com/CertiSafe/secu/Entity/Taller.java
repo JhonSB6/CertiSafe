@@ -39,4 +39,8 @@ public class Taller {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoTaller estado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tipo_certificacion", nullable = false)
+    private TipoCertificacion tipoCertificacion;
 }

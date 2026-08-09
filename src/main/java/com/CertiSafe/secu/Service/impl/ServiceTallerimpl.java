@@ -1,16 +1,20 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Entity.InscripcionTaller;
+import com.CertiSafe.secu.Entity.Notificacion;
 import com.CertiSafe.secu.Entity.Taller;
-import com.CertiSafe.secu.Enum.EstadoInscripcion;
-import com.CertiSafe.secu.Enum.EstadoTaller;
-import com.CertiSafe.secu.Repository.RepositoryInscripcionTaller;
-import com.CertiSafe.secu.Repository.RepositoryTaller;
+import com.CertiSafe.secu.Entity.Usuario;
+import com.CertiSafe.secu.Enum.*;
+import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceTaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,9 @@ public class ServiceTallerimpl implements ServiceTaller {
 
     private final RepositoryTaller repositoryTaller;
     private final RepositoryInscripcionTaller repositoryInscripcionTaller;
+    private final RepositoryUsuario repositoryUsuario;
+    private final RepositoryCertificacion repositoryCertificacion;
+    private final RepositoryNotificacion repositoryNotificacion;
 
     @Override
     public List<Taller> listarTalleres() {
@@ -31,9 +38,6 @@ public class ServiceTallerimpl implements ServiceTaller {
 
     @Override
     public Taller guardar(Taller taller) {
-
-        taller.setEstado(EstadoTaller.PROGRAMADO);
-
         return repositoryTaller.save(taller);
     }
 
@@ -51,8 +55,23 @@ public class ServiceTallerimpl implements ServiceTaller {
         tallerExistente.setHoraInicio(taller.getHoraInicio());
         tallerExistente.setHoraFin(taller.getHoraFin());
         tallerExistente.setAforo(taller.getAforo());
+        tallerExistente.setTipoCertificacion(
+                taller.getTipoCertificacion());
 
         return repositoryTaller.save(tallerExistente);
+    }
+
+    @Override
+    public void desactivar(Long id) {
+
+        Taller taller = repositoryTaller.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Taller no encontrado con id: " + id));
+
+        taller.setEstado(EstadoTaller.CANCELADO);
+
+        repositoryTaller.save(taller);
     }
 
     @Override
@@ -75,50 +94,139 @@ public class ServiceTallerimpl implements ServiceTaller {
                                 EstadoInscripcion.CONFIRMADA);
 
         if (confirmadas < taller.getAforo()) {
-            throw new RuntimeException(
-                    "El aforo del taller no está completo. " +
-                            "Confirmados: " + confirmadas +
-                            " / Aforo: " + taller.getAforo());
+            long faltantes = taller.getAforo() - confirmadas;
+            // Aquí posteriormente agregaremos la lógica
+            // de notificación y búsqueda de operarios.
+            System.out.println("Aforo incompleto. Faltan" + faltantes + " operarios confirmados.");
         }
 
         taller.setEstado(EstadoTaller.EN_CURSO);
 
         repositoryTaller.save(taller);
     }
-
     @Override
-    public void finalizarTaller(Long id) {
+    public List<Usuario> buscarOperariosDisponibles(Long idTaller) {
 
-        Taller taller = repositoryTaller.findById(id)
+        Taller taller = repositoryTaller.findById(idTaller)
                 .orElseThrow(() ->
                         new RuntimeException(
-                                "Taller no encontrado con id: " + id));
+                                "Taller no encontrado con id: " + idTaller));
 
-        if (taller.getEstado() != EstadoTaller.EN_CURSO) {
-            throw new RuntimeException(
-                    "El taller no se encuentra EN_CURSO");
-        }
+        Long idTipoCertificacion =
+                taller.getTipoCertificacion().getIdTipoCertificacion();
 
-        taller.setEstado(EstadoTaller.FINALIZADO);
+        List<Usuario> operarios =
+                repositoryUsuario.findByRolNombre("OPERARIO");
 
-        repositoryTaller.save(taller);
+        return operarios.stream()
+                .filter(usuario ->
+                        !repositoryCertificacion
+                                .findByUsuarioIdusuarioAndTipoCertificacionIdTipoCertificacionAndEstado(
+                                        usuario.getIdusuario(),
+                                        idTipoCertificacion,
+                                        EstadoCertificacion.VIGENTE)
+                                .isPresent())
+                .filter(usuario ->
+                        !repositoryInscripcionTaller
+                                .existsByTallerIdtallerAndUsuarioIdusuarioAndEstadoNot(
+                                        idTaller,
+                                        usuario.getIdusuario(),
+                                        EstadoInscripcion.CANCELADA))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void cancelar(Long id) {
+    public void revisarAforo(Long id) {
 
         Taller taller = repositoryTaller.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Taller no encontrado con id: " + id));
 
-        if (taller.getEstado() == EstadoTaller.FINALIZADO) {
-            throw new RuntimeException(
-                    "No se puede cancelar un taller finalizado");
+        if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
+            return;
         }
 
-        taller.setEstado(EstadoTaller.CANCELADO);
+        long confirmadas =
+                repositoryInscripcionTaller
+                        .countByTallerIdtallerAndEstado(
+                                id,
+                                EstadoInscripcion.CONFIRMADA);
 
-        repositoryTaller.save(taller);
+        if (confirmadas >= taller.getAforo()) {
+            return;
+        }
+
+        long faltantes = taller.getAforo() - confirmadas;
+
+        List<Usuario> disponibles =
+                buscarOperariosDisponibles(id);
+
+        System.out.println(
+                "Taller: " + taller.getNombre()
+                        + " | Aforo: " + taller.getAforo()
+                        + " | Confirmadas: " + confirmadas
+                        + " | Faltantes: " + faltantes
+                        + " | Operarios disponibles: "
+                        + disponibles.size()
+        );
+
+        for (Usuario usuario : disponibles) {
+
+            InscripcionTaller inscripcion =
+                    new InscripcionTaller();
+
+            inscripcion.setTaller(taller);
+            inscripcion.setUsuario(usuario);
+            inscripcion.setEstado(
+                    EstadoInscripcion.PENDIENTE);
+            inscripcion.setEstadoTipoProgramacion(
+                    EstadoTipoProgramacion.COLA);
+            inscripcion.setFechaInscripcion(
+                    new Date(System.currentTimeMillis()));
+
+            repositoryInscripcionTaller.save(inscripcion);
+        }
+
+        // Verificar si ya existe una notificación
+        boolean notificacionExiste =
+                repositoryNotificacion.existsByTallerIdtallerAndTipo(
+                        id,
+                        EstadoTipoNotificacion.FALTA_AFORO);
+
+        // Solo crearla si todavía no existe
+        if (!notificacionExiste) {
+
+            List<Usuario> administradores =
+                    repositoryUsuario.findByRolNombre("ADMINISTRADOR");
+
+            for (Usuario administrador : administradores) {
+
+                Notificacion notificacion =
+                        new Notificacion();
+
+                notificacion.setMensaje(
+                        "Falta aforo para el taller "
+                                + taller.getNombre()
+                                + ". Faltan "
+                                + faltantes
+                                + " operarios confirmados."
+                );
+
+                notificacion.setTipo(
+                        EstadoTipoNotificacion.FALTA_AFORO);
+
+                notificacion.setLeida(false);
+
+                notificacion.setFecha(
+                        LocalDateTime.now());
+
+                notificacion.setUsuario(administrador);
+
+                notificacion.setTaller(taller);
+
+                repositoryNotificacion.save(notificacion);
+            }
+        }
     }
 }

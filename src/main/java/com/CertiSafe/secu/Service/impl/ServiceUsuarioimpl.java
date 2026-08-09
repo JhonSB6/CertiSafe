@@ -15,12 +15,17 @@ import java.util.Optional;
 public class ServiceUsuarioimpl implements ServiceUsuario {
     private final RepositoryUsuario repositoryUsuario;
     @Override
-    public List<Usuario> listarUsuarios() {
+    public List<Usuario> listarUsuarios(){
         return repositoryUsuario.findAll();
     }
 
     @Override
-    public Optional<Usuario> buscarPorId(Long id) {
+    public List<Usuario> listarOperarios() {
+        return repositoryUsuario.findByRolNombre("OPERARIO");
+    }
+
+    @Override
+    public Optional<Usuario> buscarPorId(Long id){
         return repositoryUsuario.findById(id);
     }
 
