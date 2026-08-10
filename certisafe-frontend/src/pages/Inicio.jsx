@@ -1,10 +1,192 @@
 import { useState } from "react";
+import VistaOperario from "./VistaOperario";
 
 function Inicio() {
 
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarCambioContrasena, setMostrarCambioContrasena] = useState(false);
     const [documentoCambio, setDocumentoCambio] = useState("");
+    const [validandoDocumento, setValidandoDocumento] = useState(false);
+    const [mensajeCambio, setMensajeCambio] = useState("");
+    const [usuarioValidado, setUsuarioValidado] = useState(null);
+    const [nuevaContrasena, setNuevaContrasena] = useState("");
+    const [confirmarContrasena, setConfirmarContrasena] = useState("");
+    const [documentoLogin, setDocumentoLogin] = useState("");
+    const [contrasenaLogin, setContrasenaLogin] = useState("");
+    const [mensajeLogin, setMensajeLogin] = useState("");
+    const [ingresando, setIngresando] = useState(false);
+    const [usuario, setUsuario] = useState(null);
+
+    const iniciarSesion = async () => {
+
+        if (
+            documentoLogin.trim() === "" ||
+            contrasenaLogin === ""
+        ) {
+            setMensajeLogin("Ingresa documento y contraseña.");
+            return;
+        }
+
+        setIngresando(true);
+        setMensajeLogin("");
+
+        try {
+
+            const respuesta = await fetch(
+                "http://localhost:8080/usuarios/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        documento: documentoLogin.trim(),
+                        contrasena: contrasenaLogin
+                    })
+                }
+            );
+
+            if (respuesta.ok) {
+
+                const datos = await respuesta.json();
+
+                console.log("Usuario autenticado:", datos);
+
+                setUsuario(datos);
+
+                setMostrarLogin(false);
+                console.log("Rol:", datos.rol);
+
+            } else if (respuesta.status === 401) {
+
+                const mensaje = await respuesta.text();
+
+                setMensajeLogin(mensaje);
+
+            } else {
+
+                setMensajeLogin(
+                    "Ocurrió un error al iniciar sesión."
+                );
+            }
+
+        } catch (error) {
+
+            console.error("Error de conexión:", error);
+
+            setMensajeLogin(
+                "No fue posible conectar con el servidor."
+            );
+
+        } finally {
+
+            setIngresando(false);
+        }
+    };
+
+    const validarDocumento = async () => {
+
+        if (documentoCambio.trim() === "") {
+            return;
+        }
+
+        setValidandoDocumento(true);
+        setMensajeCambio("");
+
+        try {
+
+            const respuesta = await fetch(
+                `http://localhost:8080/usuarios/validar-documento?documento=${encodeURIComponent(documentoCambio.trim())}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            const datos = await respuesta.json();
+
+            if (datos.valido) {
+
+                setUsuarioValidado(datos.idUsuario);
+
+                setMensajeCambio(
+                    "Documento validado correctamente."
+                );
+
+            } else {
+
+                setUsuarioValidado(null);
+
+                setMensajeCambio(datos.mensaje);
+            }
+
+        } catch (error) {
+
+            console.error("Error al validar documento:", error);
+
+            setUsuarioValidado(null);
+
+            setMensajeCambio(
+                "No fue posible conectar con el servidor."
+            );
+
+        } finally {
+
+            setValidandoDocumento(false);
+        }
+    };
+    const cambiarContrasena = async () => {
+
+        if (!usuarioValidado) {
+            return;
+        }
+
+        if (nuevaContrasena === "") {
+            setMensajeCambio("Ingresa una nueva contraseña.");
+            return;
+        }
+
+        if (nuevaContrasena !== confirmarContrasena) {
+            setMensajeCambio("Las contraseñas no coinciden.");
+            return;
+        }
+
+        try {
+
+            const respuesta = await fetch(
+                "http://localhost:8080/usuarios/" +
+                usuarioValidado +
+                "/cambiar-password?nuevaContrasena=" +
+                encodeURIComponent(nuevaContrasena),
+                {
+                    method: "PUT"
+                }
+            );
+
+            if (respuesta.ok) {
+
+                setMensajeCambio(
+                    "Contraseña cambiada correctamente."
+                );
+
+                setNuevaContrasena("");
+                setConfirmarContrasena("");
+
+            } else {
+
+                setMensajeCambio(
+                    "No fue posible cambiar la contraseña."
+                );
+            }
+
+        } catch (error) {
+
+            console.error("Error al cambiar contraseña:", error);
+
+            setMensajeCambio(
+                "No fue posible conectar con el servidor."
+            );
+        }
+    };
 
     return (
         <div className="pagina-inicio">
@@ -42,8 +224,6 @@ function Inicio() {
 
             <main>
 
-                {/* BANNER */}
-
                 <section className="banner">
 
                     <div className="banner-contenido">
@@ -57,7 +237,6 @@ function Inicio() {
                             certificaciones para la seguridad
                             de los operarios.
                         </p>
-
 
                     </div>
 
@@ -164,8 +343,6 @@ function Inicio() {
 
                     <div className="modal-login">
 
-                        {/* BOTÓN CERRAR */}
-
                         <button
                             className="modal-cerrar"
                             onClick={() => setMostrarLogin(false)}
@@ -184,8 +361,6 @@ function Inicio() {
                         </p>
 
 
-                        {/* DOCUMENTO */}
-
                         <div className="campo">
 
                             <label>
@@ -195,12 +370,16 @@ function Inicio() {
                             <input
                                 type="text"
                                 placeholder="Número de documento"
+                                value={documentoLogin}
+                                onChange={(e) => {
+                                    setDocumentoLogin(e.target.value);
+                                    setMensajeLogin("");
+                                }
+                            }
                             />
 
                         </div>
 
-
-                        {/* CONTRASEÑA */}
 
                         <div className="campo">
 
@@ -211,25 +390,44 @@ function Inicio() {
                             <input
                                 type="password"
                                 placeholder="Contraseña"
+                                value={contrasenaLogin}
+                                onChange={(e) => {
+                                    setContrasenaLogin(e.target.value);
+                                    setMensajeLogin("");
+                                }
+                            }
                             />
 
                         </div>
 
 
-                        {/* INGRESAR */}
-
-                        <button className="boton-ingresar">
-                            Ingresar
+                        <button
+                            className="boton-ingresar"
+                            disabled={
+                                documentoLogin.trim() === "" ||
+                                contrasenaLogin === "" ||
+                                ingresando
+                            }
+                            onClick={iniciarSesion}
+                        >
+                            {ingresando ? "Ingresando..." : "Ingresar"}
                         </button>
+                        {mensajeLogin && (
+                            <p className="mensaje-login">
+                                {mensajeLogin}
+                            </p>
+                        )
+                    }
 
-
-                        {/* CAMBIAR CONTRASEÑA */}
 
                         <button
                             className="boton-cambiar"
                             onClick={() => {
                                 setMostrarLogin(false);
                                 setMostrarCambioContrasena(true);
+                                setMensajeCambio("");
+                                setDocumentoCambio("");
+                                setUsuarioValidado(null);
                             }}
                         >
                             Cambiar contraseña
@@ -240,55 +438,145 @@ function Inicio() {
                 </div>
 
             )}
-        {mostrarCambioContrasena && (
 
-            <div className="modal-overlay">
 
-                <div className="modal-login">
+            {/* =========================
+                MODAL CAMBIO CONTRASEÑA
+            ========================== */}
 
-                    <button
-                        className="modal-cerrar"
-                        onClick={() => setMostrarCambioContrasena(false)}
-                    >
-                        ×
-                    </button>
+            {mostrarCambioContrasena && (
 
-                    <h2>
-                        Cambiar contraseña
-                    </h2>
+                <div className="modal-overlay">
 
-                    <p>
-                        Ingresa tu número de documento
-                        para continuar.
-                    </p>
+                    <div className="modal-login">
 
-                    <div className="campo">
+                        <button
+                            className="modal-cerrar"
+                            onClick={() => {
+                                setMostrarCambioContrasena(false);
+                                setMensajeCambio("");
+                                setDocumentoCambio("");
+                                setUsuarioValidado(null);
+                            }}
+                        >
+                            ×
+                        </button>
 
-                        <label>
-                            Documento
-                        </label>
 
-                        <input
-                            type="text"
-                            placeholder="Número de documento"
-                            value={documentoCambio}
-                            onChange={(e) => setDocumentoCambio(e.target.value)}
-                        />
+                        <h2>
+                            Cambiar contraseña
+                        </h2>
+
+                        <p>
+                            Ingresa tu número de documento
+                            para continuar.
+                        </p>
+
+
+                        <div className="campo">
+
+                            <label>
+                                Documento
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Número de documento"
+                                value={documentoCambio}
+                                onChange={(e) => {
+                                    setDocumentoCambio(e.target.value);
+                                    setMensajeCambio("");
+                                    setUsuarioValidado(null);
+                                }}
+                            />
+
+                        </div>
+
+
+                        {!usuarioValidado ? (
+
+                            <button
+                                className="boton-ingresar"
+                                disabled={
+                                    documentoCambio.trim() === "" ||
+                                    validandoDocumento
+                                }
+                                onClick={validarDocumento}
+                            >
+                                {validandoDocumento
+                                    ? "Validando..."
+                                    : "Solicitar nueva contraseña"}
+                            </button>
+
+                        ) : (
+
+                            <>
+                                <div className="campo">
+
+                                    <label>
+                                        Nueva contraseña
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        placeholder="Nueva contraseña"
+                                        value={nuevaContrasena}
+                                        onChange={(e) => {
+                                            setNuevaContrasena(e.target.value);
+                                            setMensajeCambio("");
+                                        }}
+                                    />
+
+                                </div>
+
+
+                                <div className="campo">
+
+                                    <label>
+                                        Confirmar contraseña
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        placeholder="Confirmar contraseña"
+                                        value={confirmarContrasena}
+                                        onChange={(e) => {
+                                            setConfirmarContrasena(e.target.value);
+                                            setMensajeCambio("");
+                                        }}
+                                    />
+
+                                </div>
+
+
+                                <button
+                                    className="boton-ingresar"
+                                    disabled={
+                                        nuevaContrasena === "" ||
+                                        confirmarContrasena === ""
+                                    }
+                                    onClick={cambiarContrasena}
+                                >
+                                    Cambiar contraseña
+                                </button>
+                            </>
+
+                        )}
+
+
+                        {mensajeCambio && (
+
+                            <p>
+                                {mensajeCambio}
+                            </p>
+
+                        )}
 
                     </div>
 
-                    <button
-                        className="boton-ingresar"
-                        disabled={documentoCambio.trim() === ""}
-                    >
-                        Solicitar nueva contraseña
-                    </button>
-
                 </div>
 
-            </div>
-
-        )}
+            )}
 
         </div>
     );

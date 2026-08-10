@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 
@@ -27,7 +28,8 @@ public class DataInitializer {
             RepositoryRol repositoryRol,
             RepositoryTipoCertificacion repositoryTipoCertificacion,
             RepositoryUsuario repositoryUsuario,
-            RepositoryTaller repositoryTaller) {
+            RepositoryTaller repositoryTaller,
+            PasswordEncoder passwordEncoder) {
 
         return args -> {
 
@@ -73,7 +75,7 @@ public class DataInitializer {
                         "Carlos",
                         "Administrador",
                         "admin@certisafe.com",
-                        "123456",
+                        passwordEncoder.encode("123456"),
                         EstadoUsuario.ACTIVO,
                         admin
                 ));
@@ -84,7 +86,7 @@ public class DataInitializer {
                         "Pedro",
                         "Gómez",
                         "pedro@certisafe.com",
-                        "123456",
+                        passwordEncoder.encode("123456"),
                         EstadoUsuario.ACTIVO,
                         operario
                 ));
@@ -95,7 +97,7 @@ public class DataInitializer {
                         "Luis",
                         "Rodríguez",
                         "luis@certisafe.com",
-                        "123456",
+                        passwordEncoder.encode("123456"),
                         EstadoUsuario.ACTIVO,
                         operario
                 ));
@@ -106,7 +108,7 @@ public class DataInitializer {
                         "Ana",
                         "Martínez",
                         "ana@certisafe.com",
-                        "123456",
+                        passwordEncoder.encode("123456"),
                         EstadoUsuario.ACTIVO,
                         capacitador
                 ));

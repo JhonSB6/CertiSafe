@@ -1,5 +1,7 @@
 package com.CertiSafe.secu.Service;
 
+import com.CertiSafe.secu.Dto.LoginResponse;
+import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
 import com.CertiSafe.secu.Entity.Usuario;
 
 import java.util.List;
@@ -17,4 +19,10 @@ public interface ServiceUsuario {
     Usuario actualizar(Long id, Usuario usuario);
 
     void desactivar(Long id);
+
+    ValidacionDocumentoResponse validarDocumento(String documento);
+
+    void cambiarContrasena(Long id, String nuevaContrasena);
+
+    LoginResponse login(String documento, String contrasena);
 }

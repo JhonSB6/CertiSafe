@@ -1,8 +1,13 @@
 package com.CertiSafe.secu.Controller;
 
+import com.CertiSafe.secu.Dto.CambiarContrasenaRequest;
+import com.CertiSafe.secu.Dto.LoginRequest;
+import com.CertiSafe.secu.Dto.LoginResponse;
+import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ControllerUsuario {
 
     private final ServiceUsuario serviceUsuario;
@@ -52,5 +57,46 @@ public class ControllerUsuario {
     public ResponseEntity<Void> desactivar(@PathVariable Long id) {
         serviceUsuario.desactivar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/validar-documento")
+    public ResponseEntity<ValidacionDocumentoResponse> validarDocumento(
+            @RequestParam String documento) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.validarDocumento(documento)
+        );
+    }
+    @PutMapping("/{id}/cambiar-password")
+    public ResponseEntity<Void> cambiarContrasena(
+            @PathVariable Long id,
+            @RequestParam String nuevaContrasena) {
+
+        serviceUsuario.cambiarContrasena(
+                id,
+                nuevaContrasena
+        );
+
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequest request) {
+
+        try {
+
+            LoginResponse respuesta = serviceUsuario.login(
+                    request.getDocumento(),
+                    request.getContrasena()
+            );
+
+            return ResponseEntity.ok(respuesta);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(e.getMessage());
+        }
     }
 }

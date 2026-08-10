@@ -1,0 +1,180 @@
+import { useState } from "react";
+
+function VistaOperario({ usuario, cerrarSesion }) {
+
+    const [menuAbierto, setMenuAbierto] = useState(true);
+
+    return (
+        <div className="dashboard-operario">
+
+            {/* =========================
+                MENÚ LATERAL
+            ========================== */}
+
+            <aside className={`menu-lateral ${menuAbierto ? "abierto" : "cerrado"}`}>
+
+                <div className="logo-dashboard">
+                    CERTISAFE
+                </div>
+
+                <nav>
+
+                    <button>
+                        🏠
+                        <span>Inicio</span>
+                    </button>
+
+                    <button>
+                        📚
+                        <span>Mis talleres</span>
+                    </button>
+
+                    <button>
+                        🏆
+                        <span>Mis certificaciones</span>
+                    </button>
+
+                    <button>
+                        🏭
+                        <span>Ingreso producción</span>
+                    </button>
+
+                </nav>
+
+                <div className="menu-inferior">
+
+                    <button>
+                        ⚙
+                        <span>Mi perfil</span>
+                    </button>
+
+                    <button onClick={cerrarSesion}>
+                        🚪
+                        <span>Cerrar sesión</span>
+                    </button>
+
+                </div>
+
+            </aside>
+
+
+            {/* =========================
+                CONTENIDO
+            ========================== */}
+
+            <main className="contenido-operario">
+
+                <header className="header-operario">
+
+                    <button
+                        className="boton-menu"
+                        onClick={() => setMenuAbierto(!menuAbierto)}
+                    >
+                        ☰
+                    </button>
+
+                    <div className="usuario-header">
+
+                        <div className="avatar">
+                            {usuario.nombre.charAt(0)}
+                        </div>
+
+                        <div>
+                            <strong>
+                                {usuario.nombre} {usuario.apellido}
+                            </strong>
+
+                            <span>
+                                Operario
+                            </span>
+                        </div>
+
+                    </div>
+
+                </header>
+
+
+                {/* =========================
+                    INICIO
+                ========================== */}
+
+                <section className="inicio-operario">
+
+                    <h1>
+                        Bienvenido, {usuario.nombre}
+                    </h1>
+
+                    <p>
+                        Consulta tus talleres, certificaciones
+                        y estado para ingreso a producción.
+                    </p>
+
+
+                    {/* TARJETAS */}
+
+                    <div className="tarjetas-resumen">
+
+                        <article className="resumen-card">
+
+                            <h3>
+                                Mis talleres
+                            </h3>
+
+                            <p>
+                                Consulta los talleres programados
+                                y tus próximas capacitaciones.
+                            </p>
+
+                            <button>
+                                Ver talleres
+                            </button>
+
+                        </article>
+
+
+                        <article className="resumen-card">
+
+                            <h3>
+                                Mis certificaciones
+                            </h3>
+
+                            <p>
+                                Consulta tus certificaciones
+                                y su estado actual.
+                            </p>
+
+                            <button>
+                                Ver certificaciones
+                            </button>
+
+                        </article>
+
+
+                        <article className="resumen-card">
+
+                            <h3>
+                                Ingreso a producción
+                            </h3>
+
+                            <p>
+                                Consulta si cumples los requisitos
+                                para ingresar a producción.
+                            </p>
+
+                            <button>
+                                Consultar estado
+                            </button>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+    );
+}
+
+export default VistaOperario;
