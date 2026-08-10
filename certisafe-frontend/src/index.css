@@ -1,0 +1,357 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fb;
+    color: #1f2937;
+}
+
+
+/* ENCABEZADO */
+
+.encabezado {
+    background-color: #082f66;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 60px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    gap: 15px;
+}
+
+.menu button {
+    border: none;
+    padding: 10px 20px;
+
+    background-color: #2563eb;
+    color: white;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+
+/* BANNER */
+
+.banner {
+    background-color: #0b4ea2;
+    color: white;
+
+    min-height: 430px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 40px;
+}
+
+.banner-contenido {
+    max-width: 800px;
+}
+
+.banner h1 {
+    font-size: 45px;
+    margin-bottom: 20px;
+}
+
+.banner p {
+    font-size: 20px;
+    line-height: 1.6;
+
+    margin-bottom: 30px;
+}
+
+.banner-botones {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.banner-botones button {
+    border: none;
+
+    padding: 14px 30px;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.banner-botones button:first-child {
+    background-color: white;
+    color: #0b4ea2;
+}
+
+.banner-botones button:last-child {
+    background-color: #082f66;
+    color: white;
+}
+
+
+/* INFORMACIÓN */
+
+.informacion {
+    padding: 70px 60px;
+
+    text-align: center;
+
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+.informacion h2 {
+    color: #082f66;
+
+    font-size: 32px;
+
+    margin-bottom: 20px;
+}
+
+.informacion > p {
+    max-width: 750px;
+
+    margin: 0 auto 40px;
+
+    line-height: 1.6;
+
+    font-size: 17px;
+}
+
+
+/* TARJETAS */
+
+.tarjetas {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+}
+
+.tarjeta {
+    background-color: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    flex: 1;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tarjeta h3 {
+    color: #0b4ea2;
+
+    margin-bottom: 15px;
+}
+
+.tarjeta p {
+    line-height: 1.5;
+}
+
+
+/* FOOTER */
+
+.pie {
+    background-color: #082f66;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+/* MODAL DE LOGIN */
+
+.modal-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.55);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+
+.modal-login {
+    position: relative;
+
+    width: 420px;
+
+    background-color: white;
+
+    border-radius: 12px;
+
+    padding: 35px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+.modal-login h2 {
+    color: #082f66;
+
+    text-align: center;
+
+    font-size: 28px;
+
+    margin-bottom: 10px;
+}
+
+
+.modal-login > p {
+    text-align: center;
+
+    color: #666;
+
+    margin-bottom: 30px;
+}
+
+
+.modal-cerrar {
+    position: absolute;
+
+    top: 12px;
+    right: 15px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    color: #555;
+
+    cursor: pointer;
+}
+
+
+.modal-cerrar:hover {
+    color: #082f66;
+}
+
+
+.campo {
+    display: flex;
+
+    flex-direction: column;
+
+    margin-bottom: 20px;
+}
+
+
+.campo label {
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+    color: #333;
+}
+
+
+.campo input {
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.campo input:focus {
+    border-color: #0b4ea2;
+}
+
+
+.boton-ingresar {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #0b4ea2;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-bottom: 12px;
+}
+
+
+.boton-ingresar:hover {
+    background-color: #082f66;
+}
+
+
+.boton-cambiar {
+    width: 100%;
+
+    border: none;
+
+    background: none;
+
+    color: #0b4ea2;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.boton-ingresar:disabled {
+    background-color: #aeb8c5;
+
+    color: #e5e7eb;
+
+    cursor: not-allowed;
+
+    opacity: 0.65;
+}
+
+.boton-ingresar:disabled:hover {
+    background-color: #aeb8c5;
+}
