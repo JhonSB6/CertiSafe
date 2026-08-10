@@ -14,5 +14,4 @@ public interface ServiceTipoCertificacion {
 
     void eliminar(Long id);
 
-
 }

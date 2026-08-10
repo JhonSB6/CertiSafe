@@ -2,9 +2,11 @@ package com.CertiSafe.secu.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table (name = "tipo_certificacion")
 
 public class TipoCertificacion {

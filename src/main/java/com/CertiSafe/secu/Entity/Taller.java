@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Entity
 @Data
-@Builder
+@NoArgsConstructor
 @Table (name = "taller")
 
 public class Taller {

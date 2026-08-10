@@ -3,11 +3,13 @@ package com.CertiSafe.secu.Entity;
 import com.CertiSafe.secu.Enum.EstadoTipoNotificacion;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "notificacion")
 public class Notificacion {
 

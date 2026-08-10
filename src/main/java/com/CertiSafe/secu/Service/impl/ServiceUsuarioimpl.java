@@ -1,6 +1,8 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Entity.Rol;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
+import com.CertiSafe.secu.Repository.RepositoryRol;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 import com.CertiSafe.secu.Entity.Usuario;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ServiceUsuarioimpl implements ServiceUsuario {
     private final RepositoryUsuario repositoryUsuario;
+    private final RepositoryRol repositoryRol;
+
     @Override
     public List<Usuario> listarUsuarios(){
         return repositoryUsuario.findAll();
@@ -31,6 +35,14 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
 
     @Override
     public Usuario guardar(Usuario usuario) {
+
+        Long idRol = usuario.getRol().getIdrol();
+
+        Rol rol = repositoryRol.findById(idRol)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        usuario.setRol(rol);
+
         return repositoryUsuario.save(usuario);
     }
 

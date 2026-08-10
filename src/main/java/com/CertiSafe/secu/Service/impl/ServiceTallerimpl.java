@@ -95,8 +95,6 @@ public class ServiceTallerimpl implements ServiceTaller {
 
         if (confirmadas < taller.getAforo()) {
             long faltantes = taller.getAforo() - confirmadas;
-            // Aquí posteriormente agregaremos la lógica
-            // de notificación y búsqueda de operarios.
             System.out.println("Aforo incompleto. Faltan" + faltantes + " operarios confirmados.");
         }
 
@@ -198,7 +196,7 @@ public class ServiceTallerimpl implements ServiceTaller {
         if (!notificacionExiste) {
 
             List<Usuario> administradores =
-                    repositoryUsuario.findByRolNombre("ADMINISTRADOR");
+                    repositoryUsuario.findByRolNombre("ADMIN");
 
             for (Usuario administrador : administradores) {
 

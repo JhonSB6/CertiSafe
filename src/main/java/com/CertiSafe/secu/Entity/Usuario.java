@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Data
 @AllArgsConstructor
-
+@NoArgsConstructor
 @Table(name = "usuario")
 
 public class Usuario {
@@ -31,7 +31,7 @@ public class Usuario {
     private String correo;
 
     @Column(nullable = false)
-    private String contraseña;
+    private String contrasena;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

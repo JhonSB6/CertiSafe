@@ -21,8 +21,9 @@ public class ServiceRolimpl implements ServiceRol {
     }
 
     @Override
-    public Optional<Rol> buscarPorId(Long id) {
-        return repositoryRol.findById(id);
+    public Rol buscarPorId(Long id) {
+        return repositoryRol.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
     }
 
     @Override

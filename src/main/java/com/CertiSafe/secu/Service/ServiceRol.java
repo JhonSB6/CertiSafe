@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ServiceRol {
     List<Rol> listarRoles();
 
-    Optional<Rol> buscarPorId(Long id);
+    Rol buscarPorId(Long id);
 
     Rol guardar(Rol rol);
 
