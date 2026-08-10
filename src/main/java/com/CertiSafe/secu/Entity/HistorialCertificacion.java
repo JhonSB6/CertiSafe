@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Data
-
+@NoArgsConstructor
 @Table(name = "historial_certificacion")
 public class HistorialCertificacion {
     @Id

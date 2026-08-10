@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
- @Data
-
+@Data
+@NoArgsConstructor
 @Table(name = "asistencia")
 public class AsistenciaTaller {
     @Id

@@ -8,7 +8,7 @@ import java.sql.Date;
 
 @Entity
 @Data
-
+@NoArgsConstructor
 @Table(name = "ingreso_produccion")
 public class IngresoProduccion {
     @Id

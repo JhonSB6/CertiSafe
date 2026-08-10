@@ -10,4 +10,5 @@ public interface RepositoryCertificacion extends JpaRepository<Certificacion, Lo
             Long idUsuario,
             Long idTipoCertificacion,
             EstadoCertificacion estado);
+
 }

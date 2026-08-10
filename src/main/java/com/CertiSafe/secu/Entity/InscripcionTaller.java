@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Data
-
+@NoArgsConstructor
 @Table(name = "inscripcion_taller")
 public class InscripcionTaller {
     @Id

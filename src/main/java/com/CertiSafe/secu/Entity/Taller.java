@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table (name = "taller")
 
 public class Taller {
