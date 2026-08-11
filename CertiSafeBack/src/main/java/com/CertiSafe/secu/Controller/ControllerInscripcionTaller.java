@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/inscripciones-taller")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ControllerInscripcionTaller {
 
     private final ServiceInscripcionTaller serviceInscripcionTaller;
@@ -84,5 +84,13 @@ public class ControllerInscripcionTaller {
         );
 
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<InscripcionTaller>> listarPorUsuario(
+            @PathVariable Long idUsuario) {
+
+        return ResponseEntity.ok(
+                serviceInscripcionTaller.listarPorUsuario(idUsuario)
+        );
     }
 }

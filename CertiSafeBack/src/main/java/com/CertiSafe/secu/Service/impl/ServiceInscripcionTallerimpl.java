@@ -27,6 +27,12 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
     private final RepositoryCertificacion repositoryCertificacion;
 
     @Override
+    public List<InscripcionTaller> listarPorUsuario(Long idUsuario) {
+
+        return inscripcionRepository.findByUsuarioIdusuario(idUsuario);
+    }
+
+    @Override
     public List<InscripcionTaller> listarInscripciones() {
         return inscripcionRepository.findAll();
     }
@@ -163,5 +169,6 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
 
         inscripcionRepository.save(inscripcion);
     }
+
 
 }

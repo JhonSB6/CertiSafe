@@ -20,4 +20,6 @@ public interface ServiceInscripcionTaller {
     void cancelarInscripcion(Long id);
 
     void programarOperario(Long idTaller, Long idUsuario, EstadoTipoProgramacion estadoTipoProgramacion);
+
+    List<InscripcionTaller> listarPorUsuario(Long idUsuario);
 }

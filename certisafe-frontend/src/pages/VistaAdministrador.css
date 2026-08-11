@@ -1,0 +1,309 @@
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.dashboard-administrador {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background: #f4f7fb;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1e293b;
+}
+
+
+/* =========================================
+   MENÚ LATERAL
+========================================= */
+
+.menu-administrador {
+    width: 280px;
+    min-height: 100vh;
+    background: #123f68;
+    color: white;
+    padding: 30px 20px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo-administrador {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 55px;
+}
+
+
+/* =========================================
+   NAVEGACIÓN
+========================================= */
+
+.menu-administrador nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.menu-administrador nav button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    background: transparent;
+    border: none;
+    color: white;
+
+    padding: 17px 20px;
+    border-radius: 14px;
+
+    font-size: 17px;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.menu-administrador nav button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+
+.menu-administrador nav button.menu-admin-activo {
+    background: rgba(255, 255, 255, 0.20);
+}
+
+
+/* =========================================
+   MENÚ INFERIOR
+========================================= */
+
+.menu-admin-inferior {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.menu-admin-inferior button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 13px 16px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    background: white;
+    color: #123f68;
+
+    transition: background 0.2s ease;
+}
+
+
+.menu-admin-inferior button:hover {
+    background: #e8eef5;
+}
+
+
+/* =========================================
+   CONTENIDO PRINCIPAL
+========================================= */
+
+.contenido-administrador {
+    flex: 1;
+
+    padding: 40px 50px;
+
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header-administrador {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin-bottom: 40px;
+}
+
+
+.usuario-administrador {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.usuario-administrador strong {
+    display: block;
+
+    font-size: 16px;
+
+    color: #123f68;
+}
+
+
+.usuario-administrador span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+
+    color: #64748b;
+}
+
+
+/* =========================================
+   AVATAR
+========================================= */
+
+.avatar-administrador {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #1769aa;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================================
+   SECCIONES
+========================================= */
+
+.seccion-administrador {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 35px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.seccion-administrador h1 {
+    margin-top: 0;
+    margin-bottom: 12px;
+
+    font-size: 32px;
+
+    color: #123f68;
+}
+
+
+.seccion-administrador p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .menu-administrador {
+        width: 220px;
+    }
+
+    .contenido-administrador {
+        padding: 30px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .menu-administrador {
+        width: 80px;
+
+        padding: 25px 10px;
+    }
+
+
+    .logo-administrador {
+        font-size: 0;
+    }
+
+
+    .menu-administrador nav button {
+        justify-content: center;
+
+        padding: 15px;
+    }
+
+
+    .menu-administrador nav button span {
+        display: none;
+    }
+
+
+    .menu-admin-inferior button {
+        justify-content: center;
+
+        padding: 13px;
+    }
+
+
+    .menu-admin-inferior button span {
+        display: none;
+    }
+
+
+    .contenido-administrador {
+        padding: 20px;
+    }
+
+}

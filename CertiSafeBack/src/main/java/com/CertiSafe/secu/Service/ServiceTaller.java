@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Service;
 
+import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
 
@@ -22,5 +23,6 @@ public interface ServiceTaller {
     List<Usuario> buscarOperariosDisponibles(Long idTaller);
 
     void revisarAforo(Long id);
+
 
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import VistaOperario from "./VistaOperario";
+import VistaAdministrador from "./VistaAdministrador";
 
 function Inicio() {
 
@@ -16,6 +17,8 @@ function Inicio() {
     const [mensajeLogin, setMensajeLogin] = useState("");
     const [ingresando, setIngresando] = useState(false);
     const [usuario, setUsuario] = useState(null);
+
+
 
     const iniciarSesion = async () => {
 
@@ -187,6 +190,13 @@ function Inicio() {
             );
         }
     };
+    if (usuario && usuario.rol === "OPERARIO") {
+        return <VistaOperario usuario={usuario} />;
+    }
+    if (usuario && usuario.rol === "ADMIN") {
+        return <VistaAdministrador usuario={usuario} />;
+    }
+
 
     return (
         <div className="pagina-inicio">

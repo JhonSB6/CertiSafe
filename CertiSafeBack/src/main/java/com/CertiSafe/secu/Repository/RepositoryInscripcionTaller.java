@@ -21,4 +21,6 @@ public interface RepositoryInscripcionTaller extends JpaRepository<InscripcionTa
             Long idTaller,
             EstadoInscripcion estado,
             EstadoTipoProgramacion estadoTipoProgramacion);
+
+    List<InscripcionTaller> findByUsuarioIdusuario(Long idUsuario);
 }

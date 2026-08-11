@@ -1,0 +1,279 @@
+import { useState } from "react";
+import "./VistaAdministrador.css";
+
+function VistaAdministrador({ usuario, cerrarSesion }) {
+
+    const [vistaActual, setVistaActual] = useState("inicio");
+
+    return (
+
+        <div className="dashboard-administrador">
+
+            {/* =========================
+                MENÚ LATERAL
+            ========================== */}
+
+            <aside className="menu-administrador">
+
+                <div className="logo-administrador">
+                    CERTISAFE
+                </div>
+
+                <nav>
+
+                    <button
+                        className={
+                            vistaActual === "inicio"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() => setVistaActual("inicio")}
+                    >
+                        🏠
+                        <span>Inicio</span>
+                    </button>
+
+
+                    <button
+                        className={
+                            vistaActual === "talleres"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() => setVistaActual("talleres")}
+                    >
+                        📚
+                        <span>Talleres</span>
+                    </button>
+
+
+                    <button
+                        className={
+                            vistaActual === "operarios"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() => setVistaActual("operarios")}
+                    >
+                        👥
+                        <span>Operarios</span>
+                    </button>
+
+
+                    <button
+                        className={
+                            vistaActual === "historial"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() => setVistaActual("historial")}
+                    >
+                        📜
+                        <span>Historial certificaciones</span>
+                    </button>
+
+
+                    <button
+                        className={
+                            vistaActual === "notificaciones"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual("notificaciones")
+                        }
+                    >
+                        🔔
+                        <span>Notificaciones</span>
+                    </button>
+
+                </nav>
+
+
+                {/* =========================
+                    OPCIONES INFERIORES
+                ========================== */}
+
+                <div className="menu-admin-inferior">
+
+                    <button
+                        onClick={() =>
+                            setVistaActual("perfil")
+                        }
+                    >
+                        ⚙
+                        <span>Mi perfil</span>
+                    </button>
+
+
+                    <button onClick={cerrarSesion}>
+                        🚪
+                        <span>Cerrar sesión</span>
+                    </button>
+
+                </div>
+
+            </aside>
+
+
+            {/* =========================
+                CONTENIDO PRINCIPAL
+            ========================== */}
+
+            <main className="contenido-administrador">
+
+                {/* =========================
+                    HEADER
+                ========================== */}
+
+                <header className="header-administrador">
+
+                    <div className="usuario-administrador">
+
+                        <div className="avatar-administrador">
+
+                            {usuario.nombre
+                                ? usuario.nombre
+                                    .charAt(0)
+                                    .toUpperCase()
+                                : "A"}
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {usuario.nombre} {usuario.apellido}
+                            </strong>
+
+                            <span>
+                                Administrador
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </header>
+
+
+                {/* =========================
+                    CONTENIDO TEMPORAL
+                ========================== */}
+
+                {vistaActual === "inicio" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Bienvenido, {usuario.nombre}
+                        </h1>
+
+                        <p>
+                            Desde aquí puedes gestionar los
+                            talleres, operarios, certificaciones
+                            y notificaciones de CertiSafe.
+                        </p>
+
+                    </section>
+
+                )}
+
+
+                {vistaActual === "talleres" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Talleres
+                        </h1>
+
+                        <p>
+                            Aquí podrás gestionar los talleres
+                            de capacitación.
+                        </p>
+
+                    </section>
+
+                )}
+
+
+                {vistaActual === "operarios" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Operarios
+                        </h1>
+
+                        <p>
+                            Aquí podrás consultar y programar
+                            operarios.
+                        </p>
+
+                    </section>
+
+                )}
+
+
+                {vistaActual === "historial" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Historial de certificaciones
+                        </h1>
+
+                        <p>
+                            Aquí podrás consultar el historial
+                            de certificaciones de los operarios.
+                        </p>
+
+                    </section>
+
+                )}
+
+
+                {vistaActual === "notificaciones" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Notificaciones
+                        </h1>
+
+                        <p>
+                            Aquí podrás consultar las
+                            notificaciones del sistema.
+                        </p>
+
+                    </section>
+
+                )}
+
+
+                {vistaActual === "perfil" && (
+
+                    <section className="seccion-administrador">
+
+                        <h1>
+                            Mi perfil
+                        </h1>
+
+                        <p>
+                            Aquí podrás consultar y actualizar
+                            tu información personal.
+                        </p>
+
+                    </section>
+
+                )}
+
+            </main>
+
+        </div>
+    );
+}
+
+export default VistaAdministrador;
