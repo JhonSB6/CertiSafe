@@ -194,9 +194,11 @@ function VistaOperario({ usuario, cerrarSesion }) {
                     </button>
 
 
-                    <button onClick={cerrarSesion}>
-                        🚪
-                        <span>Cerrar sesión</span>
+                    <button
+                        className="btn-cerrar-sesion"
+                        onClick={cerrarSesion}
+                    >
+                        Cerrar sesión
                     </button>
 
                 </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import VistaOperario from "./VistaOperario";
 import VistaAdministrador from "./VistaAdministrador";
+import CapacitadorCertificaciones from "./CapacitadorCertificaciones";
 
 function Inicio() {
 
@@ -191,10 +192,18 @@ function Inicio() {
         }
     };
     if (usuario && usuario.rol === "OPERARIO") {
-        return <VistaOperario usuario={usuario} />;
+        return <VistaOperario usuario={usuario} cerrarSesion={() => setUsuario(null)}/>;
     }
     if (usuario && usuario.rol === "ADMIN") {
-        return <VistaAdministrador usuario={usuario} />;
+        return <VistaAdministrador usuario={usuario} cerrarSesion={() => setUsuario(null)}/>;
+    }
+    if (usuario && usuario.rol === "CAPACITADOR") {
+        return (
+            <CapacitadorCertificaciones
+                usuario={usuario}
+                cerrarSesion={() => setUsuario(null)}
+            />
+        );
     }
 
 
