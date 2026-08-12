@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tipos-certificacion")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ControllerTipoCertificacion {
 
     private final ServiceTipoCertificacion serviceTipoCertificacion;

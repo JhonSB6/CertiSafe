@@ -4,6 +4,9 @@ import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Enum.EstadoInscripcion;
 import com.CertiSafe.secu.Enum.EstadoTipoProgramacion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.*;
 
 public interface RepositoryInscripcionTaller extends JpaRepository<InscripcionTaller, Long> {
@@ -23,4 +26,11 @@ public interface RepositoryInscripcionTaller extends JpaRepository<InscripcionTa
             EstadoTipoProgramacion estadoTipoProgramacion);
 
     List<InscripcionTaller> findByUsuarioIdusuario(Long idUsuario);
+
+    @Query("""
+    SELECT COUNT(i)
+    FROM InscripcionTaller i
+    WHERE i.taller.idtaller = :idTaller
+    AND i.estado <> com.CertiSafe.secu.Enum.EstadoInscripcion.CANCELADA""")
+    Long countInscripcionesActivas(@Param("idTaller") Long idTaller);
 }

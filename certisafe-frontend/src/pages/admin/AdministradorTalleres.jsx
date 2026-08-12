@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import AdministradorCrearTaller from "./AdministradorCrearTaller";
+import AdministradorProgramarOperarios from "./AdministradorProgramarOperarios";
 
 function AdministradorTalleres() {
 
     const [talleres, setTalleres] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [mostrarCrear, setMostrarCrear] = useState(false);
+    const [tallerSeleccionado, setTallerSeleccionado] = useState(null);
+    const [resumenes, setResumenes] = useState({});
 
     const cargarTalleres = async () => {
 
@@ -27,6 +32,34 @@ function AdministradorTalleres() {
 
             setTalleres(datos);
 
+            const nuevosResumenes = {};
+
+            for (const taller of datos) {
+
+                try {
+
+                    const respuestaResumen = await fetch(
+                        `http://localhost:8080/api/talleres/${taller.idtaller}/resumen`
+                    );
+
+                    if (respuestaResumen.ok) {
+
+                        const resumen = await respuestaResumen.json();
+
+                        nuevosResumenes[taller.idtaller] = resumen;
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        `Error cargando resumen del taller ${taller.idtaller}:`,
+                        error
+                    );
+                }
+            }
+
+            setResumenes(nuevosResumenes);
+
         } catch (error) {
 
             console.error(error);
@@ -46,6 +79,27 @@ function AdministradorTalleres() {
         cargarTalleres();
     }, []);
 
+    if (mostrarCrear) {
+                return (
+                    <AdministradorCrearTaller
+                        volver={() => {
+                            setMostrarCrear(false);
+                            cargarTalleres();
+                        }}
+                    />
+                );
+            }
+    if (tallerSeleccionado) {
+        return (
+            <AdministradorProgramarOperarios
+                taller={tallerSeleccionado}
+                volver={() => {
+                    setTallerSeleccionado(null);
+                    cargarTalleres();
+                }}
+            />
+        );
+    }
 
     return (
 
@@ -54,6 +108,12 @@ function AdministradorTalleres() {
             <h1>
                 Talleres
             </h1>
+            <button
+                className="boton-crear-taller"
+                onClick={() => setMostrarCrear(true)}
+            >
+                + Crear nuevo taller
+            </button>
 
             <p>
                 Gestiona los talleres de capacitación
@@ -131,6 +191,43 @@ function AdministradorTalleres() {
                                     <strong>Estado:</strong>{" "}
                                     {taller.estado}
                                 </p>
+                        {resumenes[taller.idtaller] && (
+
+                                                        <div className="resumen-aforo">
+
+                                                            <p>
+                                                                <strong>Aforo:</strong>{" "}
+                                                                {resumenes[taller.idtaller].aforo}
+                                                            </p>
+
+                                                            <p>
+                                                                <strong>Programados:</strong>{" "}
+                                                                {resumenes[taller.idtaller].programados}
+                                                                {" / "}
+                                                                {resumenes[taller.idtaller].aforo}
+                                                            </p>
+
+                                                            <p>
+                                                                <strong>Confirmados:</strong>{" "}
+                                                                {resumenes[taller.idtaller].confirmados}
+                                                                {" / "}
+                                                                {resumenes[taller.idtaller].aforo}
+                                                            </p>
+
+                                                            <p>
+                                                                <strong>Pendientes:</strong>{" "}
+                                                                {resumenes[taller.idtaller].pendientes}
+                                                            </p>
+
+                                                        </div>
+                                                    )}
+
+                                <button
+                                    className="boton-programar-taller"
+                                    onClick={() => setTallerSeleccionado(taller)}
+                                >
+                                    👥 Programar operarios
+                                </button>
 
                             </article>
 

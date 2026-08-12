@@ -27,6 +27,23 @@ public class ServicioProgramacionTallerimpl {
                 repositoryTaller.findAll();
 
         for (Taller taller : talleres) {
+            if (taller.getEstado() == EstadoTaller.EN_CURSO) {
+
+                LocalDateTime fin =
+                        LocalDateTime.of(
+                                taller.getFecha(),
+                                taller.getHoraFin());
+
+                if (!ahora.isBefore(fin)) {
+
+                    taller.setEstado(
+                            EstadoTaller.FINALIZADO);
+
+                    repositoryTaller.save(taller);
+                }
+
+                continue;
+            }
 
             if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
                 continue;
@@ -50,7 +67,8 @@ public class ServicioProgramacionTallerimpl {
             if (!ahora.isBefore(inicio)) {
 
                 serviceTaller.iniciarTaller(
-                        taller.getIdtaller());
+                        taller.getIdtaller(),
+                        true);
             }
         }
     }

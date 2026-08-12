@@ -129,6 +129,14 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
             throw new RuntimeException(
                     "El usuario seleccionado no es un operario");
         }
+        Long inscripcionesActivas =
+                inscripcionRepository.countInscripcionesActivas(idTaller);
+
+        if (inscripcionesActivas >= taller.getAforo()) {
+            throw new RuntimeException(
+                    "No se puede programar el operario. El aforo del taller ya está completo."
+            );
+        }
 
         Long idTipoCertificacion =
                 taller.getTipoCertificacion()
@@ -169,6 +177,5 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
 
         inscripcionRepository.save(inscripcion);
     }
-
 
 }

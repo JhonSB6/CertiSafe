@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,7 +73,7 @@ public class ServiceTallerimpl implements ServiceTaller {
     }
 
     @Override
-    public void iniciarTaller(Long id) {
+    public void iniciarTaller(Long id, boolean forzarInicio) {
 
         Taller taller = repositoryTaller.findById(id)
                 .orElseThrow(() ->
@@ -93,9 +91,17 @@ public class ServiceTallerimpl implements ServiceTaller {
                                 id,
                                 EstadoInscripcion.CONFIRMADA);
 
-        if (confirmadas < taller.getAforo()) {
-            long faltantes = taller.getAforo() - confirmadas;
-            System.out.println("Aforo incompleto. Faltan" + faltantes + " operarios confirmados.");
+        if (confirmadas < taller.getAforo() && !forzarInicio) {
+
+            long faltantes =
+                    taller.getAforo() - confirmadas;
+
+            throw new RuntimeException(
+                    "No se puede iniciar el taller. "
+                            + "Faltan "
+                            + faltantes
+                            + " operarios confirmados."
+            );
         }
 
         taller.setEstado(EstadoTaller.EN_CURSO);
@@ -114,7 +120,7 @@ public class ServiceTallerimpl implements ServiceTaller {
                 taller.getTipoCertificacion().getIdTipoCertificacion();
 
         List<Usuario> operarios =
-                repositoryUsuario.findByRolNombre("OPERARIO");
+                repositoryUsuario.findByRolNombre("OPERARIO", EstadoUsuario.ACTIVO);
 
         return operarios.stream()
                 .filter(usuario ->
@@ -141,6 +147,7 @@ public class ServiceTallerimpl implements ServiceTaller {
                         new RuntimeException(
                                 "Taller no encontrado con id: " + id));
 
+        // Solo revisamos talleres que todavía están programados
         if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
             return;
         }
@@ -151,11 +158,19 @@ public class ServiceTallerimpl implements ServiceTaller {
                                 id,
                                 EstadoInscripcion.CONFIRMADA);
 
-        if (confirmadas >= taller.getAforo()) {
+        long faltantes = taller.getAforo() - confirmadas;
+
+        // ==========================================
+        // AFORO COMPLETO
+        // ==========================================
+
+        if (faltantes <= 0) {
             return;
         }
 
-        long faltantes = taller.getAforo() - confirmadas;
+        // ==========================================
+        // BUSCAR TODOS LOS OPERARIOS DISPONIBLES
+        // ==========================================
 
         List<Usuario> disponibles =
                 buscarOperariosDisponibles(id);
@@ -169,6 +184,10 @@ public class ServiceTallerimpl implements ServiceTaller {
                         + disponibles.size()
         );
 
+        // ==========================================
+        // PROGRAMAR TODOS LOS DISPONIBLES
+        // ==========================================
+
         for (Usuario usuario : disponibles) {
 
             InscripcionTaller inscripcion =
@@ -176,27 +195,36 @@ public class ServiceTallerimpl implements ServiceTaller {
 
             inscripcion.setTaller(taller);
             inscripcion.setUsuario(usuario);
+
             inscripcion.setEstado(
                     EstadoInscripcion.PENDIENTE);
+
             inscripcion.setEstadoTipoProgramacion(
                     EstadoTipoProgramacion.COLA);
+
             inscripcion.setFechaInscripcion(
                     new Date(System.currentTimeMillis()));
 
             repositoryInscripcionTaller.save(inscripcion);
         }
 
-        // Verificar si ya existe una notificación
-        boolean notificacionExiste =
-                repositoryNotificacion.existsByTallerIdtallerAndTipo(
-                        id,
-                        EstadoTipoNotificacion.FALTA_AFORO);
+        // ==========================================
+        // NOTIFICACIÓN AL ADMINISTRADOR
+        // ==========================================
 
-        // Solo crearla si todavía no existe
+        boolean notificacionExiste =
+                repositoryNotificacion
+                        .existsByTallerIdtallerAndTipo(
+                                id,
+                                EstadoTipoNotificacion.FALTA_AFORO);
+
         if (!notificacionExiste) {
 
             List<Usuario> administradores =
-                    repositoryUsuario.findByRolNombre("ADMIN");
+                    repositoryUsuario
+                            .findByRolNombre(
+                                    "ADMIN",
+                                    EstadoUsuario.ACTIVO);
 
             for (Usuario administrador : administradores) {
 
@@ -204,11 +232,16 @@ public class ServiceTallerimpl implements ServiceTaller {
                         new Notificacion();
 
                 notificacion.setMensaje(
-                        "Falta aforo para el taller "
+                        "El taller "
                                 + taller.getNombre()
-                                + ". Faltan "
+                                + " tiene el aforo incompleto. "
+                                + "Aforo requerido: "
+                                + taller.getAforo()
+                                + ". Confirmados: "
+                                + confirmadas
+                                + ". Faltan: "
                                 + faltantes
-                                + " operarios confirmados."
+                                + "."
                 );
 
                 notificacion.setTipo(
@@ -219,12 +252,48 @@ public class ServiceTallerimpl implements ServiceTaller {
                 notificacion.setFecha(
                         LocalDateTime.now());
 
-                notificacion.setUsuario(administrador);
+                notificacion.setUsuario(
+                        administrador);
 
-                notificacion.setTaller(taller);
+                notificacion.setTaller(
+                        taller);
 
-                repositoryNotificacion.save(notificacion);
+                repositoryNotificacion.save(
+                        notificacion);
             }
         }
+    }
+    @Override
+    public Map<String, Object> obtenerResumen(Long idTaller) {
+
+        Taller taller = repositoryTaller.findById(idTaller)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Taller no encontrado con id: " + idTaller));
+
+        long programados =
+                repositoryInscripcionTaller
+                        .countInscripcionesActivas(idTaller);
+
+        long confirmados =
+                repositoryInscripcionTaller
+                        .countByTallerIdtallerAndEstado(
+                                idTaller,
+                                EstadoInscripcion.CONFIRMADA);
+
+        long pendientes =
+                repositoryInscripcionTaller
+                        .countByTallerIdtallerAndEstado(
+                                idTaller,
+                                EstadoInscripcion.PENDIENTE);
+
+        Map<String, Object> resumen = new HashMap<>();
+
+        resumen.put("aforo", taller.getAforo());
+        resumen.put("programados", programados);
+        resumen.put("confirmados", confirmados);
+        resumen.put("pendientes", pendientes);
+
+        return resumen;
     }
 }

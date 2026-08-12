@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./VistaAdministrador.css";
+import AdministradorTalleres from "./admin/AdministradorTalleres";
 
 function VistaAdministrador({ usuario, cerrarSesion }) {
 
@@ -182,20 +183,7 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
 
 
                 {vistaActual === "talleres" && (
-
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Talleres
-                        </h1>
-
-                        <p>
-                            Aquí podrás gestionar los talleres
-                            de capacitación.
-                        </p>
-
-                    </section>
-
+                    <AdministradorTalleres />
                 )}
 
 

@@ -6,13 +6,15 @@ import com.CertiSafe.secu.Service.ServiceTaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/talleres")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ControllerTaller {
 
     private final ServiceTaller serviceTaller;
@@ -70,12 +72,29 @@ public class ControllerTaller {
                 serviceTaller.buscarOperariosDisponibles(id)
         );
     }
+    @GetMapping("/{id}/resumen")
+    public ResponseEntity<Map<String, Object>> obtenerResumen(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                serviceTaller.obtenerResumen(id)
+        );
+    }
 
     @PostMapping("/{id}/revisar-aforo")
     public ResponseEntity<Void> revisarAforo(
             @PathVariable Long id) {
 
         serviceTaller.revisarAforo(id);
+
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/{id}/iniciar")
+    public ResponseEntity<Void> iniciarTaller(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean forzarInicio) {
+
+        serviceTaller.iniciarTaller(id, forzarInicio);
 
         return ResponseEntity.noContent().build();
     }

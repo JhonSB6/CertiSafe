@@ -305,5 +305,455 @@
     .contenido-administrador {
         padding: 20px;
     }
+ }
+ /* ==========================================
+    FORMULARIO CREAR TALLER
+ ========================================== */
 
-}
+ .formulario-taller {
+     margin-top: 30px;
+     background: #ffffff;
+     padding: 35px;
+     border-radius: 18px;
+     border: 1px solid #e5e7eb;
+     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+     max-width: 900px;
+     box-sizing: border-box;
+ }
+
+
+ /* ==========================================
+    ENCABEZADO DEL FORMULARIO
+ ========================================== */
+
+ .encabezado-formulario {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+
+     margin-bottom: 25px;
+ }
+
+ .encabezado-formulario h1 {
+     margin: 0;
+ }
+
+ .encabezado-formulario p {
+     margin-top: 8px;
+ }
+
+
+ /* ==========================================
+    CAMPOS
+ ========================================== */
+
+ .campo-formulario {
+     display: flex;
+     flex-direction: column;
+     gap: 8px;
+
+     margin-bottom: 22px;
+ }
+
+ .campo-formulario label {
+     font-size: 16px;
+     font-weight: 600;
+     color: #123f68;
+ }
+
+
+ /* ==========================================
+    INPUTS
+ ========================================== */
+
+ .campo-formulario input,
+ .campo-formulario textarea,
+ .campo-formulario select {
+     width: 100%;
+     box-sizing: border-box;
+
+     padding: 12px 14px;
+
+     border: 1px solid #cbd5e1;
+     border-radius: 9px;
+
+     font-size: 16px;
+     font-family: inherit;
+
+     background: #ffffff;
+     color: #1e293b;
+
+     outline: none;
+
+     transition:
+         border-color 0.2s ease,
+         box-shadow 0.2s ease;
+ }
+
+ .campo-formulario input:focus,
+ .campo-formulario textarea:focus,
+ .campo-formulario select:focus {
+     border-color: #1769aa;
+
+     box-shadow:
+         0 0 0 3px rgba(23, 105, 170, 0.12);
+ }
+
+ .campo-formulario textarea {
+     resize: vertical;
+     min-height: 110px;
+ }
+
+
+ /* ==========================================
+    FILA FECHA / HORAS
+ ========================================== */
+
+ .fila-formulario {
+     display: grid;
+     grid-template-columns: 1fr 1fr 1fr;
+     gap: 20px;
+ }
+
+
+ /* ==========================================
+    BOTÓN VOLVER
+ ========================================== */
+
+ .encabezado-formulario button {
+     border: none;
+     border-radius: 9px;
+
+     padding: 10px 18px;
+
+     background: #e8eef5;
+     color: #123f68;
+
+     font-size: 15px;
+     font-weight: 600;
+
+     cursor: pointer;
+
+     transition: 0.2s ease;
+ }
+
+ .encabezado-formulario button:hover {
+     background: #d6e2ee;
+ }
+
+
+ /* ==========================================
+    NUEVA CERTIFICACIÓN
+ ========================================== */
+
+ .boton-nueva-certificacion {
+     border: 1px solid #1769aa;
+     border-radius: 9px;
+
+     padding: 11px 18px;
+
+     background: white;
+     color: #1769aa;
+
+     font-size: 15px;
+     font-weight: 600;
+
+     cursor: pointer;
+
+     transition: 0.2s ease;
+
+     margin-bottom: 20px;
+ }
+
+ .boton-nueva-certificacion:hover {
+     background: #1769aa;
+     color: white;
+ }
+
+
+ /* ==========================================
+    PANEL NUEVA CERTIFICACIÓN
+ ========================================== */
+
+ .nueva-certificacion {
+     background: #f4f7fb;
+
+     border: 1px solid #dbe4ee;
+     border-radius: 12px;
+
+     padding: 20px;
+
+     margin-bottom: 25px;
+ }
+
+ .nueva-certificacion label {
+     display: block;
+
+     margin-bottom: 8px;
+
+     font-weight: 600;
+     color: #123f68;
+ }
+
+ .nueva-certificacion input {
+     width: 100%;
+     box-sizing: border-box;
+
+     padding: 12px;
+
+     border: 1px solid #cbd5e1;
+     border-radius: 8px;
+
+     font-size: 15px;
+
+     margin-bottom: 15px;
+ }
+
+ .nueva-certificacion div {
+     display: flex;
+     gap: 10px;
+ }
+
+ .nueva-certificacion button {
+     border: none;
+     border-radius: 8px;
+
+     padding: 10px 16px;
+
+     cursor: pointer;
+
+     font-size: 14px;
+ }
+
+
+ /* ==========================================
+    CREAR TALLER
+ ========================================== */
+
+ .boton-guardar-taller {
+     width: 100%;
+
+     margin-top: 15px;
+
+     padding: 14px 20px;
+
+     border: none;
+     border-radius: 10px;
+
+     background: #1769aa;
+     color: white;
+
+     font-size: 16px;
+     font-weight: 700;
+
+     cursor: pointer;
+
+     transition: background 0.2s ease;
+ }
+
+ .boton-guardar-taller:hover {
+     background: #0f4f83;
+ }
+
+ .boton-guardar-taller:disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+ }
+
+
+ /* ==========================================
+    MENSAJES
+ ========================================== */
+
+ .mensaje-exito {
+     background: #ecfdf5;
+     color: #047857;
+
+     border: 1px solid #a7f3d0;
+
+     padding: 12px 16px;
+
+     border-radius: 9px;
+
+     margin: 15px 0;
+ }
+
+ .mensaje-error {
+     background: #fef2f2;
+     color: #b91c1c;
+
+     border: 1px solid #fecaca;
+
+     padding: 12px 16px;
+
+     border-radius: 9px;
+
+     margin: 15px 0;
+ }
+
+
+ /* ==========================================
+    RESPONSIVE
+ ========================================== */
+
+ @media (max-width: 800px) {
+
+     .fila-formulario {
+         grid-template-columns: 1fr;
+         gap: 0;
+     }
+
+     .formulario-taller {
+         padding: 25px;
+     }
+
+     .encabezado-formulario {
+         flex-direction: column;
+         align-items: flex-start;
+         gap: 15px;
+     }
+ }
+ .tarjetas-talleres-admin {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+     gap: 25px;
+     margin-top: 30px;
+ }
+
+ .taller-admin-card {
+     background: #ffffff;
+     border-radius: 16px;
+     padding: 25px;
+     box-sizing: border-box;
+     border: 1px solid #e5e7eb;
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+     transition: transform 0.2s ease,
+                 box-shadow 0.2s ease;
+ }
+
+ .taller-admin-card:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+ }
+
+ .taller-admin-card h2 {
+     margin-top: 0;
+     margin-bottom: 15px;
+     color: #123f68;
+     font-size: 22px;
+ }
+
+ .taller-admin-card p {
+     margin: 8px 0;
+     color: #64748b;
+     line-height: 1.5;
+ }
+
+ .taller-admin-card strong {
+     color: #475569;
+ }
+
+ .resumen-aforo {
+     margin-top: 20px;
+     padding: 15px;
+     background: #f4f7fb;
+     border-radius: 12px;
+     border-left: 4px solid #1769aa;
+ }
+
+ .resumen-aforo p {
+     margin: 6px 0;
+ }
+
+ .boton-programar-operarios {
+     margin-top: 20px;
+     width: 100%;
+     padding: 12px 16px;
+     border: none;
+     border-radius: 8px;
+     background: #1769aa;
+     color: white;
+     font-size: 15px;
+     cursor: pointer;
+ }
+
+ .boton-programar-operarios:hover {
+     background: #0f4f83;
+ }
+ .boton-programar-taller {
+     width: 100%;
+     margin-top: 20px;
+     padding: 12px 16px;
+
+     border: none;
+     border-radius: 8px;
+
+     background: #1769aa;
+     color: white;
+
+     font-size: 15px;
+     cursor: pointer;
+
+     transition: background 0.2s ease;
+ }
+
+ .boton-programar-taller:hover {
+     background: #0f4f83;
+ }
+ .tarjetas-talleres-admin {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+     gap: 25px;
+     margin-top: 30px;
+ }
+
+ .taller-admin-card {
+     background: #ffffff;
+     border-radius: 16px;
+     padding: 25px;
+     box-sizing: border-box;
+
+     border: 1px solid #e5e7eb;
+
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+     transition: transform 0.2s ease,
+                 box-shadow 0.2s ease;
+ }
+
+ .taller-admin-card:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+ }
+
+ .taller-admin-card h2 {
+     margin-top: 0;
+     margin-bottom: 15px;
+
+     color: #123f68;
+     font-size: 22px;
+ }
+
+ .taller-admin-card p {
+     margin: 8px 0;
+     color: #64748b;
+     line-height: 1.5;
+ }
+ .resumen-aforo {
+     margin-top: 20px;
+     padding: 15px;
+
+     background: #f4f7fb;
+     border-radius: 12px;
+
+     border-left: 4px solid #1769aa;
+ }
+
+ .resumen-aforo p {
+     margin: 6px 0;
+ }
+
+ .resumen-aforo strong {
+     color: #475569;
+ }

@@ -5,6 +5,7 @@ import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ServiceTaller {
@@ -16,7 +17,7 @@ public interface ServiceTaller {
 
     Taller actualizar(Long id, Taller taller);
 
-    void iniciarTaller(Long id);
+    void iniciarTaller(Long id, boolean forzarInicio);
 
     void desactivar(Long id);
 
@@ -24,5 +25,5 @@ public interface ServiceTaller {
 
     void revisarAforo(Long id);
 
-
+    Map<String, Object> obtenerResumen(Long idTaller);
 }
