@@ -99,4 +99,11 @@ public class ControllerUsuario {
                     .body(e.getMessage());
         }
     }
+    @GetMapping("/capacitadores")
+    public ResponseEntity<List<Usuario>> listarCapacitadores() {
+
+        return ResponseEntity.ok(
+                serviceUsuario.listarCapacitadores()
+        );
+    }
 }

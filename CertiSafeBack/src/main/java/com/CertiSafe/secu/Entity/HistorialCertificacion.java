@@ -17,5 +17,4 @@ public class HistorialCertificacion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_certificacion", nullable = false)
     private Certificacion certificacion;
-
 }

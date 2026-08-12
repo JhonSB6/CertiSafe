@@ -12,4 +12,6 @@ public interface ServiceCertificacion {
     Certificacion actualizar(Long id, Certificacion certificacion);
 
     void eliminar(Long id);
+
+    Certificacion certificarOperario(Long idTaller, Long idAsistencia, Long idCapacitador);
 }

@@ -101,6 +101,14 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
         repositoryUsuario.save(usuario);
     }
     @Override
+    public List<Usuario> listarCapacitadores() {
+
+        return repositoryUsuario.findByRolNombre(
+                "CAPACITADOR",
+                EstadoUsuario.ACTIVO
+        );
+    }
+    @Override
     public LoginResponse login(String documento, String contrasena) {
 
         Usuario usuario = repositoryUsuario.findByDocumento(documento)

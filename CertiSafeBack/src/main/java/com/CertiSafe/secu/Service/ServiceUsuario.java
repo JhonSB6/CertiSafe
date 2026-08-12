@@ -25,4 +25,6 @@ public interface ServiceUsuario {
     void cambiarContrasena(Long id, String nuevaContrasena);
 
     LoginResponse login(String documento, String contrasena);
+
+    List<Usuario> listarCapacitadores();
 }

@@ -1,9 +1,6 @@
 package com.CertiSafe.secu.Service.impl;
 
-import com.CertiSafe.secu.Entity.InscripcionTaller;
-import com.CertiSafe.secu.Entity.Notificacion;
-import com.CertiSafe.secu.Entity.Taller;
-import com.CertiSafe.secu.Entity.Usuario;
+import com.CertiSafe.secu.Entity.*;
 import com.CertiSafe.secu.Enum.*;
 import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceTaller;
@@ -23,6 +20,7 @@ public class ServiceTallerimpl implements ServiceTaller {
     private final RepositoryUsuario repositoryUsuario;
     private final RepositoryCertificacion repositoryCertificacion;
     private final RepositoryNotificacion repositoryNotificacion;
+    private final RepositoryAsistenciaTaller repositoryAsistenciaTaller;
 
     @Override
     public List<Taller> listarTalleres() {
@@ -36,6 +34,39 @@ public class ServiceTallerimpl implements ServiceTaller {
 
     @Override
     public Taller guardar(Taller taller) {
+
+        if (taller.getCapacitador() == null) {
+            throw new RuntimeException(
+                    "El taller debe tener un capacitador"
+            );
+        }
+
+        Long idCapacitador =
+                taller.getCapacitador().getIdusuario();
+
+        Usuario capacitador =
+                repositoryUsuario.findById(idCapacitador)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "El capacitador no existe"
+                                ));
+
+        if (capacitador.getEstado() != EstadoUsuario.ACTIVO) {
+            throw new RuntimeException(
+                    "El capacitador se encuentra inactivo"
+            );
+        }
+
+        if (!capacitador.getRol().getNombre()
+                .equalsIgnoreCase("CAPACITADOR")) {
+
+            throw new RuntimeException(
+                    "El usuario seleccionado no tiene rol de capacitador"
+            );
+        }
+
+        taller.setCapacitador(capacitador);
+
         return repositoryTaller.save(taller);
     }
 
@@ -104,10 +135,36 @@ public class ServiceTallerimpl implements ServiceTaller {
             );
         }
 
+        List<InscripcionTaller> inscripcionesConfirmadas =
+                repositoryInscripcionTaller
+                        .findByTallerIdtallerAndEstado(
+                                id,
+                                EstadoInscripcion.CONFIRMADA);
+
+        for (InscripcionTaller inscripcion : inscripcionesConfirmadas) {
+
+            AsistenciaTaller asistencia = new AsistenciaTaller();
+
+            asistencia.setTaller(taller);
+            asistencia.setUsuario(inscripcion.getUsuario());
+
+            asistencia.setFechainicio(
+                    java.sql.Date.valueOf(taller.getFecha()));
+
+            asistencia.setFechafin(
+                    java.sql.Date.valueOf(taller.getFecha()));
+
+            asistencia.setEstado(
+                    EstadoAsistencia.PRESENTE);
+
+            repositoryAsistenciaTaller.save(asistencia);
+        }
+
         taller.setEstado(EstadoTaller.EN_CURSO);
 
         repositoryTaller.save(taller);
     }
+
     @Override
     public List<Usuario> buscarOperariosDisponibles(Long idTaller) {
 
@@ -296,4 +353,25 @@ public class ServiceTallerimpl implements ServiceTaller {
 
         return resumen;
     }
+    @Override
+    public List<Taller> listarTalleresFinalizadosPorCapacitador(
+            Long idCapacitador) {
+
+        return repositoryTaller
+                .findByCapacitadorIdusuarioAndEstado(
+                        idCapacitador,
+                        EstadoTaller.FINALIZADO
+                );
+    }
+    @Override
+    public List<Taller> listarPorCapacitador(
+            Long idCapacitador,
+            EstadoTaller estado) {
+
+        return repositoryTaller
+                .findByCapacitadorIdusuarioAndEstado(
+                        idCapacitador,
+                        estado);
+    }
+
 }

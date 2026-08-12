@@ -2,6 +2,7 @@ package com.CertiSafe.secu.Controller;
 
 import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
+import com.CertiSafe.secu.Enum.EstadoTaller;
 import com.CertiSafe.secu.Service.ServiceTaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -98,4 +99,17 @@ public class ControllerTaller {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/capacitador/{idCapacitador}/finalizados")
+    public ResponseEntity<List<Taller>> listarTalleresFinalizados(
+            @PathVariable Long idCapacitador) {
+
+        return ResponseEntity.ok(
+                serviceTaller.listarPorCapacitador(
+                        idCapacitador,
+                        EstadoTaller.FINALIZADO
+                )
+        );
+    }
+
 }

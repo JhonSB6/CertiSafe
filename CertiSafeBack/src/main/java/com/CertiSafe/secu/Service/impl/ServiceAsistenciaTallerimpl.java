@@ -50,4 +50,16 @@ public class ServiceAsistenciaTallerimpl implements ServiceAsistenciaTaller{
 
         repositoryAsistenciaTaller.save(asistencia);
     }
+    @Override
+    public List<AsistenciaTaller> listarPorTaller(
+            Long idTaller,
+            EstadoAsistencia estado) {
+
+        return repositoryAsistenciaTaller
+                .findByTallerIdtallerAndEstado(
+                        idTaller,
+                        estado
+                );
+    }
+
 }

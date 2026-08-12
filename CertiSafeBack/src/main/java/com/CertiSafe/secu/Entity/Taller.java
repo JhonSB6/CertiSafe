@@ -44,4 +44,8 @@ public class Taller {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_certificacion", nullable = false)
     private TipoCertificacion tipoCertificacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_capacitador")
+    private Usuario capacitador;
 }

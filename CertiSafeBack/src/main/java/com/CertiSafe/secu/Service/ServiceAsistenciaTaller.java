@@ -1,6 +1,8 @@
 package com.CertiSafe.secu.Service;
 
 import com.CertiSafe.secu.Entity.AsistenciaTaller;
+import com.CertiSafe.secu.Enum.EstadoAsistencia;
+
 import java.util.*;
 
 public interface ServiceAsistenciaTaller {
@@ -13,4 +15,6 @@ public interface ServiceAsistenciaTaller {
     AsistenciaTaller actualizar(Long id, AsistenciaTaller asistencia);
 
     void registrarAusencia(Long id);
+
+    List<AsistenciaTaller> listarPorTaller(Long idTaller, EstadoAsistencia estado);
 }

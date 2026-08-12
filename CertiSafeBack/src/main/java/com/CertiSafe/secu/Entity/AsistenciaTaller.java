@@ -26,4 +26,8 @@ public class AsistenciaTaller {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_taller", nullable = false)
     private Taller taller;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 }

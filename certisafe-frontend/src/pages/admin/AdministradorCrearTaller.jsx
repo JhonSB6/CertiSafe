@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 function AdministradorCrearTaller({ volver }) {
 
     const [tiposCertificacion, setTiposCertificacion] = useState([]);
+    const [capacitadores, setCapacitadores] = useState([]);
+    const [capacitador, setCapacitador] = useState("");
 
     const [nombre, setNombre] = useState("");
     const [descripcion, setDescripcion] = useState("");
@@ -53,6 +55,35 @@ function AdministradorCrearTaller({ volver }) {
                 );
             }
         };
+        const cargarCapacitadores = async () => {
+
+            try {
+
+                const respuesta = await fetch(
+                    "http://localhost:8080/usuarios/capacitadores"
+                );
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        "No fue posible cargar los capacitadores"
+                    );
+                }
+
+                const datos = await respuesta.json();
+
+                setCapacitadores(datos);
+
+            } catch (error) {
+
+                console.error(error);
+
+                setError(
+                    "No fue posible cargar los capacitadores."
+                );
+            }
+        };
+
+        cargarCapacitadores();
 
         cargarTiposCertificacion();
 
@@ -139,7 +170,12 @@ function AdministradorCrearTaller({ volver }) {
             );
             return;
         }
-
+        if (!capacitador) {
+            setError(
+                "Selecciona un capacitador."
+            );
+            return;
+        }
         if (horaFin <= horaInicio) {
             setError(
                 "La hora de finalización debe ser posterior a la hora de inicio."
@@ -172,6 +208,9 @@ function AdministradorCrearTaller({ volver }) {
                         tipoCertificacion: {
                             idTipoCertificacion:
                                 Number(tipoCertificacion)
+                        },
+                        capacitador: {
+                            idusuario: Number(capacitador)
                         }
 
                     })
@@ -197,6 +236,7 @@ function AdministradorCrearTaller({ volver }) {
             setHoraFin("");
             setAforo("");
             setTipoCertificacion("");
+            setCapacitador("");
 
         } catch (error) {
 
@@ -399,6 +439,38 @@ function AdministradorCrearTaller({ volver }) {
                                 value={tipo.idTipoCertificacion}
                             >
                                 {tipo.nombre}
+                            </option>
+
+                        ))}
+
+                    </select>
+
+                </div>
+                <div className="campo-formulario">
+
+                    <label>
+                        Capacitador
+                    </label>
+
+                    <select
+                        value={capacitador}
+                        onChange={(e) =>
+                            setCapacitador(e.target.value)
+                        }
+                        required
+                    >
+
+                        <option value="">
+                            Selecciona un capacitador
+                        </option>
+
+                        {capacitadores.map((usuario) => (
+
+                            <option
+                                key={usuario.idusuario}
+                                value={usuario.idusuario}
+                            >
+                                {usuario.nombre} {usuario.apellido}
                             </option>
 
                         ))}

@@ -40,5 +40,4 @@ public class Certificacion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_certificacion", nullable = false)
     private TipoCertificacion tipoCertificacion;
-
 }

@@ -1,7 +1,11 @@
 package com.CertiSafe.secu.Service.impl;
-import com.CertiSafe.secu.Entity.Certificacion;
+import com.CertiSafe.secu.Entity.*;
+import com.CertiSafe.secu.Enum.EstadoAsistencia;
+import com.CertiSafe.secu.Enum.EstadoCertificacion;
+
+import com.CertiSafe.secu.Enum.EstadoTaller;
+import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceCertificacion;
-import com.CertiSafe.secu.Repository.RepositoryCertificacion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +14,12 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ServiceCertificacionimpl implements ServiceCertificacion{
+
     private final RepositoryCertificacion repositoryCertificacion;
+    private final RepositoryTaller repositoryTaller;
+    private final RepositoryAsistenciaTaller repositoryAsistenciaTaller;
+    private final RepositoryUsuario repositoryUsuario;
+    private final RepositoryHistorialCertificacion repositoryHistorialCertificacion;
 
     @Override
     public List<Certificacion> listarCertificacion(){
@@ -55,6 +64,101 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
                                 "Certificacion no encontrada con id: " + id));
 
         repositoryCertificacion.delete(existente);
+    }
+    @Override
+    public Certificacion certificarOperario(
+            Long idTaller,
+            Long idAsistencia,
+            Long idCapacitador) {
+
+        Taller taller = repositoryTaller.findById(idTaller)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Taller no encontrado con id: " + idTaller));
+
+        if (taller.getEstado() != EstadoTaller.FINALIZADO) {
+            throw new RuntimeException(
+                    "El taller todavía no ha finalizado");
+        }
+
+        if (taller.getCapacitador() == null ||
+                !taller.getCapacitador()
+                        .getIdusuario()
+                        .equals(idCapacitador)) {
+
+            throw new RuntimeException(
+                    "El capacitador no está asignado a este taller");
+        }
+
+        AsistenciaTaller asistencia =
+                repositoryAsistenciaTaller.findById(idAsistencia)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Asistencia no encontrada con id: "
+                                                + idAsistencia));
+
+        if (!asistencia.getTaller()
+                .getIdtaller()
+                .equals(idTaller)) {
+
+            throw new RuntimeException(
+                    "La asistencia no pertenece a este taller");
+        }
+
+        if (asistencia.getEstado() != EstadoAsistencia.PRESENTE) {
+            throw new RuntimeException(
+                    "El operario no tiene asistencia registrada como PRESENTE");
+        }
+
+        Usuario usuario = asistencia.getUsuario();
+
+        Long idTipoCertificacion =
+                taller.getTipoCertificacion()
+                        .getIdTipoCertificacion();
+
+        boolean yaTieneCertificacion =
+                repositoryCertificacion
+                        .findByUsuarioIdusuarioAndTipoCertificacionIdTipoCertificacionAndEstado(
+                                usuario.getIdusuario(),
+                                idTipoCertificacion,
+                                EstadoCertificacion.VIGENTE)
+                        .isPresent();
+
+        if (yaTieneCertificacion) {
+            throw new RuntimeException(
+                    "El operario ya tiene esta certificación vigente");
+        }
+
+        Certificacion certificacion = new Certificacion();
+
+        certificacion.setNombre(
+                taller.getTipoCertificacion().getNombre());
+
+        certificacion.setFechaExpedicion(
+                new java.sql.Date(System.currentTimeMillis()));
+
+        certificacion.setFechaVigencia(
+                new java.sql.Date(System.currentTimeMillis()));
+
+        certificacion.setEstado(
+                EstadoCertificacion.VIGENTE);
+
+        certificacion.setAsistencia(asistencia);
+        certificacion.setUsuario(usuario);
+        certificacion.setTipoCertificacion(
+                taller.getTipoCertificacion());
+
+        Certificacion certificacionGuardada =
+                repositoryCertificacion.save(certificacion);
+
+        HistorialCertificacion historial =
+                new HistorialCertificacion();
+
+        historial.setCertificacion(certificacionGuardada);
+
+        repositoryHistorialCertificacion.save(historial);
+
+        return certificacionGuardada;
     }
 }
 

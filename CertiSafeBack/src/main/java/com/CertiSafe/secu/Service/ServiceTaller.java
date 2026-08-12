@@ -3,6 +3,7 @@ package com.CertiSafe.secu.Service;
 import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
+import com.CertiSafe.secu.Enum.EstadoTaller;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,9 @@ public interface ServiceTaller {
     void revisarAforo(Long id);
 
     Map<String, Object> obtenerResumen(Long idTaller);
+
+    List<Taller> listarTalleresFinalizadosPorCapacitador(Long idCapacitador);
+
+    List<Taller> listarPorCapacitador(Long idCapacitador,EstadoTaller estado);
+
 }
