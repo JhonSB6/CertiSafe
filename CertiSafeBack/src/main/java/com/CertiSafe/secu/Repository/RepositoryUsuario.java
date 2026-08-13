@@ -9,6 +9,6 @@ public interface RepositoryUsuario extends JpaRepository<Usuario,Long> {
 
     Optional<Usuario> findByDocumento(String documento);
 
-    List<Usuario> findByRolNombre(String nombre, EstadoUsuario estado);
+    List<Usuario> findByRolNombreAndEstado(String nombre, EstadoUsuario estado);
 
 }

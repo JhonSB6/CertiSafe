@@ -82,14 +82,6 @@ public class ControllerTaller {
         );
     }
 
-    @PostMapping("/{id}/revisar-aforo")
-    public ResponseEntity<Void> revisarAforo(
-            @PathVariable Long id) {
-
-        serviceTaller.revisarAforo(id);
-
-        return ResponseEntity.noContent().build();
-    }
     @PostMapping("/{id}/iniciar")
     public ResponseEntity<Void> iniciarTaller(
             @PathVariable Long id,

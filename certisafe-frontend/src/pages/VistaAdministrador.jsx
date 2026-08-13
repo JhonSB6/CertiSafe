@@ -1,10 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./VistaAdministrador.css";
 import AdministradorTalleres from "./admin/AdministradorTalleres";
+import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 
 function VistaAdministrador({ usuario, cerrarSesion }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
+    const [notificacionesNoLeidas, setNotificacionesNoLeidas] =  useState(0);
+
+    useEffect(() => {
+
+        if (!usuario?.idusuario) {
+            return;
+        }
+
+        const cargarContador = async () => {
+
+            try {
+
+                const respuesta = await fetch(
+                    `http://localhost:8080/api/notificaciones/usuario/${usuario.idusuario}/no-leidas/count`
+                );
+
+                if (!respuesta.ok) {
+                    return;
+                }
+
+                const cantidad = await respuesta.json();
+
+                setNotificacionesNoLeidas(cantidad);
+
+            } catch (error) {
+
+                console.error(
+                    "Error consultando notificaciones:",
+                    error
+                );
+            }
+        };
+
+        cargarContador();
+
+        const intervalo = setInterval(
+            cargarContador,
+            10000
+        );
+
+        return () => clearInterval(intervalo);
+
+    }, [usuario]);
 
     return (
 
@@ -84,8 +128,22 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                             setVistaActual("notificaciones")
                         }
                     >
-                        🔔
-                        <span>Notificaciones</span>
+
+    <span className="icono-notificacion">
+        🔔
+
+        {notificacionesNoLeidas > 0 && (
+            <span className="contador-notificaciones">
+                {notificacionesNoLeidas}
+            </span>
+        )}
+
+    </span>
+
+                        <span>
+        Notificaciones
+    </span>
+
                     </button>
 
                 </nav>
@@ -224,20 +282,9 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
 
 
                 {vistaActual === "notificaciones" && (
-
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Notificaciones
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar las
-                            notificaciones del sistema.
-                        </p>
-
-                    </section>
-
+                    <AdministradorNotificaciones
+                        usuario={usuario}
+                    />
                 )}
 
 

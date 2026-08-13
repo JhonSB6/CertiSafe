@@ -11,4 +11,6 @@ public interface RepositoryCertificacion extends JpaRepository<Certificacion, Lo
             Long idTipoCertificacion,
             EstadoCertificacion estado);
 
+    List<Certificacion> findByUsuarioIdusuario(Long idUsuario);
+
 }

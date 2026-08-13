@@ -11,4 +11,6 @@ public interface RepositoryNotificacion extends JpaRepository<Notificacion, Long
     List<Notificacion> findByUsuarioIdusuarioOrderByFechaDesc(Long idUsuario);
 
     boolean existsByTallerIdtallerAndTipo(Long idTaller, EstadoTipoNotificacion tipo);
+
+    long countByUsuarioIdusuarioAndLeidaFalse(Long idUsuario);
 }

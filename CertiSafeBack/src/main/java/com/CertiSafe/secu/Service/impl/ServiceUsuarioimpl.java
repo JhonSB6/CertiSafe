@@ -29,7 +29,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
 
     @Override
     public List<Usuario> listarOperarios() {
-        return repositoryUsuario.findByRolNombre("OPERARIO", EstadoUsuario.ACTIVO);
+        return repositoryUsuario.findByRolNombreAndEstado("OPERARIO", EstadoUsuario.ACTIVO);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
     @Override
     public List<Usuario> listarCapacitadores() {
 
-        return repositoryUsuario.findByRolNombre(
+        return repositoryUsuario.findByRolNombreAndEstado(
                 "CAPACITADOR",
                 EstadoUsuario.ACTIVO
         );

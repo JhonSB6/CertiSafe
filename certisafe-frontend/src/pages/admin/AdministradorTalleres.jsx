@@ -191,6 +191,12 @@ function AdministradorTalleres() {
                                     <strong>Estado:</strong>{" "}
                                     {taller.estado}
                                 </p>
+                                <p>
+                                    <strong>Capacitador:</strong>{" "}
+                                    {taller.capacitador
+                                        ? `${taller.capacitador.nombre} ${taller.capacitador.apellido}`
+                                        : "Sin asignar"}
+                                </p>
                         {resumenes[taller.idtaller] && (
 
                                                         <div className="resumen-aforo">

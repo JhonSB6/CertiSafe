@@ -105,15 +105,48 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                 );
             }
 
-            const datos =
-                await respuesta.json();
+            const datos = await respuesta.json();
 
             console.log(
                 "ASISTENCIAS PRESENTES:",
                 datos
             );
 
-            setAsistencias(datos);
+            const tipoCertificacion =
+                talleres.find(
+                    (taller) => taller.idtaller === idTaller
+                )?.tipoCertificacion?.idTipoCertificacion;
+
+            const asistenciasConCertificacion =
+                await Promise.all(
+                    datos.map(async (asistencia) => {
+
+                        const respuestaCertificacion =
+                            await fetch(
+                                `http://localhost:8080/api/certificaciones/verificar/${asistencia.usuario.idusuario}/${tipoCertificacion}`
+                            );
+
+                        if (!respuestaCertificacion.ok) {
+                            return {
+                                ...asistencia,
+                                estadoCertificacion: "NO_CERTIFICADO"
+                            };
+                        }
+
+                        const certificado =
+                            await respuestaCertificacion.json();
+
+                        return {
+                            ...asistencia,
+                            estadoCertificacion:
+                                certificado
+                                    ? "CERTIFICADO"
+                                    : "NO_CERTIFICADO"
+                        };
+                    })
+                );
+
+            setAsistencias(asistenciasConCertificacion);
 
             setTallerSeleccionado(
                 idTaller

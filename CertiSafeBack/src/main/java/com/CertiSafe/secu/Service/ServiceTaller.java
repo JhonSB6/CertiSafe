@@ -24,12 +24,18 @@ public interface ServiceTaller {
 
     List<Usuario> buscarOperariosDisponibles(Long idTaller);
 
-    void revisarAforo(Long id);
+    void revisarAforoTresMinutosAntes(Long idTaller);
+
+    void revisarAforoUnMinutoAntes(Long idTaller);
+
+    void iniciarAutomaticamente(Long idTaller);
 
     Map<String, Object> obtenerResumen(Long idTaller);
 
     List<Taller> listarTalleresFinalizadosPorCapacitador(Long idCapacitador);
 
     List<Taller> listarPorCapacitador(Long idCapacitador,EstadoTaller estado);
+
+    void finalizarTaller(Long idTaller);
 
 }

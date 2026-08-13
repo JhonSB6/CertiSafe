@@ -28,6 +28,18 @@ public class ControllerCertificacion {
                 )
         );
     }
+    @GetMapping("/verificar/{idUsuario}/{idTipoCertificacion}")
+    public ResponseEntity<Boolean> verificarCertificacion(
+            @PathVariable Long idUsuario,
+            @PathVariable Long idTipoCertificacion) {
+
+        return ResponseEntity.ok(
+                serviceCertificacion.estaCertificado(
+                        idUsuario,
+                        idTipoCertificacion)
+        );
+    }
+
 }
 
 

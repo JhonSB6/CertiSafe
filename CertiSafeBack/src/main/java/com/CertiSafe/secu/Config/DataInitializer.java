@@ -72,8 +72,8 @@ public class DataInitializer {
                 repositoryUsuario.save(new Usuario(
                         null,
                         "1000000001",
-                        "Carlos",
-                        "Administrador",
+                        "Jhon",
+                        "Suarez",
                         "admin@certisafe.com",
                         passwordEncoder.encode("123456"),
                         EstadoUsuario.ACTIVO,
@@ -112,6 +112,56 @@ public class DataInitializer {
                         EstadoUsuario.ACTIVO,
                         capacitador
                 ));
+                repositoryUsuario.save(new Usuario(
+                        null,
+                        "1000000005",
+                        "Jairo",
+                        "Suarez",
+                        "jairo@certisafe.com",
+                        passwordEncoder.encode("123456"),
+                        EstadoUsuario.ACTIVO,
+                        capacitador
+                ));
+                repositoryUsuario.save(new Usuario(
+                        null,
+                        "1000000006",
+                        "Camila",
+                        "Lopez",
+                        "camila@certisafe.com",
+                        passwordEncoder.encode("123456"),
+                        EstadoUsuario.ACTIVO,
+                        capacitador
+                ));
+                repositoryUsuario.save(new Usuario(
+                        null,
+                        "1000000007",
+                        "Orlando",
+                        "Ruiz",
+                        "orlando@certisafe.com",
+                        passwordEncoder.encode("123456"),
+                        EstadoUsuario.INACTIVO,
+                        operario
+                ));
+                repositoryUsuario.save(new Usuario(
+                        null,
+                        "1000000008",
+                        "Daniela",
+                        "Perez",
+                        "daniela@certisafe.com",
+                        passwordEncoder.encode("123456"),
+                        EstadoUsuario.ACTIVO,
+                        operario
+                ));
+                repositoryUsuario.save(new Usuario(
+                        null,
+                        "1000000009",
+                        "Maria",
+                        "Gonzalez",
+                        "maria@certisafe.com",
+                        passwordEncoder.encode("123456"),
+                        EstadoUsuario.ACTIVO,
+                        operario
+                ));
             }
 
             // Talleres
@@ -129,16 +179,29 @@ public class DataInitializer {
                         .findByNombre("Espacios confinados")
                         .orElseThrow();
 
+                Usuario capacitadorAna=
+                        repositoryUsuario.findByDocumento("1000000004")
+                                .orElseThrow();
+
+                Usuario capacitadorJairo=
+                        repositoryUsuario.findByDocumento("1000000005")
+                                .orElseThrow();
+
+                Usuario capacitadorCamila=
+                        repositoryUsuario.findByDocumento("1000000006")
+                                .orElseThrow();
+
 
                 Taller taller1 = new Taller();
                 taller1.setNombre("Trabajo seguro en alturas");
                 taller1.setDescripcion("Capacitación sobre procedimientos y medidas de seguridad para trabajo en alturas.");
-                taller1.setFecha(LocalDate.of(2026, 8, 15));
+                taller1.setFecha(LocalDate.of(2026, 8, 14));
                 taller1.setHoraInicio(LocalTime.of(8, 0));
                 taller1.setHoraFin(LocalTime.of(12, 0));
-                taller1.setAforo(10);
+                taller1.setAforo(5);
                 taller1.setEstado(EstadoTaller.PROGRAMADO);
                 taller1.setTipoCertificacion(alturas);
+                taller1.setCapacitador(capacitadorAna);
 
                 repositoryTaller.save(taller1);
 
@@ -146,25 +209,26 @@ public class DataInitializer {
                 Taller taller2 = new Taller();
                 taller2.setNombre("Manejo seguro de productos químicos");
                 taller2.setDescripcion("Capacitación sobre manipulación y prevención de riesgos con productos químicos.");
-                taller2.setFecha(LocalDate.of(2026, 8, 18));
+                taller2.setFecha(LocalDate.of(2026, 8, 15));
                 taller2.setHoraInicio(LocalTime.of(8, 0));
                 taller2.setHoraFin(LocalTime.of(12, 0));
-                taller2.setAforo(10);
+                taller2.setAforo(5);
                 taller2.setEstado(EstadoTaller.PROGRAMADO);
                 taller2.setTipoCertificacion(quimicos);
-
+                taller2.setCapacitador(capacitadorJairo);
                 repositoryTaller.save(taller2);
 
 
                 Taller taller3 = new Taller();
                 taller3.setNombre("Seguridad en espacios confinados");
                 taller3.setDescripcion("Capacitación sobre identificación de riesgos y procedimientos en espacios confinados.");
-                taller3.setFecha(LocalDate.of(2026, 8, 20));
+                taller3.setFecha(LocalDate.of(2026, 8, 16));
                 taller3.setHoraInicio(LocalTime.of(8, 0));
                 taller3.setHoraFin(LocalTime.of(12, 0));
-                taller3.setAforo(10);
+                taller3.setAforo(5);
                 taller3.setEstado(EstadoTaller.PROGRAMADO);
                 taller3.setTipoCertificacion(espaciosConfinados);
+                taller3.setCapacitador(capacitadorCamila);
 
                 repositoryTaller.save(taller3);
             }

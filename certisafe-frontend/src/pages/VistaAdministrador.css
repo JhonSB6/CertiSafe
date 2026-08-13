@@ -757,3 +757,76 @@
  .resumen-aforo strong {
      color: #475569;
  }
+.lista-notificaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 25px;
+}
+
+.notificacion-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    background: white;
+    border-left: 5px solid #0d47a1;
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.notificacion-icono {
+    font-size: 28px;
+}
+
+.notificacion-contenido {
+    flex: 1;
+}
+
+.notificacion-contenido h3 {
+    margin: 0 0 8px 0;
+    color: #0d47a1;
+}
+
+.notificacion-contenido p {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.notificacion-contenido small {
+    color: #777;
+}
+.icono-notificacion {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contador-notificaciones {
+    position: absolute;
+
+    top: -9px;
+    right: -12px;
+
+    min-width: 18px;
+    height: 18px;
+
+    padding: 0 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #d32f2f;
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 11px;
+    font-weight: bold;
+}

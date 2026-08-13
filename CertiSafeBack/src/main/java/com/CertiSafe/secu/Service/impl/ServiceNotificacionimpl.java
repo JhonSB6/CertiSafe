@@ -52,4 +52,11 @@ public class ServiceNotificacionimpl implements ServiceNotificacion {
 
         repositoryNotificacion.save(notificacion);
     }
+    @Override
+    public long contarNoLeidas(Long idUsuario) {
+
+        return repositoryNotificacion
+                .countByUsuarioIdusuarioAndLeidaFalse(
+                        idUsuario);
+    }
 }

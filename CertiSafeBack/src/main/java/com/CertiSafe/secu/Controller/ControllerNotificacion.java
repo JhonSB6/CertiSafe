@@ -51,4 +51,12 @@ public class ControllerNotificacion {
 
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/usuario/{idUsuario}/no-leidas/count")
+    public ResponseEntity<Long> contarNoLeidas(
+            @PathVariable Long idUsuario) {
+
+        return ResponseEntity.ok(
+                serviceNotificacion.contarNoLeidas(idUsuario)
+        );
+    }
 }

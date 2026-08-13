@@ -9,6 +9,7 @@ import com.CertiSafe.secu.Service.ServiceCertificacion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -64,6 +65,11 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
                                 "Certificacion no encontrada con id: " + id));
 
         repositoryCertificacion.delete(existente);
+    }
+    @Override
+    public List<Certificacion> listarCertificacionesUsuario(Long idUsuario) {
+
+        return repositoryCertificacion.findByUsuarioIdusuario(idUsuario);
     }
     @Override
     public Certificacion certificarOperario(
@@ -134,11 +140,14 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
         certificacion.setNombre(
                 taller.getTipoCertificacion().getNombre());
 
+        LocalDate fechaExpedicion = LocalDate.now();
+        LocalDate fechaVigencia = fechaExpedicion.plusYears(1);
+
         certificacion.setFechaExpedicion(
-                new java.sql.Date(System.currentTimeMillis()));
+                java.sql.Date.valueOf(fechaExpedicion));
 
         certificacion.setFechaVigencia(
-                new java.sql.Date(System.currentTimeMillis()));
+                java.sql.Date.valueOf(fechaVigencia));
 
         certificacion.setEstado(
                 EstadoCertificacion.VIGENTE);
@@ -159,6 +168,18 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
         repositoryHistorialCertificacion.save(historial);
 
         return certificacionGuardada;
+    }
+    @Override
+    public boolean estaCertificado(
+            Long idUsuario,
+            Long idTipoCertificacion) {
+
+        return repositoryCertificacion
+                .findByUsuarioIdusuarioAndTipoCertificacionIdTipoCertificacionAndEstado(
+                        idUsuario,
+                        idTipoCertificacion,
+                        EstadoCertificacion.VIGENTE)
+                .isPresent();
     }
 }
 

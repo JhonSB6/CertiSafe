@@ -14,4 +14,6 @@ public interface ServiceNotificacion {
     Notificacion guardar(Notificacion notificacion);
 
     void marcarComoLeida(Long id);
+
+    long contarNoLeidas(Long idUsuario);
 }

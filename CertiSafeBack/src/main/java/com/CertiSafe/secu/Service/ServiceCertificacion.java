@@ -14,4 +14,8 @@ public interface ServiceCertificacion {
     void eliminar(Long id);
 
     Certificacion certificarOperario(Long idTaller, Long idAsistencia, Long idCapacitador);
+
+    List<Certificacion> listarCertificacionesUsuario(Long idUsuario);
+
+    boolean estaCertificado(Long idUsuario, Long idTipoCertificacion);
 }
