@@ -8,6 +8,53 @@ function VistaOperario({ usuario, cerrarSesion }) {
     const [talleres, setTalleres] = useState([]);
     const [cargandoTalleres, setCargandoTalleres] = useState(false);
     const [errorTalleres, setErrorTalleres] = useState("");
+    const [certificaciones, setCertificaciones] = useState([]);
+    const [cargandoCertificaciones, setCargandoCertificaciones] = useState(false);
+    const [errorCertificaciones, setErrorCertificaciones] = useState("");
+
+    // ==========================================
+    // CARGAR CERTIFICACIONES DEL OPERARIO
+    // ==========================================
+
+    const cargarCertificaciones = async () => {
+
+        setCargandoCertificaciones(true);
+        setErrorCertificaciones("");
+
+        try {
+
+            const respuesta = await fetch(
+                `http://localhost:8080/api/certificaciones/usuario/${usuario.idUsuario}`
+            );
+
+            if (!respuesta.ok) {
+                throw new Error(
+                    "No fue posible consultar las certificaciones"
+                );
+            }
+
+            const datos = await respuesta.json();
+
+            console.log(
+                "CERTIFICACIONES DEL OPERARIO:",
+                datos
+            );
+
+            setCertificaciones(datos);
+
+        } catch (error) {
+
+            console.error(error);
+
+            setErrorCertificaciones(
+                "No fue posible cargar tus certificaciones."
+            );
+
+        } finally {
+
+            setCargandoCertificaciones(false);
+        }
+    };
 
     // ==========================================
         // INSCRIBIRSE AL TALLER
@@ -98,6 +145,10 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
         if (vistaActual === "talleres") {
             cargarTalleres();
+        }
+
+        if (vistaActual === "certificaciones") {
+            cargarCertificaciones();
         }
 
     }, [vistaActual]);
@@ -563,9 +614,169 @@ function VistaOperario({ usuario, cerrarSesion }) {
                         </h1>
 
                         <p>
-                            Aquí podrás consultar tus
-                            certificaciones y su estado.
+                            Aquí puedes consultar las certificaciones
+                            obtenidas durante tus capacitaciones.
                         </p>
+
+
+                        {/* CARGANDO */}
+
+                        {cargandoCertificaciones && (
+
+                            <p>
+                                Cargando certificaciones...
+                            </p>
+
+                        )}
+
+
+                        {/* ERROR */}
+
+                        {errorCertificaciones && (
+
+                            <p className="mensaje-error">
+                                {errorCertificaciones}
+                            </p>
+
+                        )}
+
+
+                        {/* SIN CERTIFICACIONES */}
+
+                        {!cargandoCertificaciones &&
+                            !errorCertificaciones &&
+                            certificaciones.length === 0 && (
+
+                                <div className="sin-certificaciones">
+
+                                    <h3>
+                                        No tienes certificaciones
+                                    </h3>
+
+                                    <p>
+                                        Cuando completes una capacitación
+                                        y seas certificado por el capacitador,
+                                        aparecerá aquí.
+                                    </p>
+
+                                </div>
+
+                            )}
+
+
+                        {/* CERTIFICACIONES */}
+
+                        {!cargandoCertificaciones &&
+                            !errorCertificaciones &&
+                            certificaciones.length > 0 && (
+
+                                <div className="tarjetas-certificaciones">
+
+                                    {certificaciones.map(
+                                        (certificacion) => (
+
+                                            <article
+                                                className="certificacion-card"
+                                                key={
+                                                    certificacion.idcertificacion
+                                                }
+                                            >
+
+                                                <div className="certificacion-icono">
+
+                                                </div>
+
+
+                                                <div className="certificacion-contenido">
+
+                                                    <h2>
+                                                        {
+                                                            certificacion.nombre
+                                                        }
+                                                    </h2>
+
+
+                                                    <span
+                                                        className={
+                                                            certificacion.estado ===
+                                                            "VIGENTE"
+                                                                ? "estado-certificacion-vigente"
+                                                                : "estado-certificacion"
+                                                        }
+                                                    >
+                                                        ✓{" "}
+                                                        {
+                                                            certificacion.estado
+                                                        }
+                                                    </span>
+
+
+                                                    <p>
+                                                        <strong>
+                                                            Fecha de expedición:
+                                                        </strong>{" "}
+                                                        {
+                                                            new Date(
+                                                                certificacion.fechaExpedicion
+                                                            ).toLocaleDateString()
+                                                        }
+                                                    </p>
+
+
+                                                    <p>
+                                                        <strong>
+                                                            Fecha de vigencia:
+                                                        </strong>{" "}
+                                                        {
+                                                            new Date(
+                                                                certificacion.fechaVigencia
+                                                            ).toLocaleDateString()
+                                                        }
+                                                    </p>
+
+
+                                                    {certificacion.asistencia?.taller && (
+
+                                                        <p>
+                                                            <strong>
+                                                                Taller:
+                                                            </strong>{" "}
+                                                            {
+                                                                certificacion
+                                                                    .asistencia
+                                                                    .taller
+                                                                    .nombre
+                                                            }
+                                                        </p>
+
+                                                    )}
+
+
+                                                    {certificacion.tipoCertificacion && (
+
+                                                        <p>
+                                                            <strong>
+                                                                Tipo:
+                                                            </strong>{" "}
+                                                            {
+                                                                certificacion
+                                                                    .tipoCertificacion
+                                                                    .nombre
+                                                            }
+                                                        </p>
+
+                                                    )}
+
+                                                </div>
+
+                                            </article>
+
+                                        )
+                                    )}
+
+                                </div>
+
+                            )}
 
                     </section>
 

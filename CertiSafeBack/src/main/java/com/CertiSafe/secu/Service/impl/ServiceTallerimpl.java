@@ -352,7 +352,7 @@ public class ServiceTallerimpl implements ServiceTaller {
         EventoTaller evento =
                 new EventoTaller(
                         taller,
-                        TipoEventoTaller.AFORO_INCOMPLETO_UN_MINUTO);
+                        TipoEventoTaller.AFORO_INCOMPLETO_TRES_MINUTOS);
 
         publisherTaller.notificarObservers(evento);
     }

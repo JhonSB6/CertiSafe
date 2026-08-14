@@ -72,6 +72,12 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
         return repositoryCertificacion.findByUsuarioIdusuario(idUsuario);
     }
     @Override
+    public List<Certificacion> listarPorUsuario(Long idUsuario) {
+
+        return repositoryCertificacion
+                .findByUsuarioIdusuario(idUsuario);
+    }
+    @Override
     public Certificacion certificarOperario(
             Long idTaller,
             Long idAsistencia,

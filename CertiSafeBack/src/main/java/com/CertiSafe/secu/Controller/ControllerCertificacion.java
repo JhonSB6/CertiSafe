@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/certificaciones")
 @RequiredArgsConstructor
@@ -37,6 +39,14 @@ public class ControllerCertificacion {
                 serviceCertificacion.estaCertificado(
                         idUsuario,
                         idTipoCertificacion)
+        );
+    }
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<Certificacion>> listarPorUsuario(
+            @PathVariable Long idUsuario) {
+
+        return ResponseEntity.ok(
+                serviceCertificacion.listarPorUsuario(idUsuario)
         );
     }
 

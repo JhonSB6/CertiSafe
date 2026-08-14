@@ -31,7 +31,7 @@ public class ObserverNotificacionTaller
     public void actualizar(EventoTaller evento) {
 
         if (evento.getTipoEvento()
-                != TipoEventoTaller.AFORO_INCOMPLETO_UN_MINUTO) {
+                != TipoEventoTaller.AFORO_INCOMPLETO_TRES_MINUTOS) {
 
             return;
         }

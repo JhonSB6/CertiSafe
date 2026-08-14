@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import "./VistaAdministrador.css";
+import BotonCerrarSesion from "../components/BotonCerrarSesion";
 import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 
-function VistaAdministrador({ usuario, cerrarSesion }) {
+function VistaAdministrador({ usuario, onCerrarSesion }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
     const [notificacionesNoLeidas, setNotificacionesNoLeidas] =  useState(0);
@@ -165,10 +166,7 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                     </button>
 
 
-                    <button onClick={cerrarSesion}>
-                        🚪
-                        <span>Cerrar sesión</span>
-                    </button>
+                    <BotonCerrarSesion onCerrar={onCerrarSesion} />
 
                 </div>
 

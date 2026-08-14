@@ -18,4 +18,6 @@ public interface ServiceCertificacion {
     List<Certificacion> listarCertificacionesUsuario(Long idUsuario);
 
     boolean estaCertificado(Long idUsuario, Long idTipoCertificacion);
+
+    List<Certificacion> listarPorUsuario(Long idUsuario);
 }

@@ -29,7 +29,12 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                 console.log(
                     "ID CAPACITADOR:",
-                    usuario.idUsuario
+                    usuario.idusuario
+                );
+
+                console.log(
+                    "OBJETO USUARIO COMPLETO:",
+                    usuario
                 );
 
                 const url =
@@ -183,6 +188,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
             const idAsistencia =
                 asistencia.idasistencia;
+
+                console.log("USUARIO EN CERTIFICAR:", usuario);
+                console.log("ID USUARIO:", usuario?.idusuario);
+                console.log("ID USUARIO ANTIGUO:", usuario?.idUsuario);
 
             const idCapacitador =
                 usuario.idUsuario;
