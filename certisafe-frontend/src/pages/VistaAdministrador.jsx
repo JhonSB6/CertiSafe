@@ -4,7 +4,7 @@ import BotonCerrarSesion from "../components/BotonCerrarSesion";
 import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 
-function VistaAdministrador({ usuario, onCerrarSesion }) {
+function VistaAdministrador({ usuario, cerrarSesion }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
     const [notificacionesNoLeidas, setNotificacionesNoLeidas] =  useState(0);
@@ -165,8 +165,12 @@ function VistaAdministrador({ usuario, onCerrarSesion }) {
                         <span>Mi perfil</span>
                     </button>
 
-
-                    <BotonCerrarSesion onCerrar={onCerrarSesion} />
+                    <button
+                        className="btn-cerrar-sesion"
+                        onClick={cerrarSesion}
+                    >
+                        Cerrar sesión
+                    </button>
 
                 </div>
 

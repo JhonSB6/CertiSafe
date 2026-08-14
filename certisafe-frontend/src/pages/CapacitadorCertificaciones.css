@@ -1,298 +1,720 @@
-.btn-certificar.certificado {
-    background-color: #166534;
-    cursor: default;
-    opacity: 0.8;
-}
-/* =========================================================
-   BANNER / NAVBAR CAPACITADOR
-========================================================= */
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
 
-.capacitador-navbar {
-    width: 100%;
-    min-height: 70px;
-    padding: 0 30px;
-
+.dashboard-capacitador {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    min-height: 100vh;
+    width: 100%;
+
+    background: #f4f7fb;
+
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1e293b;
+}
+
+
+/* =========================================
+   MENÚ LATERAL
+========================================= */
+
+.menu-capacitador {
+    width: 280px;
+    min-height: 100vh;
+
+    background: #123f68;
+    color: white;
+
+    padding: 30px 20px;
 
     box-sizing: border-box;
 
-    background-color: #111827;
-    border-bottom: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
 
-    margin-bottom: 35px;
+    flex-shrink: 0;
 }
 
 
-/* =========================================================
-   LOGO CERTISAFE
-========================================================= */
+/* =========================================
+   LOGO
+========================================= */
 
-.certisafe-logo {
-    color: #60a5fa;
-    font-size: 24px;
+.logo-capacitador {
+    text-align: center;
+
+    font-size: 32px;
     font-weight: 800;
-    letter-spacing: 1px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 55px;
 }
 
 
-/* =========================================================
-   PARTE DERECHA DEL BANNER
-========================================================= */
+/* =========================================
+   NAVEGACIÓN
+========================================= */
 
-.capacitador-navbar-derecha {
+.menu-capacitador nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.menu-capacitador nav button {
+    width: 100%;
+
     display: flex;
     align-items: center;
-    gap: 20px;
+
+    gap: 18px;
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    padding: 17px 20px;
+
+    border-radius: 14px;
+
+    font-size: 17px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
 }
 
 
-/* =========================================================
-   NOMBRE DEL CAPACITADOR
-========================================================= */
+.menu-capacitador nav button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
 
-.capacitador-nombre {
-    color: #e5e7eb;
-    font-size: 15px;
+
+/* =========================================
+   OPCIÓN ACTIVA
+========================================= */
+
+.menu-capacitador nav button.menu-capacitador-activo {
+    background: rgba(255, 255, 255, 0.20);
+}
+
+
+/* =========================================
+   MENÚ INFERIOR
+========================================= */
+
+.menu-capacitador-inferior {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.menu-capacitador-inferior button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 13px 16px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    background: white;
+
+    color: #123f68;
+
+    transition:
+            background 0.2s ease;
+}
+
+
+.menu-capacitador-inferior button:hover {
+    background: #e8eef5;
+}
+
+
+/* =========================================
+   CONTENIDO PRINCIPAL
+========================================= */
+
+.contenido-capacitador {
+    flex: 1;
+
+    padding: 40px 50px;
+
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header-capacitador {
+    display: flex;
+
+    justify-content: flex-end;
+    align-items: center;
+
+    margin-bottom: 40px;
+}
+
+
+/* =========================================
+   USUARIO
+========================================= */
+
+.usuario-capacitador {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.usuario-capacitador strong {
+    display: block;
+
+    font-size: 16px;
+
+    color: #123f68;
+}
+
+
+.usuario-capacitador span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+
+    color: #64748b;
+}
+
+
+/* =========================================
+   AVATAR
+========================================= */
+
+.avatar-capacitador {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #1769aa;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================================
+   SECCIÓN PRINCIPAL
+========================================= */
+
+.capacitador-certificaciones {
+    width: 100%;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.capacitador-header {
+    margin-bottom: 30px;
+}
+
+
+.capacitador-header h1 {
+    margin: 0 0 8px;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #123f68;
+}
+
+
+.capacitador-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   TÍTULOS DE SECCIÓN
+========================================= */
+
+.capacitador-certificaciones > h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    color: #123f68;
+
+    font-size: 24px;
+}
+
+
+/* =========================================
+   MENSAJE
+========================================= */
+
+.mensaje-certificacion {
+    margin-bottom: 25px;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    color: #047857;
+
     font-weight: 500;
 }
 
 
-/* =========================================================
-   BOTÓN CERRAR SESIÓN
-========================================================= */
+/* =========================================
+   SIN TALLERES
+========================================= */
 
-.btn-cerrar-sesion {
-    padding: 9px 16px;
+.sin-talleres {
+    padding: 40px;
 
-    border: 1px solid #4b5563;
-    border-radius: 6px;
+    text-align: center;
 
-    background-color: transparent;
-    color: #e5e7eb;
+    color: #64748b;
 
-    font-size: 14px;
+    background: white;
+
+    border-radius: 16px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+            0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================
+   TARJETAS DE TALLERES
+========================================= */
+
+.talleres-container {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+
+    gap: 25px;
+
+    margin-top: 30px;
+}
+
+
+.taller-card {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+            0 4px 15px rgba(0, 0, 0, 0.06);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.taller-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.09);
+}
+
+
+.taller-card h3 {
+    margin: 0 0 15px;
+
+    color: #123f68;
+
+    font-size: 22px;
+}
+
+
+.taller-card p {
+    margin: 8px 0;
+
+    color: #64748b;
+
+    line-height: 1.5;
+}
+
+
+.taller-card strong {
+    color: #475569;
+}
+
+
+/* =========================================
+   DESCRIPCIÓN DEL TALLER
+========================================= */
+
+.taller-descripcion {
+    color: #64748b;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================
+   ESTADO DEL TALLER
+========================================= */
+
+.estado-finalizado {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    font-weight: bold;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   BOTÓN CERTIFICAR OPERARIOS
+========================================= */
+
+.btn-certificar-operarios {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 12px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 15px;
+
     font-weight: 600;
 
     cursor: pointer;
 
     transition:
-            background-color 0.2s ease,
-            border-color 0.2s ease;
+            background 0.2s ease,
+            transform 0.2s ease;
 }
 
-.btn-cerrar-sesion:hover {
-    background-color: #374151;
-    border-color: #6b7280;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 768px) {
-
-    .capacitador-navbar {
-        padding: 0 20px;
-    }
-
-    .capacitador-navbar-derecha {
-        gap: 10px;
-    }
-
-    .capacitador-nombre {
-        display: none;
-    }
-
-    .certisafe-logo {
-        font-size: 21px;
-    }
-}
-
-.capacitador-certificaciones {
-    min-height: 100vh;
-    padding: 40px 60px;
-    background-color: #f4f6f8;
-    box-sizing: border-box;
-}
-
-.capacitador-header {
-    margin-bottom: 35px;
-}
-
-.capacitador-header h1 {
-    margin: 0 0 8px;
-    font-size: 32px;
-    font-weight: 700;
-    color: #1f2937;
-}
-
-.capacitador-header p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 16px;
-}
-
-.capacitador-seccion h2 {
-    margin-bottom: 20px;
-    color: #1f2937;
-    font-size: 24px;
-}
-
-.capacitador-mensaje {
-    margin-bottom: 25px;
-    padding: 14px 18px;
-    border-radius: 8px;
-    background-color: #e8f5e9;
-    border: 1px solid #a5d6a7;
-    color: #2e7d32;
-}
-
-.talleres-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    gap: 25px;
-}
-
-.taller-card {
-    background-color: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-.taller-card h3 {
-    margin: 0 0 12px;
-    color: #111827;
-    font-size: 20px;
-}
-
-.taller-descripcion {
-    color: #6b7280;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.taller-info {
-    margin-bottom: 20px;
-}
-
-.taller-info p {
-    margin: 9px 0;
-    color: #374151;
-    font-size: 14px;
-}
-
-.taller-info strong {
-    color: #111827;
-}
-
-.taller-estado {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.btn-certificar-operarios {
-    width: 100%;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 7px;
-    background-color: #1976d2;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
 
 .btn-certificar-operarios:hover {
-    background-color: #1565c0;
+    background: #0f4f83;
+
+    transform: translateY(-1px);
 }
+
+
+/* =========================================
+   CONTENEDOR DE OPERARIOS
+========================================= */
 
 .operarios-container {
     margin-top: 25px;
+
     padding-top: 20px;
+
     border-top: 1px solid #e5e7eb;
 }
 
+
 .operarios-container h4 {
     margin: 0 0 18px;
-    color: #1f2937;
+
+    color: #123f68;
+
     font-size: 17px;
 }
 
+
+/* =========================================
+   TARJETA DE OPERARIO
+========================================= */
+
 .operario-card {
     margin-bottom: 12px;
+
     padding: 15px;
-    background-color: #f9fafb;
+
+    background: #f9fafb;
+
     border: 1px solid #e5e7eb;
-    border-radius: 8px;
+
+    border-radius: 10px;
 }
+
 
 .operario-card p {
     margin: 6px 0;
+
     color: #4b5563;
+
     font-size: 14px;
 }
+
 
 .operario-nombre {
     color: #111827 !important;
+
     font-size: 16px !important;
+
     font-weight: 600;
 }
 
-.operario-estado {
+
+/* =========================================
+   ESTADO PRESENTE
+========================================= */
+
+.estado-presente {
     display: inline-block;
+
     margin-top: 5px;
+
     padding: 4px 9px;
+
     border-radius: 15px;
-    background-color: #e8f5e9;
-    color: #2e7d32;
+
+    background: #dcfce7;
+
+    color: #166534;
+
     font-size: 12px;
+
     font-weight: 600;
 }
+
+
+/* =========================================
+   OPERARIO CERTIFICADO
+========================================= */
+
+.operario-certificado {
+    display: inline-block;
+
+    margin-top: 12px !important;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    background: #dcfce7;
+
+    color: #166534 !important;
+
+    font-size: 14px !important;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   BOTÓN CERTIFICAR
+========================================= */
 
 .btn-certificar {
     width: 100%;
+
     margin-top: 12px;
+
     padding: 10px 15px;
+
     border: none;
-    border-radius: 6px;
-    background-color: #2e7d32;
+
+    border-radius: 8px;
+
+    background: #2e7d32;
+
     color: white;
+
     font-size: 14px;
+
     font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
 }
+
 
 .btn-certificar:hover {
-    background-color: #256b29;
+    background: #256b29;
+
+    transform: translateY(-1px);
 }
 
-.capacitador-cargando,
-.capacitador-vacio {
+
+/* =========================================
+   BOTÓN CERTIFICADO
+   Por seguridad visual, si luego agregamos
+   esta clase desde JSX
+========================================= */
+
+.btn-certificar.certificado {
+    background-color: #166534;
+
+    cursor: default;
+
+    opacity: 0.8;
+}
+
+
+/* =========================================
+   CARGANDO
+========================================= */
+
+.capacitador-cargando {
     padding: 40px;
+
     text-align: center;
-    color: #6b7280;
-    background-color: white;
-    border-radius: 10px;
+
+    color: #64748b;
+
+    background: white;
+
+    border-radius: 16px;
+
     border: 1px solid #e5e7eb;
+
+    box-shadow:
+            0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
-@media (max-width: 768px) {
 
-    .capacitador-certificaciones {
-        padding: 25px 20px;
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .menu-capacitador {
+        width: 220px;
     }
+
+    .contenido-capacitador {
+        padding: 30px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .menu-capacitador {
+        width: 80px;
+
+        padding: 25px 10px;
+    }
+
+
+    .logo-capacitador {
+        font-size: 0;
+    }
+
+
+    .menu-capacitador nav button {
+        justify-content: center;
+
+        padding: 15px;
+    }
+
+
+    .menu-capacitador nav button span {
+        display: none;
+    }
+
+
+    .menu-capacitador-inferior button {
+        justify-content: center;
+
+        padding: 13px;
+    }
+
+
+    .menu-capacitador-inferior button span {
+        display: none;
+    }
+
+
+    .contenido-capacitador {
+        padding: 20px;
+    }
+
 
     .talleres-container {
         grid-template-columns: 1fr;
     }
+
 }

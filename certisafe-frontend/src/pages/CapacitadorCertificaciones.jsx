@@ -3,6 +3,8 @@ import "./CapacitadorCertificaciones.css";
 
 function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
+    const [vistaActual, setVistaActual] = useState("inicio");
+
     const [talleres, setTalleres] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [mensaje, setMensaje] = useState("");
@@ -22,32 +24,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
             try {
 
-                console.log(
-                    "USUARIO RECIBIDO:",
-                    usuario
-                );
-
-                console.log(
-                    "ID CAPACITADOR:",
-                    usuario.idusuario
-                );
-
-                console.log(
-                    "OBJETO USUARIO COMPLETO:",
-                    usuario
-                );
-
                 const url =
                     `http://localhost:8080/api/talleres/capacitador/${usuario.idUsuario}/finalizados`;
 
-                console.log("URL:", url);
-
                 const respuesta = await fetch(url);
-
-                console.log(
-                    "STATUS:",
-                    respuesta.status
-                );
 
                 if (!respuesta.ok) {
 
@@ -56,11 +36,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                     );
                 }
 
-                const datos =
-                    await respuesta.json();
+                const datos = await respuesta.json();
 
                 console.log(
-                    "TALLERES:",
+                    "TALLERES FINALIZADOS:",
                     datos
                 );
 
@@ -83,9 +62,11 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
             }
         };
 
-        cargarTalleres();
+        if (usuario?.idUsuario) {
+            cargarTalleres();
+        }
 
-    }, [usuario.idUsuario]);
+    }, [usuario?.idUsuario]);
 
 
     // =========================================================
@@ -117,13 +98,25 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                 datos
             );
 
+
+            // =================================================
+            // OBTENER TIPO DE CERTIFICACIÓN DEL TALLER
+            // =================================================
+
             const tipoCertificacion =
                 talleres.find(
-                    (taller) => taller.idtaller === idTaller
+                    (taller) =>
+                        taller.idtaller === idTaller
                 )?.tipoCertificacion?.idTipoCertificacion;
+
+
+            // =================================================
+            // VERIFICAR CERTIFICACIÓN DE CADA OPERARIO
+            // =================================================
 
             const asistenciasConCertificacion =
                 await Promise.all(
+
                     datos.map(async (asistencia) => {
 
                         const respuestaCertificacion =
@@ -132,9 +125,11 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                             );
 
                         if (!respuestaCertificacion.ok) {
+
                             return {
                                 ...asistencia,
-                                estadoCertificacion: "NO_CERTIFICADO"
+                                estadoCertificacion:
+                                    "NO_CERTIFICADO"
                             };
                         }
 
@@ -148,10 +143,15 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                                     ? "CERTIFICADO"
                                     : "NO_CERTIFICADO"
                         };
+
                     })
+
                 );
 
-            setAsistencias(asistenciasConCertificacion);
+
+            setAsistencias(
+                asistenciasConCertificacion
+            );
 
             setTallerSeleccionado(
                 idTaller
@@ -189,20 +189,19 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
             const idAsistencia =
                 asistencia.idasistencia;
 
-                console.log("USUARIO EN CERTIFICAR:", usuario);
-                console.log("ID USUARIO:", usuario?.idusuario);
-                console.log("ID USUARIO ANTIGUO:", usuario?.idUsuario);
-
             const idCapacitador =
                 usuario.idUsuario;
 
+
             const url =
                 `http://localhost:8080/api/certificaciones/certificar/${idTaller}/${idAsistencia}/${idCapacitador}`;
+
 
             console.log(
                 "CERTIFICANDO:",
                 url
             );
+
 
             const respuesta = await fetch(
                 url,
@@ -210,6 +209,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                     method: "POST"
                 }
             );
+
 
             if (!respuesta.ok) {
 
@@ -222,8 +222,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                 );
             }
 
+
             const certificacion =
                 await respuesta.json();
+
 
             console.log(
                 "CERTIFICACIÓN CREADA:",
@@ -231,17 +233,24 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
             );
 
 
-            // Cambiar el estado visual del operario
+            // =================================================
+            // ACTUALIZAR ESTADO VISUAL
+            // =================================================
+
             setAsistencias(
                 asistencias.map((item) =>
+
                     item.idasistencia ===
                     asistencia.idasistencia
+
                         ? {
                             ...item,
                             estadoCertificacion:
                                 "CERTIFICADO"
                         }
+
                         : item
+
                 )
             );
 
@@ -266,30 +275,83 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
 
     // =========================================================
-    // CARGANDO TALLERES
+    // CERRAR OPERARIOS DEL TALLER SELECCIONADO
+    // =========================================================
+
+    const cerrarOperarios = () => {
+
+        setTallerSeleccionado(null);
+        setAsistencias([]);
+
+        setMensaje("");
+    };
+
+
+    // =========================================================
+    // CARGANDO
     // =========================================================
 
     if (cargando) {
 
         return (
 
-            <section className="capacitador-certificaciones">
+            <div className="dashboard-capacitador">
 
-                <header className="capacitador-navbar">
+                {/* =========================================
+                    MENÚ LATERAL
+                ========================================== */}
 
-                    <div className="certisafe-logo">
+                <aside className="menu-capacitador">
+
+                    <div className="logo-capacitador">
                         CERTISAFE
                     </div>
 
-                    <div className="capacitador-navbar-derecha">
 
-                        <span className="capacitador-nombre">
-                            {usuario.nombre}{" "}
-                            {usuario.apellido}
-                        </span>
+                    <nav>
 
                         <button
-                            className="btn-cerrar-sesion"
+                            className="menu-capacitador-activo"
+                        >
+                            🏠
+                            <span>
+                                Inicio
+                            </span>
+                        </button>
+
+
+                        <button>
+                            📚
+                            <span>
+                                Mis talleres
+                            </span>
+                        </button>
+
+
+                        <button
+                            className="menu-capacitador-activo"
+                        >
+                            🏆
+                            <span>
+                                Certificaciones
+                            </span>
+                        </button>
+
+                    </nav>
+
+
+                    <div className="menu-capacitador-inferior">
+
+                        <button>
+                            ⚙
+                            <span>
+                                Mi perfil
+                            </span>
+                        </button>
+
+
+                        <button
+                            className="boton-cerrar-sesion-capacitador"
                             onClick={cerrarSesion}
                         >
                             Cerrar sesión
@@ -297,22 +359,63 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                     </div>
 
-                </header>
+                </aside>
 
 
-                <div className="capacitador-header">
+                {/* =========================================
+                    CONTENIDO
+                ========================================== */}
 
-                    <h1>
-                        Certificaciones
-                    </h1>
+                <main className="contenido-capacitador">
 
-                    <p>
-                        Cargando talleres...
-                    </p>
+                    <header className="header-capacitador">
 
-                </div>
+                        <div className="usuario-capacitador">
 
-            </section>
+                            <div className="avatar-capacitador">
+
+                                {usuario?.nombre
+                                    ? usuario.nombre
+                                        .charAt(0)
+                                        .toUpperCase()
+                                    : "C"}
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    {usuario?.nombre}{" "}
+                                    {usuario?.apellido}
+                                </strong>
+
+                                <span>
+                                    Capacitador
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </header>
+
+
+                    <section className="seccion-capacitador">
+
+                        <h1>
+                            Certificaciones
+                        </h1>
+
+                        <p>
+                            Cargando talleres finalizados...
+                        </p>
+
+                    </section>
+
+                </main>
+
+            </div>
         );
     }
 
@@ -323,32 +426,114 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
     return (
 
-        <section className="capacitador-certificaciones">
+        <div className="dashboard-capacitador">
 
 
-            {/* =====================================================
-                BANNER CERTISAFE
-            ===================================================== */}
+            {/* =================================================
+                MENÚ LATERAL
+            ================================================= */}
 
-            <header className="capacitador-navbar">
+            <aside className="menu-capacitador">
 
-                <div className="certisafe-logo">
+
+                {/* LOGO */}
+
+                <div className="logo-capacitador">
                     CERTISAFE
                 </div>
 
 
-                <div className="capacitador-navbar-derecha">
+                {/* NAVEGACIÓN */}
 
-                    <span className="capacitador-nombre">
+                <nav>
 
-                        {usuario.nombre}{" "}
-                        {usuario.apellido}
 
-                    </span>
-
+                    {/* INICIO */}
 
                     <button
-                        className="btn-cerrar-sesion"
+                        className={
+                            vistaActual === "inicio"
+                                ? "menu-capacitador-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual("inicio")
+                        }
+                    >
+                        🏠
+                        <span>
+                            Inicio
+                        </span>
+                    </button>
+
+
+                    {/* TALLERES */}
+
+                    <button
+                        className={
+                            vistaActual === "talleres"
+                                ? "menu-capacitador-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual("talleres")
+                        }
+                    >
+                        📚
+                        <span>
+                            Mis talleres
+                        </span>
+                    </button>
+
+
+                    {/* CERTIFICACIONES */}
+
+                    <button
+                        className={
+                            vistaActual === "certificaciones"
+                                ? "menu-capacitador-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual(
+                                "certificaciones"
+                            )
+                        }
+                    >
+                        🏆
+                        <span>
+                            Certificaciones
+                        </span>
+                    </button>
+
+                </nav>
+
+
+                {/* =================================================
+                    OPCIONES INFERIORES
+                ================================================= */}
+
+                <div className="menu-capacitador-inferior">
+
+
+                    {/* PERFIL */}
+
+                    <button
+                        onClick={() =>
+                            setVistaActual("perfil")
+                        }
+                    >
+                        ⚙
+                        <span>
+                            Mi perfil
+                        </span>
+                    </button>
+
+
+                    {/* CERRAR SESIÓN */}
+
+                    <button
+                        className="boton-cerrar-sesion-capacitador"
                         onClick={cerrarSesion}
                     >
                         Cerrar sesión
@@ -356,301 +541,541 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                 </div>
 
-            </header>
+            </aside>
 
 
-            {/* =====================================================
-                ENCABEZADO
-            ===================================================== */}
+            {/* =================================================
+                CONTENIDO PRINCIPAL
+            ================================================= */}
 
-            <div className="capacitador-header">
-
-                <h1>
-                    Certificaciones
-                </h1>
-
-                <p>
-                    Bienvenido,{" "}
-                    {usuario.nombre}{" "}
-                    {usuario.apellido}
-                </p>
-
-            </div>
+            <main className="contenido-capacitador">
 
 
-            {/* =====================================================
-                TÍTULO
-            ===================================================== */}
+                {/* =================================================
+                    HEADER
+                ================================================= */}
 
-            <h2>
-                Talleres finalizados
-            </h2>
+                <header className="header-capacitador">
 
+                    <div className="usuario-capacitador">
 
-            {/* =====================================================
-                MENSAJES
-            ===================================================== */}
+                        <div className="avatar-capacitador">
 
-            {mensaje && (
+                            {usuario?.nombre
+                                ? usuario.nombre
+                                    .charAt(0)
+                                    .toUpperCase()
+                                : "C"}
 
-                <p className="mensaje-certificacion">
-                    {mensaje}
-                </p>
-
-            )}
+                        </div>
 
 
-            {/* =====================================================
-                SIN TALLERES
-            ===================================================== */}
+                        <div>
 
-            {talleres.length === 0 ? (
+                            <strong>
+                                {usuario?.nombre}{" "}
+                                {usuario?.apellido}
+                            </strong>
 
-                <p className="sin-talleres">
+                            <span>
+                                Capacitador
+                            </span>
 
-                    No tienes talleres finalizados
-                    pendientes de certificación.
+                        </div>
 
-                </p>
+                    </div>
 
-            ) : (
-
-
-                /* =================================================
-                   LISTA DE TALLERES
-                ================================================= */
-
-                <div className="talleres-container">
-
-                    {talleres.map((taller) => (
-
-                        <article
-                            className="taller-card"
-                            key={taller.idtaller}
-                        >
+                </header>
 
 
-                            {/* =====================================
-                                INFORMACIÓN DEL TALLER
-                            ===================================== */}
+                {/* =================================================
+                    INICIO
+                ================================================= */}
 
-                            <h3>
-                                {taller.nombre}
-                            </h3>
+                {vistaActual === "inicio" && (
+
+                    <section className="seccion-capacitador">
+
+                        <h1>
+                            Bienvenido,{" "}
+                            {usuario?.nombre}
+                        </h1>
+
+                        <p>
+                            Desde aquí puedes consultar tus
+                            talleres finalizados y certificar
+                            a los operarios que asistieron.
+                        </p>
 
 
-                            <p className="taller-descripcion">
-                                {taller.descripcion}
-                            </p>
+                        <div className="tarjetas-resumen-capacitador">
 
+                            <article className="resumen-capacitador-card">
+
+                                <h3>
+                                    Certificaciones
+                                </h3>
+
+                                <p>
+                                    Consulta tus talleres finalizados
+                                    y certifica a los operarios presentes.
+                                </p>
+
+                                <button
+                                    onClick={() =>
+                                        setVistaActual(
+                                            "certificaciones"
+                                        )
+                                    }
+                                >
+                                    Ver certificaciones
+                                </button>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+                )}
+
+
+                {/* =================================================
+                    MIS TALLERES
+                ================================================= */}
+
+                {vistaActual === "talleres" && (
+
+                    <section className="seccion-capacitador">
+
+                        <h1>
+                            Mis talleres
+                        </h1>
+
+                        <p>
+                            Consulta los talleres finalizados
+                            asociados a tu usuario.
+                        </p>
+
+
+                        {talleres.length === 0 ? (
+
+                            <div className="capacitador-vacio">
+
+                                No tienes talleres finalizados
+                                actualmente.
+
+                            </div>
+
+                        ) : (
+
+                            <div className="talleres-container">
+
+                                {talleres.map((taller) => (
+
+                                    <article
+                                        className="taller-card"
+                                        key={
+                                            taller.idtaller
+                                        }
+                                    >
+
+                                        <h3>
+                                            {taller.nombre}
+                                        </h3>
+
+                                        <p className="taller-descripcion">
+                                            {taller.descripcion}
+                                        </p>
+
+                                        <p>
+                                            <strong>
+                                                Fecha:
+                                            </strong>{" "}
+                                            {taller.fecha}
+                                        </p>
+
+                                        <p>
+                                            <strong>
+                                                Horario:
+                                            </strong>{" "}
+                                            {taller.horaInicio}
+                                            {" - "}
+                                            {taller.horaFin}
+                                        </p>
+
+                                        <p>
+                                            <strong>
+                                                Certificación:
+                                            </strong>{" "}
+                                            {
+                                                taller
+                                                    .tipoCertificacion
+                                                    ?.nombre
+                                            }
+                                        </p>
+
+                                        <p>
+                                            <strong>
+                                                Estado:
+                                            </strong>{" "}
+
+                                            <span className="taller-estado-finalizado">
+                                                {taller.estado}
+                                            </span>
+
+                                        </p>
+
+                                    </article>
+
+                                ))}
+
+                            </div>
+
+                        )}
+
+                    </section>
+
+                )}
+
+
+                {/* =================================================
+                    CERTIFICACIONES
+                ================================================= */}
+
+                {vistaActual === "certificaciones" && (
+
+                    <section className="seccion-capacitador">
+
+
+                        <div className="capacitador-header">
+
+                            <h1>
+                                Certificaciones
+                            </h1>
 
                             <p>
-                                <strong>
-                                    Fecha:
-                                </strong>{" "}
-                                {taller.fecha}
+                                Aquí puedes certificar a los
+                                operarios que estuvieron presentes
+                                en tus talleres finalizados.
                             </p>
 
+                        </div>
 
-                            <p>
-                                <strong>
-                                    Horario:
-                                </strong>{" "}
-                                {taller.horaInicio}
-                                {" - "}
-                                {taller.horaFin}
+
+                        <h2>
+                            Talleres finalizados
+                        </h2>
+
+
+                        {/* =================================================
+                            MENSAJE
+                        ================================================= */}
+
+                        {mensaje && (
+
+                            <p className="mensaje-certificacion">
+                                {mensaje}
                             </p>
 
-
-                            <p>
-                                <strong>
-                                    Certificación:
-                                </strong>{" "}
-                                {taller.tipoCertificacion?.nombre}
-                            </p>
+                        )}
 
 
-                            <p>
-                                <strong>
-                                    Estado:
-                                </strong>{" "}
+                        {/* =================================================
+                            SIN TALLERES
+                        ================================================= */}
 
-                                <span className="estado-finalizado">
-                                    {taller.estado}
-                                </span>
+                        {talleres.length === 0 ? (
 
-                            </p>
+                            <div className="capacitador-vacio">
 
+                                No tienes talleres finalizados
+                                pendientes de certificación.
 
-                            {/* =====================================
-                                BOTÓN MOSTRAR OPERARIOS
-                            ===================================== */}
+                            </div>
 
-                            <button
-                                className="btn-certificar-operarios"
-                                onClick={() =>
-                                    cargarAsistencias(
-                                        taller.idtaller
-                                    )
-                                }
-                            >
-                                Certificar operarios
-                            </button>
+                        ) : (
 
 
-                            {/* =====================================
-                                OPERARIOS PRESENTES
-                            ===================================== */}
+                            /* =================================================
+                               TALLERES
+                            ================================================= */
 
-                            {tallerSeleccionado ===
-                                taller.idtaller && (
+                            <div className="talleres-container">
 
-                                    <div className="operarios-container">
+                                {talleres.map((taller) => (
 
-                                        <h4>
-                                            Operarios presentes
-                                        </h4>
+                                    <article
+                                        className="taller-card"
+                                        key={
+                                            taller.idtaller
+                                        }
+                                    >
 
 
-                                        {cargandoAsistencias ? (
+                                        {/* INFORMACIÓN */}
+
+                                        <h3>
+                                            {taller.nombre}
+                                        </h3>
+
+
+                                        <p className="taller-descripcion">
+                                            {taller.descripcion}
+                                        </p>
+
+
+                                        <div className="taller-info">
 
                                             <p>
-                                                Cargando operarios...
+                                                <strong>
+                                                    Fecha:
+                                                </strong>{" "}
+                                                {taller.fecha}
                                             </p>
 
-                                        ) : asistencias.length === 0 ? (
 
                                             <p>
-                                                No hay operarios presentes.
+                                                <strong>
+                                                    Horario:
+                                                </strong>{" "}
+                                                {taller.horaInicio}
+                                                {" - "}
+                                                {taller.horaFin}
                                             </p>
 
-                                        ) : (
 
-                                            asistencias.map(
-                                                (asistencia) => (
-
-                                                    <div
-                                                        className="operario-card"
-                                                        key={
-                                                            asistencia.idasistencia
-                                                        }
-                                                    >
-
-
-                                                        {/* ==================
-                                                            NOMBRE
-                                                        ================== */}
-
-                                                        <p className="operario-nombre">
-
-                                                            <strong>
-
-                                                                {
-                                                                    asistencia
-                                                                        .usuario
-                                                                        .nombre
-                                                                }{" "}
-
-                                                                {
-                                                                    asistencia
-                                                                        .usuario
-                                                                        .apellido
-                                                                }
-
-                                                            </strong>
-
-                                                        </p>
+                                            <p>
+                                                <strong>
+                                                    Certificación:
+                                                </strong>{" "}
+                                                {
+                                                    taller
+                                                        .tipoCertificacion
+                                                        ?.nombre
+                                                }
+                                            </p>
 
 
-                                                        {/* ==================
-                                                            DOCUMENTO
-                                                        ================== */}
+                                            <p>
+                                                <strong>
+                                                    Estado:
+                                                </strong>{" "}
 
-                                                        <p>
+                                                <span className="taller-estado-finalizado">
+                                                    {taller.estado}
+                                                </span>
 
-                                                            <strong>
-                                                                Documento:
-                                                            </strong>{" "}
+                                            </p>
 
-                                                            {
-                                                                asistencia
-                                                                    .usuario
-                                                                    .documento
+                                        </div>
+
+
+                                        {/* =================================================
+                                            BOTÓN MOSTRAR OPERARIOS
+                                        ================================================= */}
+
+                                        <button
+                                            className="btn-certificar-operarios"
+                                            onClick={() =>
+                                                cargarAsistencias(
+                                                    taller.idtaller
+                                                )
+                                            }
+                                        >
+                                            Certificar operarios
+                                        </button>
+
+
+                                        {/* =================================================
+                                            OPERARIOS PRESENTES
+                                        ================================================= */}
+
+                                        {tallerSeleccionado ===
+                                            taller.idtaller && (
+
+                                                <div className="operarios-container">
+
+
+                                                    <div className="operarios-header">
+
+                                                        <h4>
+                                                            Operarios presentes
+                                                        </h4>
+
+
+                                                        <button
+                                                            className="btn-cerrar-operarios"
+                                                            onClick={
+                                                                cerrarOperarios
                                                             }
-
-                                                        </p>
-
-
-                                                        {/* ==================
-                                                            ESTADO ASISTENCIA
-                                                        ================== */}
-
-                                                        <p>
-
-                                                            <strong>
-                                                                Estado:
-                                                            </strong>{" "}
-
-                                                            <span className="estado-presente">
-
-                                                                {
-                                                                    asistencia
-                                                                        .estado
-                                                                }
-
-                                                            </span>
-
-                                                        </p>
-
-
-                                                        {/* ==================
-                                                            ESTADO CERTIFICACIÓN
-                                                        ================== */}
-
-                                                        {asistencia.estadoCertificacion ===
-                                                        "CERTIFICADO" ? (
-
-                                                            <p className="operario-certificado">
-
-                                                                ✓ Certificado
-
-                                                            </p>
-
-                                                        ) : (
-
-                                                            <button
-                                                                className="btn-certificar"
-                                                                onClick={() =>
-                                                                    certificarOperario(
-                                                                        asistencia
-                                                                    )
-                                                                }
-                                                            >
-                                                                Certificar
-                                                            </button>
-
-                                                        )}
+                                                        >
+                                                            Cerrar
+                                                        </button>
 
                                                     </div>
 
-                                                )
-                                            )
 
-                                        )}
+                                                    {cargandoAsistencias ? (
 
-                                    </div>
+                                                        <p className="mensaje-cargando">
+                                                            Cargando operarios...
+                                                        </p>
 
-                                )}
+                                                    ) : asistencias.length ===
+                                                    0 ? (
 
-                        </article>
+                                                        <p className="mensaje-vacio">
+                                                            No hay operarios presentes.
+                                                        </p>
 
-                    ))}
+                                                    ) : (
 
-                </div>
+                                                        asistencias.map(
+                                                            (asistencia) => (
 
-            )}
+                                                                <div
+                                                                    className="operario-card"
+                                                                    key={
+                                                                        asistencia.idasistencia
+                                                                    }
+                                                                >
 
-        </section>
+
+                                                                    {/* NOMBRE */}
+
+                                                                    <p className="operario-nombre">
+
+                                                                        <strong>
+
+                                                                            {
+                                                                                asistencia
+                                                                                    .usuario
+                                                                                    .nombre
+                                                                            }{" "}
+
+                                                                            {
+                                                                                asistencia
+                                                                                    .usuario
+                                                                                    .apellido
+                                                                            }
+
+                                                                        </strong>
+
+                                                                    </p>
+
+
+                                                                    {/* DOCUMENTO */}
+
+                                                                    <p>
+
+                                                                        <strong>
+                                                                            Documento:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            asistencia
+                                                                                .usuario
+                                                                                .documento
+                                                                        }
+
+                                                                    </p>
+
+
+                                                                    {/* ESTADO ASISTENCIA */}
+
+                                                                    <p>
+
+                                                                        <strong>
+                                                                            Estado:
+                                                                        </strong>{" "}
+
+                                                                        <span className="estado-presente">
+
+                                                                        {
+                                                                            asistencia
+                                                                                .estado
+                                                                        }
+
+                                                                    </span>
+
+                                                                    </p>
+
+
+                                                                    {/* ESTADO CERTIFICACIÓN */}
+
+                                                                    {asistencia.estadoCertificacion ===
+                                                                    "CERTIFICADO" ? (
+
+                                                                        <p className="operario-certificado">
+
+                                                                            ✓ Certificado
+
+                                                                        </p>
+
+                                                                    ) : (
+
+                                                                        <button
+                                                                            className="btn-certificar"
+                                                                            onClick={() =>
+                                                                                certificarOperario(
+                                                                                    asistencia
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Certificar
+                                                                        </button>
+
+                                                                    )}
+
+                                                                </div>
+
+                                                            )
+                                                        )
+
+                                                    )}
+
+                                                </div>
+
+                                            )}
+
+                                    </article>
+
+                                ))}
+
+                            </div>
+
+                        )}
+
+                    </section>
+
+                )}
+
+
+                {/* =================================================
+                    PERFIL
+                ================================================= */}
+
+                {vistaActual === "perfil" && (
+
+                    <section className="seccion-capacitador">
+
+                        <h1>
+                            Mi perfil
+                        </h1>
+
+                        <p>
+                            Aquí podrás consultar y actualizar
+                            tu información personal.
+                        </p>
+
+                    </section>
+
+                )}
+
+            </main>
+
+        </div>
     );
 }
 
