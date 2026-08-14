@@ -667,4 +667,158 @@
     .tarjetas-talleres {
         grid-template-columns: 1fr;
     }
+
+}
+/* ==========================================
+   ESTADO DEL TALLER
+========================================== */
+
+.estado-taller-programado {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+
+.estado-taller-en-curso {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+
+.estado-taller-finalizado {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #fee2e2;
+
+    color: #7a3535;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+
+.estado-taller-cancelado {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #e5e7eb;
+
+    color: #4b5563;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   TARJETA TALLER EN CURSO
+========================================== */
+
+.taller-en-curso {
+    border: 1px solid #93c5fd;
+}
+
+
+/* ==========================================
+   TARJETA TALLER FINALIZADO
+========================================== */
+
+.taller-finalizado {
+    border: 1px solid #fca5a5;
+
+    background: #fffafa;
+}
+
+
+/* ==========================================
+   BOTÓN DESHABILITADO
+========================================== */
+
+.boton-deshabilitado {
+    background: #94a3b8;
+
+    color: #e2e8f0;
+
+    cursor: not-allowed;
+
+    opacity: 0.8;
+}
+
+.boton-deshabilitado:hover {
+    background: #94a3b8;
+
+    transform: none;
+}
+
+
+/* ==========================================
+   MENSAJE TALLER FINALIZADO
+========================================== */
+
+.mensaje-finalizado {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    background: #fee2e2;
+
+    color: #a74242;
+
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   MENSAJE TALLER CANCELADO
+========================================== */
+
+.mensaje-cancelado {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    background: #e5e7eb;
+
+    color: #4b5563;
+
+    font-weight: bold;
 }

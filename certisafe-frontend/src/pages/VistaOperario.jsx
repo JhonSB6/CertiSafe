@@ -8,6 +8,7 @@ function VistaOperario({ usuario, cerrarSesion }) {
     const [talleres, setTalleres] = useState([]);
     const [cargandoTalleres, setCargandoTalleres] = useState(false);
     const [errorTalleres, setErrorTalleres] = useState("");
+
     const [certificaciones, setCertificaciones] = useState([]);
     const [cargandoCertificaciones, setCargandoCertificaciones] = useState(false);
     const [errorCertificaciones, setErrorCertificaciones] = useState("");
@@ -56,9 +57,10 @@ function VistaOperario({ usuario, cerrarSesion }) {
         }
     };
 
+
     // ==========================================
-        // INSCRIBIRSE AL TALLER
-        // ==========================================
+    // INSCRIBIRSE AL TALLER
+    // ==========================================
 
     const confirmarInscripcion = async (idInscripcion) => {
 
@@ -82,7 +84,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
             alert("Inscripción confirmada correctamente");
 
-            // Volvemos a cargar los talleres
             cargarTalleres();
 
         } catch (error) {
@@ -95,6 +96,7 @@ function VistaOperario({ usuario, cerrarSesion }) {
             );
         }
     };
+
 
     // ==========================================
     // CARGAR TALLERES DEL OPERARIO
@@ -118,6 +120,11 @@ function VistaOperario({ usuario, cerrarSesion }) {
             }
 
             const datos = await respuesta.json();
+
+            console.log(
+                "TALLERES DEL OPERARIO:",
+                datos
+            );
 
             setTalleres(datos);
 
@@ -144,7 +151,23 @@ function VistaOperario({ usuario, cerrarSesion }) {
     useEffect(() => {
 
         if (vistaActual === "talleres") {
+
             cargarTalleres();
+
+            /*
+             * El backend cambia automáticamente el estado
+             * del taller según la hora.
+             *
+             * Consultamos cada 10 segundos para reflejar
+             * ese cambio en la pantalla del operario.
+             */
+            const intervalo = setInterval(() => {
+
+                cargarTalleres();
+
+            }, 10000);
+
+            return () => clearInterval(intervalo);
         }
 
         if (vistaActual === "certificaciones") {
@@ -318,9 +341,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
                         <div className="tarjetas-resumen">
 
-
-                            {/* MIS TALLERES */}
-
                             <article className="resumen-card">
 
                                 <h3>
@@ -343,8 +363,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
                             </article>
 
-
-                            {/* CERTIFICACIONES */}
 
                             <article className="resumen-card">
 
@@ -369,8 +387,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
                             </article>
 
-
-                            {/* PRODUCCIÓN */}
 
                             <article className="resumen-card">
 
@@ -465,131 +481,237 @@ function VistaOperario({ usuario, cerrarSesion }) {
                                 <div className="tarjetas-talleres">
 
                                     {talleres.map(
-                                        (inscripcion) => (
+                                        (inscripcion) => {
 
-                                            <article
-                                                className="taller-card"
-                                                key={
-                                                    inscripcion.idinscripcion
-                                                }
-                                            >
+                                            const estadoTaller =
+                                                inscripcion.taller.estado;
 
-                                                <h3>
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .nombre
+                                            const inscripcionPendiente =
+                                                inscripcion.estado === "PENDIENTE";
+
+                                            const tallerNoDisponible =
+                                                estadoTaller === "EN_CURSO" ||
+                                                estadoTaller === "FINALIZADO" ||
+                                                estadoTaller === "CANCELADO";
+
+                                            const puedeInscribirse =
+                                                inscripcionPendiente &&
+                                                estadoTaller === "PROGRAMADO";
+
+                                            return (
+
+                                                <article
+                                                    className={
+                                                        estadoTaller === "FINALIZADO"
+                                                            ? "taller-card taller-finalizado"
+                                                            : estadoTaller === "EN_CURSO"
+                                                                ? "taller-card taller-en-curso"
+                                                                : "taller-card"
                                                     }
-                                                </h3>
-
-
-                                                <p>
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .descripcion
+                                                    key={
+                                                        inscripcion.idinscripcion
                                                     }
-                                                </p>
+                                                >
 
-
-                                                <p>
-                                                    <strong>
-                                                        Fecha:
-                                                    </strong>{" "}
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .fecha
-                                                    }
-                                                </p>
-
-
-                                                <p>
-                                                    <strong>
-                                                        Horario:
-                                                    </strong>{" "}
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .horaInicio
-                                                    }
-                                                    {" - "}
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .horaFin
-                                                    }
-                                                </p>
-
-
-                                                <p>
-                                                    <strong>
-                                                        Certificación:
-                                                    </strong>{" "}
-                                                    {
-                                                        inscripcion
-                                                            .taller
-                                                            .tipoCertificacion
-                                                            .nombre
-                                                    }
-                                                </p>
-
-
-                                                <p>
-                                                    <strong>
-                                                        Estado:
-                                                    </strong>{" "}
-
-                                                    <span
-                                                        className={
-                                                            inscripcion.estado ===
-                                                            "CONFIRMADA"
-                                                                ? "estado-confirmada"
-                                                                : "estado-pendiente"
-                                                        }
-                                                    >
+                                                    <h3>
                                                         {
-                                                            inscripcion.estado
+                                                            inscripcion
+                                                                .taller
+                                                                .nombre
                                                         }
-                                                    </span>
-
-                                                </p>
+                                                    </h3>
 
 
-                                                {/* BOTÓN INSCRIBIRSE */}
-
-                                                {inscripcion.estado ===
-                                                    "PENDIENTE" && (
-
-                                                    <button
-                                                        className="boton-inscribirse"
-                                                        onClick={() =>
-                                                            confirmarInscripcion(
-                                                                inscripcion.idinscripcion
-                                                            )
+                                                    <p>
+                                                        {
+                                                            inscripcion
+                                                                .taller
+                                                                .descripcion
                                                         }
-                                                    >
-                                                        Inscribirme
-                                                    </button>
-
-                                                )}
+                                                    </p>
 
 
-                                                {/* CONFIRMADA */}
+                                                    <p>
+                                                        <strong>
+                                                            Fecha:
+                                                        </strong>{" "}
+                                                        {
+                                                            inscripcion
+                                                                .taller
+                                                                .fecha
+                                                        }
+                                                    </p>
 
-                                                {inscripcion.estado ===
-                                                    "CONFIRMADA" && (
 
-                                                    <span className="mensaje-confirmada">
-                                                        ✓ Inscripción
-                                                        confirmada
-                                                    </span>
+                                                    <p>
+                                                        <strong>
+                                                            Horario:
+                                                        </strong>{" "}
+                                                        {
+                                                            inscripcion
+                                                                .taller
+                                                                .horaInicio
+                                                        }
+                                                        {" - "}
+                                                        {
+                                                            inscripcion
+                                                                .taller
+                                                                .horaFin
+                                                        }
+                                                    </p>
 
-                                                )}
 
-                                            </article>
+                                                    <p>
+                                                        <strong>
+                                                            Certificación:
+                                                        </strong>{" "}
+                                                        {
+                                                            inscripcion
+                                                                .taller
+                                                                .tipoCertificacion
+                                                                .nombre
+                                                        }
+                                                    </p>
 
-                                        )
+
+                                                    {/* ==========================================
+                                                        ESTADO DEL TALLER
+                                                    ========================================== */}
+
+                                                    <p>
+                                                        <strong>
+                                                            Estado del taller:
+                                                        </strong>{" "}
+
+                                                        <span
+                                                            className={
+                                                                estadoTaller === "FINALIZADO"
+                                                                    ? "estado-taller-finalizado"
+                                                                    : estadoTaller === "EN_CURSO"
+                                                                        ? "estado-taller-en-curso"
+                                                                        : estadoTaller === "CANCELADO"
+                                                                            ? "estado-taller-cancelado"
+                                                                            : "estado-taller-programado"
+                                                            }
+                                                        >
+                                                            {estadoTaller}
+                                                        </span>
+
+                                                    </p>
+
+
+                                                    {/* ==========================================
+                                                        ESTADO DE LA INSCRIPCIÓN
+                                                    ========================================== */}
+
+                                                    <p>
+                                                        <strong>
+                                                            Mi inscripción:
+                                                        </strong>{" "}
+
+                                                        <span
+                                                            className={
+                                                                inscripcion.estado ===
+                                                                "CONFIRMADA"
+                                                                    ? "estado-confirmada"
+                                                                    : "estado-pendiente"
+                                                            }
+                                                        >
+                                                            {
+                                                                inscripcion.estado
+                                                            }
+                                                        </span>
+
+                                                    </p>
+
+
+                                                    {/* ==========================================
+                                                        BOTÓN INSCRIBIRSE
+                                                    ========================================== */}
+
+                                                    {puedeInscribirse && (
+
+                                                        <button
+                                                            className="boton-inscribirse"
+                                                            onClick={() =>
+                                                                confirmarInscripcion(
+                                                                    inscripcion.idinscripcion
+                                                                )
+                                                            }
+                                                        >
+                                                            Inscribirme
+                                                        </button>
+
+                                                    )}
+
+
+                                                    {/* ==========================================
+                                                        TALLER EN CURSO + NO CONFIRMADO
+                                                    ========================================== */}
+
+                                                    {estadoTaller === "EN_CURSO" &&
+                                                        inscripcionPendiente && (
+
+                                                            <button
+                                                                className="boton-inscribirse boton-deshabilitado"
+                                                                disabled
+                                                            >
+                                                                Inscripción cerrada
+                                                            </button>
+
+                                                        )}
+
+
+                                                    {/* ==========================================
+                                                        INSCRIPCIÓN CONFIRMADA
+                                                    ========================================== */}
+
+                                                    {inscripcion.estado ===
+                                                        "CONFIRMADA" && (
+
+                                                            <span className="mensaje-confirmada">
+
+                                                            ✓ Inscripción confirmada
+
+                                                        </span>
+
+                                                        )}
+
+
+                                                    {/* ==========================================
+                                                        TALLER FINALIZADO
+                                                    ========================================== */}
+
+                                                    {estadoTaller === "FINALIZADO" && (
+
+                                                        <span className="mensaje-finalizado">
+
+                                                            Taller finalizado
+
+                                                        </span>
+
+                                                    )}
+
+
+                                                    {/* ==========================================
+                                                        TALLER CANCELADO
+                                                    ========================================== */}
+
+                                                    {estadoTaller === "CANCELADO" && (
+
+                                                        <span className="mensaje-cancelado">
+
+                                                            Taller cancelado
+
+                                                        </span>
+
+                                                    )}
+
+                                                </article>
+
+                                            );
+
+                                        }
                                     )}
 
                                 </div>
@@ -619,8 +741,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
                         </p>
 
 
-                        {/* CARGANDO */}
-
                         {cargandoCertificaciones && (
 
                             <p>
@@ -630,8 +750,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
                         )}
 
 
-                        {/* ERROR */}
-
                         {errorCertificaciones && (
 
                             <p className="mensaje-error">
@@ -640,8 +758,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
                         )}
 
-
-                        {/* SIN CERTIFICACIONES */}
 
                         {!cargandoCertificaciones &&
                             !errorCertificaciones &&
@@ -664,8 +780,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
                             )}
 
 
-                        {/* CERTIFICACIONES */}
-
                         {!cargandoCertificaciones &&
                             !errorCertificaciones &&
                             certificaciones.length > 0 && (
@@ -683,7 +797,6 @@ function VistaOperario({ usuario, cerrarSesion }) {
                                             >
 
                                                 <div className="certificacion-icono">
-
                                                 </div>
 
 

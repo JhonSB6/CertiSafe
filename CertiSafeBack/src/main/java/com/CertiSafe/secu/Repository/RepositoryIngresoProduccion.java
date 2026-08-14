@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface RepositoryIngresoProduccion extends JpaRepository<IngresoProduccion, Long> {
 
-    Optional<IngresoProduccion> findByUsuarioIdusuarioAndEstado(Long idUsuario, EstadoIngreso estado);
+    Optional<IngresoProduccion> findByUsuarioIdusuarioAndAutorizar(Long idUsuario, EstadoIngreso autorizar);
 }
