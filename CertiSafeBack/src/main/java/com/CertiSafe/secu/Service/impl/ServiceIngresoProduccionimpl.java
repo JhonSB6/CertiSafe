@@ -1,8 +1,14 @@
 package com.CertiSafe.secu.Service.impl;
+import com.CertiSafe.secu.Dto.RespuestaAccesoProduccion;
 import com.CertiSafe.secu.Entity.IngresoProduccion;
+import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoIngreso;
+import com.CertiSafe.secu.Enum.EstadoUsuario;
+import com.CertiSafe.secu.Repository.RepositoryUsuario;
+import com.CertiSafe.secu.Service.ServiceCertificacion;
 import com.CertiSafe.secu.Service.ServiceIngresoProduccion;
 import com.CertiSafe.secu.Repository.RepositoryIngresoProduccion;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +18,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
     private final RepositoryIngresoProduccion repositoryIngresoProduccion;
+    private final ServiceCertificacion serviceCertificacion;
+    private final RepositoryUsuario repositoryUsuario;
 
     @Override
     public List<IngresoProduccion> listarIngresos() {
@@ -43,7 +51,6 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
         existente.setFechaingreso(ingreso.getFechaingreso());
         existente.setFechasalida(ingreso.getFechasalida());
         existente.setUsuario(ingreso.getUsuario());
-        existente.setHistorial(ingreso.getHistorial());
         return repositoryIngresoProduccion.save(existente);
     }
 
@@ -61,5 +68,124 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
         IngresoProduccion ingresoProduccion = repositoryIngresoProduccion.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ingreso no encotrado con id: " + id));
         ingresoProduccion.setAutorizar(EstadoIngreso.RECHAZADO);
+        repositoryIngresoProduccion.save(ingresoProduccion);
+    }
+    @Override
+    public RespuestaAccesoProduccion verificarAcceso(Long idUsuario) {
+
+        List<String> faltantes = new ArrayList<>();
+
+        // Trabajo seguro en alturas
+        if (!serviceCertificacion.estaCertificado(idUsuario, 1L)) {
+
+            faltantes.add(
+                    "Trabajo seguro en alturas"
+            );
+        }
+
+        // Manejo seguro de productos químicos
+        if (!serviceCertificacion.estaCertificado(idUsuario, 2L)) {
+
+            faltantes.add(
+                    "Manejo seguro de productos químicos"
+            );
+        }
+
+        // Seguridad en espacios confinados
+        if (!serviceCertificacion.estaCertificado(idUsuario, 3L)) {
+
+            faltantes.add(
+                    "Seguridad en espacios confinados"
+            );
+        }
+
+        if (faltantes.isEmpty()) {
+
+            return new RespuestaAccesoProduccion(
+                    true,
+                    "Acceso Concedido",
+                    faltantes,
+                    null
+            );
+        }
+
+        return new RespuestaAccesoProduccion(
+                false,
+                "Acceso Denegado",
+                faltantes,
+                null
+        );
+    }
+
+    @Override
+    public RespuestaAccesoProduccion solicitarIngreso(Long idUsuario) {
+
+        Usuario usuario = repositoryUsuario.findById(idUsuario)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado con id: " + idUsuario
+                        )
+                );
+
+        if (usuario.getEstado() != EstadoUsuario.ACTIVO) {
+
+            return new RespuestaAccesoProduccion(
+                    false,
+                    "Acceso Denegado. El operario está inactivo.",
+                    new ArrayList<>()
+            );
+        }
+
+        RespuestaAccesoProduccion verificacion =
+                verificarAcceso(idUsuario);
+
+        if (!verificacion.isAcceso()) {
+            return verificacion;
+        }
+
+        Optional<IngresoProduccion> ingresoExistente =
+                repositoryIngresoProduccion
+                        .findByUsuarioIdusuarioAndAutorizar(
+                                idUsuario,
+                                EstadoIngreso.AUTORIZADO
+                        );
+
+        if (ingresoExistente.isPresent()) {
+
+            IngresoProduccion ingreso =
+                    ingresoExistente.get();
+
+            return new RespuestaAccesoProduccion(
+                    true,
+                    "Acceso Concedido",
+                    List.of(ingreso.getCodigoAcceso())
+            );
+        }
+
+        IngresoProduccion ingreso =
+                new IngresoProduccion();
+
+        ingreso.setNombre(
+                usuario.getNombre() + " " + usuario.getApellido()
+        );
+
+        ingreso.setUsuario(usuario);
+
+        ingreso.setAutorizar(
+                EstadoIngreso.AUTORIZADO
+        );
+
+        ingreso.setCodigoAcceso(
+                UUID.randomUUID().toString()
+        );
+
+        IngresoProduccion guardado =
+                repositoryIngresoProduccion.save(ingreso);
+
+        return new RespuestaAccesoProduccion(
+                true,
+                "Acceso Concedido",
+                List.of(guardado.getCodigoAcceso())
+        );
     }
 }

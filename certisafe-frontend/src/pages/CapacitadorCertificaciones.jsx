@@ -121,7 +121,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                         const respuestaCertificacion =
                             await fetch(
-                                `http://localhost:8080/api/certificaciones/verificar/${asistencia.usuario.idusuario}/${tipoCertificacion}`
+                                `http://localhost:8080/api/certificaciones/verificar/${asistencia.usuario.idUsuario}/${tipoCertificacion}`
                             );
 
                         if (!respuestaCertificacion.ok) {

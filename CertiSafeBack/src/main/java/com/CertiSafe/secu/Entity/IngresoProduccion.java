@@ -2,15 +2,19 @@ package com.CertiSafe.secu.Entity;
 
 import com.CertiSafe.secu.Enum.EstadoIngreso;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "ingreso_produccion")
 public class IngresoProduccion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ingreso")
@@ -22,18 +26,27 @@ public class IngresoProduccion {
     @Column(nullable = false)
     private Date fechaingreso;
 
-    @Column(nullable = false)
+    @Column
     private Date fechasalida;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoIngreso autorizar;
 
+    /*
+     * Código único que identifica el acceso del operario
+     * cuando cumple las certificaciones obligatorias.
+     *
+     * Posteriormente este código se podrá convertir
+     * en un código QR desde React.
+     */
+    @Column(name = "codigo_acceso", unique = true)
+    private String codigoAcceso;
+
+    /*
+     * Operario que solicita el ingreso a producción.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario; // el Operario decidir si crear operario o manejar solo usuario
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_historial", nullable = false)
-    private HistorialCertificacion historial;
+    private Usuario usuario;
 }
