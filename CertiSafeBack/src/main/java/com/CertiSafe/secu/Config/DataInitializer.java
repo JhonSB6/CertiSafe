@@ -45,15 +45,15 @@ public class DataInitializer {
             if (repositoryTipoCertificacion.count() == 0) {
 
                 repositoryTipoCertificacion.save(
-                        new TipoCertificacion(null, "Trabajo en alturas")
+                        new TipoCertificacion(null, "Trabajo seguro en alturas")
                 );
 
                 repositoryTipoCertificacion.save(
-                        new TipoCertificacion(null, "Manejo de productos químicos")
+                        new TipoCertificacion(null, "Manejo seguro de productos quimicos")
                 );
 
                 repositoryTipoCertificacion.save(
-                        new TipoCertificacion(null, "Espacios confinados")
+                        new TipoCertificacion(null, "Seguridad en espacios confinados")
                 );
             }
 
@@ -168,15 +168,15 @@ public class DataInitializer {
             if (repositoryTaller.count() == 0) {
 
                 TipoCertificacion alturas = repositoryTipoCertificacion
-                        .findByNombre("Trabajo en alturas")
+                        .findByNombre("Trabajo seguro en alturas")
                         .orElseThrow();
 
                 TipoCertificacion quimicos = repositoryTipoCertificacion
-                        .findByNombre("Manejo de productos químicos")
+                        .findByNombre("Manejo seguro de productos quimicos")
                         .orElseThrow();
 
                 TipoCertificacion espaciosConfinados = repositoryTipoCertificacion
-                        .findByNombre("Espacios confinados")
+                        .findByNombre("Seguridad en espacios confinados")
                         .orElseThrow();
 
                 Usuario capacitadorAna=

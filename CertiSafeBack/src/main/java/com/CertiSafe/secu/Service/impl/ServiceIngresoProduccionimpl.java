@@ -48,8 +48,6 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
                                 "Ingreso no encontrado con id: " + id));
 
         existente.setNombre(ingreso.getNombre());
-        existente.setFechaingreso(ingreso.getFechaingreso());
-        existente.setFechasalida(ingreso.getFechasalida());
         existente.setUsuario(ingreso.getUsuario());
         return repositoryIngresoProduccion.save(existente);
     }
@@ -75,28 +73,16 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
 
         List<String> faltantes = new ArrayList<>();
 
-        // Trabajo seguro en alturas
         if (!serviceCertificacion.estaCertificado(idUsuario, 1L)) {
-
-            faltantes.add(
-                    "Trabajo seguro en alturas"
-            );
+            faltantes.add("Trabajo seguro en alturas");
         }
 
-        // Manejo seguro de productos químicos
         if (!serviceCertificacion.estaCertificado(idUsuario, 2L)) {
-
-            faltantes.add(
-                    "Manejo seguro de productos químicos"
-            );
+            faltantes.add("Manejo seguro de productos químicos");
         }
 
-        // Seguridad en espacios confinados
         if (!serviceCertificacion.estaCertificado(idUsuario, 3L)) {
-
-            faltantes.add(
-                    "Seguridad en espacios confinados"
-            );
+            faltantes.add("Seguridad en espacios confinados");
         }
 
         if (faltantes.isEmpty()) {
@@ -132,7 +118,8 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
             return new RespuestaAccesoProduccion(
                     false,
                     "Acceso Denegado. El operario está inactivo.",
-                    new ArrayList<>()
+                    new ArrayList<>(),
+                    null
             );
         }
 
@@ -155,13 +142,27 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
             IngresoProduccion ingreso =
                     ingresoExistente.get();
 
+            // Si el ingreso ya existe pero no tiene código,
+            // generamos uno ahora.
+            if (ingreso.getCodigoAcceso() == null ||
+                    ingreso.getCodigoAcceso().isBlank()) {
+
+                ingreso.setCodigoAcceso(
+                        UUID.randomUUID().toString()
+                );
+
+                ingreso = repositoryIngresoProduccion.save(ingreso);
+            }
+
             return new RespuestaAccesoProduccion(
                     true,
                     "Acceso Concedido",
-                    List.of(ingreso.getCodigoAcceso())
+                    new ArrayList<>(),
+                    ingreso.getCodigoAcceso()
             );
         }
 
+        // Crear nuevo ingreso autorizado
         IngresoProduccion ingreso =
                 new IngresoProduccion();
 
@@ -185,7 +186,8 @@ public class ServiceIngresoProduccionimpl implements ServiceIngresoProduccion {
         return new RespuestaAccesoProduccion(
                 true,
                 "Acceso Concedido",
-                List.of(guardado.getCodigoAcceso())
+                new ArrayList<>(),
+                guardado.getCodigoAcceso()
         );
     }
 }

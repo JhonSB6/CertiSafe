@@ -1,0 +1,584 @@
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.seccion-solicitud-operario {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado-produccion {
+    margin-bottom: 30px;
+}
+
+.encabezado-produccion h1 {
+    margin: 0 0 10px 0;
+
+    color: #123f68;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.encabezado-produccion p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   ESTADO DE CARGA
+========================================= */
+
+.estado-cargando-produccion {
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06);
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.estado-cargando-produccion p {
+    margin-top: 18px;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   SPINNER
+========================================= */
+
+.spinner-produccion {
+    width: 38px;
+    height: 38px;
+
+    border: 4px solid #dbe4ee;
+
+    border-top-color: #1769aa;
+
+    border-radius: 50%;
+
+    animation: girar-produccion 0.8s linear infinite;
+}
+
+@keyframes girar-produccion {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================
+   MENSAJE DE ERROR
+========================================= */
+
+.mensaje-error-produccion {
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #b91c1c;
+
+    padding: 16px 18px;
+
+    border-radius: 10px;
+
+    margin-bottom: 15px;
+
+    font-size: 15px;
+}
+
+.boton-reintentar-produccion {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 11px 20px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.boton-reintentar-produccion:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   ACCESO CONCEDIDO
+========================================= */
+
+.acceso-concedido {
+    background: #ffffff;
+
+    border: 1px solid #a7f3d0;
+
+    border-left: 6px solid #059669;
+
+    border-radius: 16px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.icono-acceso-concedido {
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 15px auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #d1fae5;
+
+    color: #047857;
+
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.acceso-concedido h2 {
+    margin: 0 0 10px 0;
+
+    color: #047857;
+
+    font-size: 26px;
+}
+
+.acceso-concedido p {
+    margin: 0 auto;
+
+    max-width: 600px;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   CÓDIGO DE ACCESO
+========================================= */
+
+.codigo-acceso {
+    margin: 30px auto 0 auto;
+
+    max-width: 600px;
+
+    padding: 22px;
+
+    background: #f4f7fb;
+
+    border: 1px solid #dbe4ee;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.codigo-acceso span {
+    color: #64748b;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.codigo-acceso strong {
+    color: #123f68;
+
+    font-size: 18px;
+
+    word-break: break-all;
+
+    font-family: "Courier New", monospace;
+}
+
+
+/* =========================================
+   ACCESO DENEGADO
+========================================= */
+
+.acceso-denegado {
+    background: #ffffff;
+
+    border: 1px solid #fecaca;
+
+    border-left: 6px solid #dc2626;
+
+    border-radius: 16px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
+
+    margin-bottom: 25px;
+}
+
+.icono-acceso-denegado {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 15px auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.acceso-denegado h2 {
+    margin: 0 0 10px 0;
+
+    color: #b91c1c;
+
+    font-size: 25px;
+}
+
+.acceso-denegado p {
+    margin: 0 auto;
+
+    max-width: 650px;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   CERTIFICACIONES FALTANTES
+========================================= */
+
+.certificaciones-faltantes {
+    background: #ffffff;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.certificaciones-faltantes h3 {
+    margin: 0 0 8px 0;
+
+    color: #123f68;
+
+    font-size: 22px;
+}
+
+.certificaciones-faltantes > p {
+    margin: 0 0 20px 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   LISTA DE FALTANTES
+========================================= */
+
+.lista-faltantes {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/* =========================================
+   TARJETA CERTIFICACIÓN FALTANTE
+========================================= */
+
+.faltante-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 17px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.faltante-card:hover {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================
+   ICONO FALTANTE
+========================================= */
+
+.icono-faltante {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    font-weight: bold;
+
+    font-size: 18px;
+}
+
+
+/* =========================================
+   INFORMACIÓN FALTANTE
+========================================= */
+
+.faltante-info {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.faltante-info strong {
+    color: #334155;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+}
+
+.faltante-info span {
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   BOTÓN SOLICITAR CAPACITACIÓN
+========================================= */
+
+.boton-solicitar-capacitacion {
+    flex-shrink: 0;
+
+    padding: 10px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.boton-solicitar-capacitacion:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+}
+
+.boton-solicitar-capacitacion:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   MENSAJE DE SOLICITUD
+========================================= */
+
+.mensaje-solicitud {
+    margin-top: 20px;
+
+    padding: 15px 18px;
+
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    border-radius: 10px;
+
+    color: #047857;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 750px) {
+
+    .seccion-solicitud-operario {
+        max-width: 100%;
+    }
+
+    .faltante-card {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+    .faltante-info {
+        flex: 1;
+
+        min-width: 200px;
+    }
+
+    .boton-solicitar-capacitacion {
+        width: 100%;
+
+        margin-top: 5px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .encabezado-produccion h1 {
+        font-size: 26px;
+    }
+
+    .acceso-concedido,
+    .acceso-denegado,
+    .certificaciones-faltantes {
+        padding: 22px;
+    }
+
+    .codigo-acceso strong {
+        font-size: 15px;
+    }
+
+    .faltante-card {
+        flex-direction: column;
+    }
+
+    .faltante-info {
+        width: 100%;
+    }
+}

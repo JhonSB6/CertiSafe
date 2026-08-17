@@ -11,7 +11,7 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
 
     useEffect(() => {
 
-        if (!usuario?.idusuario) {
+        if (!usuario?.idUsuario) {
             return;
         }
 
@@ -20,7 +20,7 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
             try {
 
                 const respuesta = await fetch(
-                    `http://localhost:8080/api/notificaciones/usuario/${usuario.idusuario}/no-leidas/count`
+                    `http://localhost:8080/api/notificaciones/usuario/${usuario.idUsuario}/no-leidas/count`
                 );
 
                 if (!respuesta.ok) {
