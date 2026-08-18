@@ -1,5 +1,6 @@
 import "./VistaOperario.css";
 import { useEffect, useState } from "react";
+import SolicitudOperario from "./operario/SolicitudOperario";
 
 function VistaOperario({ usuario, cerrarSesion }) {
 
@@ -900,21 +901,15 @@ function VistaOperario({ usuario, cerrarSesion }) {
                     INGRESO A PRODUCCIÓN
                 ========================================== */}
 
+                {/* ==========================================
+                    INGRESO A PRODUCCIÓN
+                ========================================== */}
+
                 {vistaActual === "produccion" && (
 
-                    <section className="seccion-operario">
-
-                        <h1>
-                            Ingreso a producción
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar si cumples
-                            los requisitos para ingresar
-                            a producción.
-                        </p>
-
-                    </section>
+                    <SolicitudOperario
+                        usuario={usuario}
+                    />
 
                 )}
 

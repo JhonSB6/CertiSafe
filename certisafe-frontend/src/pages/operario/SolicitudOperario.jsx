@@ -10,6 +10,96 @@ function SolicitudOperario({ usuario }) {
     const [solicitando, setSolicitando] = useState(false);
     const [mensajeSolicitud, setMensajeSolicitud] = useState("");
 
+    const [solicitandoAcceso, setSolicitandoAcceso] = useState(false);
+
+
+    // ==========================================
+    // OBTENER ID DE CERTIFICACIÓN
+    // ==========================================
+
+    const obtenerIdCertificacion = (nombre) => {
+
+        if (
+            nombre === "Trabajo seguro en alturas"
+        ) {
+            return 1;
+        }
+
+        if (
+            nombre === "Manejo seguro de productos químicos" ||
+            nombre === "Manejo seguro de productos quimicos"
+        ) {
+            return 2;
+        }
+
+        if (
+            nombre === "Seguridad en espacios confinados"
+        ) {
+            return 3;
+        }
+
+        return null;
+    };
+
+
+    // ==========================================
+    // SOLICITAR INGRESO A PRODUCCIÓN
+    // ==========================================
+
+    const solicitarIngreso = async () => {
+
+        if (!usuario?.idUsuario) {
+            return;
+        }
+
+        setSolicitandoAcceso(true);
+        setError("");
+
+        try {
+
+            const respuesta = await fetch(
+                `http://localhost:8080/api/ingreso-produccion/solicitar/${usuario.idUsuario}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            if (!respuesta.ok) {
+
+                const texto = await respuesta.text();
+
+                throw new Error(
+                    `Error ${respuesta.status}: ${texto}`
+                );
+            }
+
+            const datos = await respuesta.json();
+
+            console.log(
+                "RESPUESTA SOLICITUD DE INGRESO:",
+                datos
+            );
+
+            setResultado(datos);
+
+        } catch (error) {
+
+            console.error(
+                "Error solicitando ingreso:",
+                error
+            );
+
+            setError(
+                "No fue posible generar el código de acceso."
+            );
+
+        } finally {
+
+            setSolicitandoAcceso(false);
+        }
+    };
+
+
     // ==========================================
     // CONSULTAR ACCESO A PRODUCCIÓN
     // ==========================================
@@ -17,13 +107,19 @@ function SolicitudOperario({ usuario }) {
     const verificarAcceso = async () => {
 
         if (!usuario?.idUsuario) {
-            setError("No se encontró el usuario.");
+
+            setError(
+                "No se encontró el usuario."
+            );
+
             setCargando(false);
+
             return;
         }
 
         setCargando(true);
         setError("");
+        setMensajeSolicitud("");
 
         try {
 
@@ -32,6 +128,7 @@ function SolicitudOperario({ usuario }) {
             );
 
             if (!respuesta.ok) {
+
                 throw new Error(
                     "No fue posible consultar el estado de ingreso."
                 );
@@ -45,6 +142,17 @@ function SolicitudOperario({ usuario }) {
             );
 
             setResultado(datos);
+
+            // ==========================================
+            // SI YA CUMPLE LAS 3 CERTIFICACIONES
+            // SOLICITAMOS EL CÓDIGO DE ACCESO
+            // ==========================================
+
+            if (datos.acceso) {
+
+                await solicitarIngreso();
+
+            }
 
         } catch (error) {
 
@@ -76,7 +184,9 @@ function SolicitudOperario({ usuario }) {
     // SOLICITAR CAPACITACIÓN
     // ==========================================
 
-    const solicitarCapacitacion = async (tipoCertificacion) => {
+    const solicitarCapacitacion = async (
+        tipoCertificacion
+    ) => {
 
         if (!usuario?.idUsuario) {
             return;
@@ -84,36 +194,112 @@ function SolicitudOperario({ usuario }) {
 
         setSolicitando(true);
         setMensajeSolicitud("");
+        setError("");
 
         try {
 
-            /*
-             * Aquí conectaremos el endpoint de
-             * SolicitudCapacitacion.
-             *
-             * Por ahora dejamos preparado el punto
-             * de integración.
-             */
+            const idTipoCertificacion =
+                obtenerIdCertificacion(
+                    tipoCertificacion
+                );
 
-            console.log(
-                "SOLICITUD DE CAPACITACIÓN:",
+            if (!idTipoCertificacion) {
+
+                throw new Error(
+                    "No se pudo identificar la certificación."
+                );
+            }
+
+
+            // ==========================================
+            // CREAR SOLICITUD
+            // ==========================================
+
+            const parametros = new URLSearchParams();
+
+            parametros.append(
+                "idUsuario",
+                usuario.idUsuario
+            );
+
+            parametros.append(
+                "idTipoCertificacion",
+                idTipoCertificacion
+            );
+
+            parametros.append(
+                "observacion",
+                "El operario requiere esta certificación para completar los requisitos de ingreso a producción."
+            );
+
+
+            const respuesta = await fetch(
+                "http://localhost:8080/api/solicitudes-capacitacion",
                 {
-                    idUsuario: usuario.idUsuario,
-                    certificacion: tipoCertificacion
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+                    body: parametros
                 }
             );
 
-            setMensajeSolicitud(
-                `Solicitud enviada para: ${tipoCertificacion}`
+
+            if (!respuesta.ok) {
+
+                const texto =
+                    await respuesta.text();
+
+                throw new Error(
+                    `Error ${respuesta.status}: ${texto}`
+                );
+            }
+
+
+            const datos =
+                await respuesta.json();
+
+
+            console.log(
+                "SOLICITUD DE CAPACITACIÓN CREADA:",
+                datos
             );
+
+
+            setMensajeSolicitud(
+                `Solicitud enviada correctamente para: ${tipoCertificacion}`
+            );
+
 
         } catch (error) {
 
-            console.error(error);
-
-            setMensajeSolicitud(
-                "No fue posible enviar la solicitud de capacitación."
+            console.error(
+                "Error solicitando capacitación:",
+                error
             );
+
+
+            // ==========================================
+            // SOLICITUD DUPLICADA
+            // ==========================================
+
+            if (
+                error.message.includes(
+                    "Ya existe una solicitud pendiente"
+                )
+            ) {
+
+                setMensajeSolicitud(
+                    `Ya tienes una solicitud pendiente para: ${tipoCertificacion}`
+                );
+
+            } else {
+
+                setMensajeSolicitud(
+                    "No fue posible enviar la solicitud de capacitación."
+                );
+            }
 
         } finally {
 
@@ -126,7 +312,7 @@ function SolicitudOperario({ usuario }) {
     // CARGANDO
     // ==========================================
 
-    if (cargando) {
+    if (cargando || solicitandoAcceso) {
 
         return (
             <section className="seccion-solicitud-operario">
@@ -140,7 +326,10 @@ function SolicitudOperario({ usuario }) {
                     <div className="spinner-produccion"></div>
 
                     <p>
-                        Consultando requisitos de ingreso...
+                        {solicitandoAcceso
+                            ? "Generando código de acceso..."
+                            : "Consultando requisitos de ingreso..."
+                        }
                     </p>
 
                 </div>
@@ -232,9 +421,11 @@ function SolicitudOperario({ usuario }) {
                         ✓
                     </div>
 
+
                     <h2>
                         Acceso Concedido
                     </h2>
+
 
                     <p>
                         Cumples con las certificaciones obligatorias
@@ -291,9 +482,11 @@ function SolicitudOperario({ usuario }) {
                     !
                 </div>
 
+
                 <h2>
                     Acceso Denegado
                 </h2>
+
 
                 <p>
                     Para ingresar a producción debes contar
@@ -317,6 +510,7 @@ function SolicitudOperario({ usuario }) {
                             Certificaciones faltantes
                         </h3>
 
+
                         <p>
                             Debes completar las siguientes
                             capacitaciones:
@@ -326,7 +520,10 @@ function SolicitudOperario({ usuario }) {
                         <div className="lista-faltantes">
 
                             {resultado.faltantes.map(
-                                (certificacion, index) => (
+                                (
+                                    certificacion,
+                                    index
+                                ) => (
 
                                     <div
                                         className="faltante-card"
@@ -360,10 +557,12 @@ function SolicitudOperario({ usuario }) {
                                                 )
                                             }
                                         >
+
                                             {solicitando
                                                 ? "Enviando..."
                                                 : "Solicitar capacitación"
                                             }
+
                                         </button>
 
                                     </div>

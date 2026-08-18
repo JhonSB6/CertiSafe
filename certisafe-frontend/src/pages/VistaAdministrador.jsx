@@ -93,18 +93,6 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                     </button>
 
 
-                    <button
-                        className={
-                            vistaActual === "operarios"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() => setVistaActual("operarios")}
-                    >
-                        👥
-                        <span>Operarios</span>
-                    </button>
-
 
                     <button
                         className={
