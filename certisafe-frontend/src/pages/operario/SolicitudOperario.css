@@ -582,3 +582,21 @@
         width: 100%;
     }
 }
+.qr-acceso {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px 0 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+}
+
+.qr-acceso svg {
+    display: block;
+}
+
+.codigo-acceso p {
+    margin-top: 10px;
+    text-align: center;
+}

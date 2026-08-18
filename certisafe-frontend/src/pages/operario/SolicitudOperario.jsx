@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./SolicitudOperario.css";
+import { QRCodeSVG } from "qrcode.react";
 
 function SolicitudOperario({ usuario }) {
 
@@ -444,6 +445,20 @@ function SolicitudOperario({ usuario }) {
                             <strong>
                                 {resultado.codigoAcceso}
                             </strong>
+
+                            <div className="qr-acceso">
+
+                                <QRCodeSVG
+                                    value={resultado.codigoAcceso}
+                                    size={220}
+                                    level="H"
+                                />
+
+                            </div>
+
+                            <p>
+                                Presenta este código QR para validar tu ingreso a producción.
+                            </p>
 
                         </div>
 
