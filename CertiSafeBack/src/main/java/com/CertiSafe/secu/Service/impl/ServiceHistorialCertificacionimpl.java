@@ -1,4 +1,5 @@
 package com.CertiSafe.secu.Service.impl;
+import com.CertiSafe.secu.Dto.HistorialCertificacionDTO;
 import com.CertiSafe.secu.Entity.HistorialCertificacion;
 import com.CertiSafe.secu.Enum.EstadoCertificacion;
 import com.CertiSafe.secu.Repository.RepositoryHistorialCertificacion;
@@ -27,6 +28,11 @@ public class ServiceHistorialCertificacionimpl implements ServiceHistorialCertif
     @Override
     public HistorialCertificacion guardar(HistorialCertificacion historialCertificacion){
         return repositoryHistorialCertificacion.save(historialCertificacion);
+    }
+
+    @Override
+    public List<HistorialCertificacionDTO> listarHistorialCompleto() {
+        return repositoryHistorialCertificacion.listarHistorialCompleto();
     }
 
 }

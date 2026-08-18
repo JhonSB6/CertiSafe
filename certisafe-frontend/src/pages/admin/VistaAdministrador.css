@@ -1,0 +1,450 @@
+/* =========================================
+   HISTORIAL DE CERTIFICACIONES
+========================================= */
+
+.historial-administrador {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado-historial {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.encabezado-historial h1 {
+    margin: 0 0 10px 0;
+
+    font-size: 32px;
+    color: #123f68;
+}
+
+.encabezado-historial p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 16px;
+}
+
+
+/* =========================================
+   FILTROS
+========================================= */
+
+.filtros-historial {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        minmax(200px, 1fr)
+        minmax(160px, 0.8fr)
+        auto;
+
+    gap: 15px;
+
+    align-items: end;
+
+    background: #f4f7fb;
+
+    border: 1px solid #dbe4ee;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 25px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   CAMPOS DE FILTRO
+========================================= */
+
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.campo-filtro label {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #123f68;
+}
+
+
+/* =========================================
+   INPUTS Y SELECT
+========================================= */
+
+.campo-filtro input,
+.campo-filtro select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px 13px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #1e293b;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.campo-filtro input:focus,
+.campo-filtro select:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 105, 170, 0.12);
+}
+
+
+/* =========================================
+   BOTÓN LIMPIAR FILTROS
+========================================= */
+
+.boton-limpiar-filtros {
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #123f68;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.boton-limpiar-filtros:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   RESUMEN
+========================================= */
+
+.resumen-historial {
+    margin-bottom: 15px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.resumen-historial strong {
+    color: #123f68;
+}
+
+
+/* =========================================
+   CONTENEDOR TABLA
+========================================= */
+
+.tabla-historial-contenedor {
+    width: 100%;
+
+    overflow-x: auto;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================
+   TABLA
+========================================= */
+
+.tabla-historial {
+    width: 100%;
+
+    min-width: 900px;
+
+    border-collapse: collapse;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   CABECERA
+========================================= */
+
+.tabla-historial thead {
+    background: #123f68;
+
+    color: white;
+}
+
+.tabla-historial th {
+    padding: 15px 14px;
+
+    text-align: left;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   FILAS
+========================================= */
+
+.tabla-historial tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+
+    transition:
+        background 0.2s ease;
+}
+
+.tabla-historial tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabla-historial tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================
+   CELDAS
+========================================= */
+
+.tabla-historial td {
+    padding: 15px 14px;
+
+    color: #475569;
+
+    vertical-align: middle;
+}
+
+
+/* Primera columna
+   nombre del operario
+*/
+
+.tabla-historial td:first-child {
+    color: #123f68;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   ESTADOS
+========================================= */
+
+.estado-historial {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* VIGENTE */
+
+.estado-vigente {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+/* PENDIENTE */
+
+.estado-pendiente {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+/* VENCIDA */
+
+.estado-vencida {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+/* =========================================
+   MENSAJE
+========================================= */
+
+.mensaje-historial {
+    padding: 35px;
+
+    margin-top: 20px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .filtros-historial {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .boton-limpiar-filtros {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .historial-administrador {
+        padding: 25px;
+    }
+
+    .encabezado-historial h1 {
+        font-size: 26px;
+    }
+
+    .filtros-historial {
+        grid-template-columns: 1fr;
+
+        padding: 16px;
+    }
+
+    .tabla-historial {
+        min-width: 850px;
+    }
+}
+/* =========================================
+   BOTÓN DESCARGAR PDF
+========================================= */
+
+.boton-descargar-pdf {
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #1769aa;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.boton-descargar-pdf:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+}
+
+.boton-descargar-pdf:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   RESPONSIVE PDF
+========================================= */
+
+@media (max-width: 700px) {
+
+    .encabezado-historial {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .boton-descargar-pdf {
+        width: 100%;
+    }
+}

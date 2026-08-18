@@ -3,6 +3,7 @@ import "./VistaAdministrador.css";
 import BotonCerrarSesion from "../components/BotonCerrarSesion";
 import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
+import AdministradorHistorial from "./admin/AdministradorHistorial";
 
 function VistaAdministrador({ usuario, cerrarSesion }) {
 
@@ -254,20 +255,7 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
 
 
                 {vistaActual === "historial" && (
-
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Historial de certificaciones
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar el historial
-                            de certificaciones de los operarios.
-                        </p>
-
-                    </section>
-
+                    <AdministradorHistorial />
                 )}
 
 
