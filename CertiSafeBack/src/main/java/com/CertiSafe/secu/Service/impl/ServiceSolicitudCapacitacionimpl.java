@@ -1,12 +1,17 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Entity.Notificacion;
 import com.CertiSafe.secu.Entity.SolicitudCapacitacion;
 import com.CertiSafe.secu.Entity.TipoCertificacion;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoSolicitudCapacitacion;
+import com.CertiSafe.secu.Enum.EstadoTipoNotificacion;
+import com.CertiSafe.secu.Enum.EstadoUsuario;
+import com.CertiSafe.secu.Repository.RepositoryNotificacion;
 import com.CertiSafe.secu.Repository.RepositorySolicitudCapacitacion;
 import com.CertiSafe.secu.Repository.RepositoryTipoCertificacion;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
+import com.CertiSafe.secu.Service.ServiceNotificacion;
 import com.CertiSafe.secu.Service.ServiceSolicitudCapacitacion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,14 +22,17 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceSolicitudCapacitacionimpl
-        implements ServiceSolicitudCapacitacion {
+public class ServiceSolicitudCapacitacionimpl implements ServiceSolicitudCapacitacion {
 
     private final RepositorySolicitudCapacitacion repositorySolicitudCapacitacion;
 
     private final RepositoryUsuario repositoryUsuario;
 
+    private final ServiceNotificacion serviceNotificacion;
+
     private final RepositoryTipoCertificacion repositoryTipoCertificacion;
+
+    private final RepositoryNotificacion repositoryNotificacion;
 
 
     // =========================================================
@@ -126,7 +134,6 @@ public class ServiceSolicitudCapacitacionimpl
                                 )
                         );
 
-
         TipoCertificacion tipoCertificacion =
                 repositoryTipoCertificacion
                         .findById(idTipoCertificacion)
@@ -184,9 +191,71 @@ public class ServiceSolicitudCapacitacionimpl
         );
 
 
-        return repositorySolicitudCapacitacion.save(
-                solicitud
+        // =====================================================
+        // GUARDAR SOLICITUD
+        // =====================================================
+
+        SolicitudCapacitacion guardada =
+                repositorySolicitudCapacitacion.save(
+                        solicitud
+                );
+
+
+        // =====================================================
+        // BUSCAR ADMINISTRADOR
+        // =====================================================
+
+        Usuario administrador =
+                repositoryUsuario.findById(1L)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Administrador no encontrado."
+                                )
+                        );
+
+
+        // =====================================================
+        // CREAR NOTIFICACIÓN PARA EL ADMINISTRADOR
+        // =====================================================
+
+        Notificacion notificacion =
+                new Notificacion();
+
+        notificacion.setMensaje(
+                usuario.getNombre() + " " +
+                        usuario.getApellido() +
+                        " solicita capacitación en " +
+                        tipoCertificacion.getNombre()
         );
+
+        notificacion.setTipo(
+                EstadoTipoNotificacion.SOLICITUD_CAPACITACION
+        );
+
+        notificacion.setLeida(false);
+
+        notificacion.setFecha(
+                LocalDateTime.now()
+        );
+
+        notificacion.setUsuario(
+                administrador
+        );
+
+        // La solicitud todavía no está asociada a un taller
+        notificacion.setTaller(null);
+
+
+        // =====================================================
+        // GUARDAR NOTIFICACIÓN
+        // =====================================================
+
+        serviceNotificacion.guardar(
+                notificacion
+        );
+
+
+        return guardada;
     }
 
 

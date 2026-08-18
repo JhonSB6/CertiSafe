@@ -36,6 +36,6 @@ public class Notificacion {
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_taller", nullable = false)
+    @JoinColumn(name = "id_taller", nullable = true)
     private Taller taller;
 }
