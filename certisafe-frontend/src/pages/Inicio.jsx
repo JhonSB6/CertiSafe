@@ -2,6 +2,7 @@ import { useState } from "react";
 import VistaOperario from "./VistaOperario";
 import VistaAdministrador from "./VistaAdministrador";
 import CapacitadorCertificaciones from "./CapacitadorCertificaciones";
+import RegistroUsuario from "./RegistroUsuario";
 
 function Inicio() {
 
@@ -18,6 +19,7 @@ function Inicio() {
     const [mensajeLogin, setMensajeLogin] = useState("");
     const [ingresando, setIngresando] = useState(false);
     const [usuario, setUsuario] = useState(null);
+    const [mostrarRegistro, setMostrarRegistro] = useState(false);
 
 
 
@@ -50,33 +52,49 @@ function Inicio() {
                 }
             );
 
+            // =========================================
+            // LOGIN CORRECTO
+            // =========================================
+
             if (respuesta.ok) {
 
                 const datos = await respuesta.json();
 
-                console.log("Usuario autenticado:", datos);
+                console.log(
+                    "Usuario autenticado:",
+                    datos
+                );
 
                 setUsuario(datos);
 
                 setMostrarLogin(false);
-                console.log("Rol:", datos.rol);
 
-            } else if (respuesta.status === 401) {
+                console.log(
+                    "Rol:",
+                    datos.rol
+                );
+
+            }
+
+                // =========================================
+                // ERROR DE AUTENTICACIÓN
+            // =========================================
+
+            else {
 
                 const mensaje = await respuesta.text();
 
-                setMensajeLogin(mensaje);
-
-            } else {
-
                 setMensajeLogin(
-                    "Ocurrió un error al iniciar sesión."
+                    mensaje || "Documento o contraseña incorrectos"
                 );
             }
 
         } catch (error) {
 
-            console.error("Error de conexión:", error);
+            console.error(
+                "Error de conexión:",
+                error
+            );
 
             setMensajeLogin(
                 "No fue posible conectar con el servidor."
@@ -205,6 +223,13 @@ function Inicio() {
             />
         );
     }
+    if (mostrarRegistro) {
+        return (
+            <RegistroUsuario
+                volverInicio={() => setMostrarRegistro(false)}
+            />
+        );
+    }
 
 
     return (
@@ -228,7 +253,9 @@ function Inicio() {
                         Ingresar
                     </button>
 
-                    <button>
+                    <button
+                        onClick={() => setMostrarRegistro(true)}
+                    >
                         Registrarse
                     </button>
 

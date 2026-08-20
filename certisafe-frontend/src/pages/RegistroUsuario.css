@@ -1,0 +1,308 @@
+/* =========================================
+   PÁGINA
+========================================= */
+
+.pagina-registro {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f4f7fb;
+
+    padding: 30px;
+    box-sizing: border-box;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================
+   CONTENEDOR
+========================================= */
+
+.registro-contenedor {
+    width: 100%;
+    max-width: 650px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.08);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.registro-encabezado {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.registro-encabezado h1 {
+    margin: 0;
+
+    color: #123f68;
+
+    font-size: 30px;
+}
+
+.registro-encabezado p {
+    margin-top: 10px;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.formulario-registro {
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================================
+   FILA
+========================================= */
+
+.fila-registro {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+
+/* =========================================
+   CAMPOS
+========================================= */
+
+.campo-registro {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.campo-registro label {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #123f68;
+}
+
+
+/* =========================================
+   INPUTS / SELECT
+========================================= */
+
+.campo-registro input,
+.campo-registro select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #1e293b;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.campo-registro input:focus,
+.campo-registro select:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+            0 0 0 3px rgba(23, 105, 170, 0.12);
+}
+
+
+/* =========================================
+   BOTÓN ENVIAR
+========================================= */
+
+.boton-enviar-registro {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.1s ease;
+}
+
+
+.boton-enviar-registro:hover {
+    background: #0f4f83;
+}
+
+
+.boton-enviar-registro:active {
+    transform: scale(0.99);
+}
+
+
+.boton-enviar-registro:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   MENSAJE ÉXITO
+========================================= */
+
+.registro-mensaje-exito {
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    color: #047857;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   MENSAJE ERROR
+========================================= */
+
+.registro-mensaje-error {
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #b91c1c;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   VOLVER
+========================================= */
+
+.boton-volver-registro {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #123f68;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+
+.boton-volver-registro:hover {
+    background: #f1f5f9;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .pagina-registro {
+        padding: 15px;
+    }
+
+    .registro-contenedor {
+        padding: 25px;
+    }
+
+    .fila-registro {
+        grid-template-columns: 1fr;
+    }
+
+    .registro-encabezado h1 {
+        font-size: 26px;
+    }
+
+}

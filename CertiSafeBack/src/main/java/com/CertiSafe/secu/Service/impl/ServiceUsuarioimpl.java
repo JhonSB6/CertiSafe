@@ -3,8 +3,11 @@ package com.CertiSafe.secu.Service.impl;
 import com.CertiSafe.secu.Dto.LoginResponse;
 import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
 import com.CertiSafe.secu.Entity.Rol;
+import com.CertiSafe.secu.Entity.SolicitudRegistroUsuario;
+import com.CertiSafe.secu.Enum.EstadoSolicitudRegistro;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
 import com.CertiSafe.secu.Repository.RepositoryRol;
+import com.CertiSafe.secu.Repository.RepositorySolicitudRegistroUsuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 import com.CertiSafe.secu.Entity.Usuario;
@@ -21,6 +24,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
     private final RepositoryUsuario repositoryUsuario;
     private final RepositoryRol repositoryRol;
     private final PasswordEncoder passwordEncoder;
+    private final RepositorySolicitudRegistroUsuario repositorySolicitudRegistroUsuario;
 
     @Override
     public List<Usuario> listarUsuarios(){
@@ -111,21 +115,47 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
     @Override
     public LoginResponse login(String documento, String contrasena) {
 
-        Usuario usuario = repositoryUsuario.findByDocumento(documento)
-                .orElseThrow(() ->
-                        new RuntimeException("Documento o contraseña incorrectos"));
+        Optional<Usuario> usuarioOptional =
+                repositoryUsuario.findByDocumento(documento);
+
+        // =========================================
+        // EL USUARIO TODAVÍA NO EXISTE
+        // =========================================
+
+        if (usuarioOptional.isEmpty()) {
+
+            return manejarSolicitudRegistro(documento);
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        // =========================================
+        // USUARIO INACTIVO
+        // =========================================
 
         if (usuario.getEstado() == EstadoUsuario.INACTIVO) {
-            throw new RuntimeException("El usuario se encuentra inactivo");
+
+            throw new RuntimeException(
+                    "El usuario se encuentra inactivo"
+            );
         }
+
+        // =========================================
+        // VALIDAR CONTRASEÑA
+        // =========================================
 
         if (!passwordEncoder.matches(
                 contrasena,
                 usuario.getContrasena())) {
 
             throw new RuntimeException(
-                    "Documento o contraseña incorrectos");
+                    "Documento o contraseña incorrectos"
+            );
         }
+
+        // =========================================
+        // LOGIN CORRECTO
+        // =========================================
 
         return new LoginResponse(
                 usuario.getIdusuario(),
@@ -134,6 +164,59 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
                 usuario.getApellido(),
                 usuario.getRol().getNombre(),
                 "Inicio de sesión exitoso"
+        );
+    }
+    private LoginResponse manejarSolicitudRegistro(String documento) {
+
+        Optional<SolicitudRegistroUsuario> solicitud =
+                repositorySolicitudRegistroUsuario
+                        .findByDocumento(documento);
+
+        if (solicitud.isPresent()) {
+
+            EstadoSolicitudRegistro estado =
+                    solicitud.get().getEstado();
+
+            // =========================================
+            // SOLICITUD PENDIENTE
+            // =========================================
+
+            if (estado == EstadoSolicitudRegistro.PENDIENTE) {
+
+                throw new RuntimeException(
+                        "Su solicitud está en proceso de validación"
+                );
+            }
+
+            // =========================================
+            // SOLICITUD RECHAZADA
+            // =========================================
+
+            if (estado == EstadoSolicitudRegistro.RECHAZADA) {
+
+                throw new RuntimeException(
+                        "Su solicitud de registro fue rechazada"
+                );
+            }
+
+            // =========================================
+            // CASO EXTRA
+            // =========================================
+
+            if (estado == EstadoSolicitudRegistro.APROBADA) {
+
+                throw new RuntimeException(
+                        "Su solicitud fue aprobada. Intente iniciar sesión nuevamente."
+                );
+            }
+        }
+
+        // =========================================
+        // NO EXISTE NI USUARIO NI SOLICITUD
+        // =========================================
+
+        throw new RuntimeException(
+                "Documento o contraseña incorrectos"
         );
     }
 }

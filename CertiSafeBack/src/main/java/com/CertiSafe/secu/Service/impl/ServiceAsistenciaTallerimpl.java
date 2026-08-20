@@ -1,6 +1,7 @@
 package com.CertiSafe.secu.Service.impl;
 import com.CertiSafe.secu.Entity.AsistenciaTaller;
 import com.CertiSafe.secu.Enum.EstadoAsistencia;
+import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import com.CertiSafe.secu.Service.ServiceAsistenciaTaller;
 import com.CertiSafe.secu.Repository.RepositoryAsistenciaTaller;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,37 @@ public class ServiceAsistenciaTallerimpl implements ServiceAsistenciaTaller{
                         idTaller,
                         estado
                 );
+    }
+    @Override
+    public void decidirCertificacion(
+            Long id,
+            EstadoDecisionCertificacion decision) {
+
+        AsistenciaTaller asistencia =
+                repositoryAsistenciaTaller.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Asistencia no encontrada con id: " + id
+                                )
+                        );
+
+        if (asistencia.getEstado() != EstadoAsistencia.PRESENTE) {
+
+            throw new RuntimeException(
+                    "Solo se puede tomar una decisión sobre operarios presentes"
+            );
+        }
+
+        if (asistencia.getDecisionCertificacion() != null) {
+
+            throw new RuntimeException(
+                    "Ya se tomó una decisión sobre esta certificación"
+            );
+        }
+
+        asistencia.setDecisionCertificacion(decision);
+
+        repositoryAsistenciaTaller.save(asistencia);
     }
 
 }

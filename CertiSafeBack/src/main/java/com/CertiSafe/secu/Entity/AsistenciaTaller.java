@@ -1,6 +1,7 @@
 package com.CertiSafe.secu.Entity;
 
 import com.CertiSafe.secu.Enum.EstadoAsistencia;
+import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,4 +31,8 @@ public class AsistenciaTaller {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private EstadoDecisionCertificacion decisionCertificacion;
 }

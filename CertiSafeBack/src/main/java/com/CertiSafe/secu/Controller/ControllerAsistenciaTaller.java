@@ -2,6 +2,7 @@ package com.CertiSafe.secu.Controller;
 
 import com.CertiSafe.secu.Entity.AsistenciaTaller;
 import com.CertiSafe.secu.Enum.EstadoAsistencia;
+import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import com.CertiSafe.secu.Service.ServiceAsistenciaTaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,29 @@ public class ControllerAsistenciaTaller {
                         EstadoAsistencia.PRESENTE
                 )
         );
+    }
+    @PatchMapping("/{id}/decision-certificacion")
+    public ResponseEntity<?> decidirCertificacion(
+            @PathVariable Long id,
+            @RequestParam EstadoDecisionCertificacion decision) {
+
+        try {
+
+            serviceAsistenciaTaller.decidirCertificacion(
+                    id,
+                    decision
+            );
+
+            return ResponseEntity.ok(
+                    "Decisión registrada correctamente"
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import BotonCerrarSesion from "../components/BotonCerrarSesion";
 import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 import AdministradorHistorial from "./admin/AdministradorHistorial";
+import AdministradorSolicitudesUsuario from "./admin/AdministradorSolicitudesUsuario";
 
 function VistaAdministrador({ usuario, cerrarSesion }) {
 
@@ -93,7 +94,19 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                         <span>Talleres</span>
                     </button>
 
-
+                    <button
+                        className={
+                            vistaActual === "solicitudes-usuario"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual("solicitudes-usuario")
+                        }
+                    >
+                        📋
+                        <span>Solicitudes usuarios</span>
+                    </button>
 
                     <button
                         className={
@@ -236,21 +249,8 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                 )}
 
 
-                {vistaActual === "operarios" && (
-
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Operarios
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar y programar
-                            operarios.
-                        </p>
-
-                    </section>
-
+                {vistaActual === "solicitudes-usuario" && (
+                    <AdministradorSolicitudesUsuario />
                 )}
 
 

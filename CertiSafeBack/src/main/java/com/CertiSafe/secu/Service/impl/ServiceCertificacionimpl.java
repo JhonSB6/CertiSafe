@@ -3,6 +3,7 @@ import com.CertiSafe.secu.Entity.*;
 import com.CertiSafe.secu.Enum.EstadoAsistencia;
 import com.CertiSafe.secu.Enum.EstadoCertificacion;
 
+import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import com.CertiSafe.secu.Enum.EstadoTaller;
 import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceCertificacion;
@@ -120,6 +121,13 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
         if (asistencia.getEstado() != EstadoAsistencia.PRESENTE) {
             throw new RuntimeException(
                     "El operario no tiene asistencia registrada como PRESENTE");
+        }
+        if (asistencia.getDecisionCertificacion()
+                != EstadoDecisionCertificacion.CERTIFICADO) {
+
+            throw new RuntimeException(
+                    "El capacitador debe seleccionar CERTIFICAR antes de crear la certificación"
+            );
         }
 
         Usuario usuario = asistencia.getUsuario();

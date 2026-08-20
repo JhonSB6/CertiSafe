@@ -141,7 +141,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
                             estadoCertificacion:
                                 certificado
                                     ? "CERTIFICADO"
-                                    : "NO_CERTIFICADO"
+                                    : "NO_CERTIFICADO",
+                            decisionCertificacion:
+                                asistencia.decisionCertificacion ||
+                                null
                         };
 
                     })
@@ -191,6 +194,24 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
             const idCapacitador =
                 usuario.idUsuario;
+
+            const respuestaDecision = await fetch(
+                `http://localhost:8080/api/asistencias/${idAsistencia}/decision-certificacion?decision=CERTIFICADO`,
+                {
+                    method: "PATCH"
+                }
+            );
+
+            if (!respuestaDecision.ok) {
+
+                const mensajeError =
+                    await respuestaDecision.text();
+
+                throw new Error(
+                    mensajeError ||
+                    "No fue posible registrar la decisión."
+                );
+            }
 
 
             const url =
@@ -269,6 +290,62 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
             setMensaje(
                 error.message ||
                 "No fue posible certificar al operario."
+            );
+        }
+    };
+    const decidirNoCertificar = async (asistencia) => {
+
+        try {
+
+            const respuesta = await fetch(
+                `http://localhost:8080/api/asistencias/${asistencia.idasistencia}/decision-certificacion?decision=NO_CERTIFICADO`,
+                {
+                    method: "PATCH"
+                }
+            );
+
+            if (!respuesta.ok) {
+
+                const mensajeError =
+                    await respuesta.text();
+
+                throw new Error(
+                    mensajeError ||
+                    "No fue posible registrar la decisión."
+                );
+            }
+
+            setAsistencias(
+                asistencias.map((item) =>
+
+                    item.idasistencia === asistencia.idasistencia
+
+                        ? {
+                            ...item,
+                            estadoCertificacion:
+                                "NO_CERTIFICADO",
+                            decisionCertificacion:
+                                "NO_CERTIFICADO"
+                        }
+
+                        : item
+                )
+            );
+
+            setMensaje(
+                `${asistencia.usuario.nombre} ${asistencia.usuario.apellido} no fue certificado.`
+            );
+
+        } catch (error) {
+
+            console.error(
+                "ERROR NO CERTIFICANDO:",
+                error
+            );
+
+            setMensaje(
+                error.message ||
+                "No fue posible registrar la decisión."
             );
         }
     };
@@ -1004,27 +1081,45 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                                                                     {/* ESTADO CERTIFICACIÓN */}
 
-                                                                    {asistencia.estadoCertificacion ===
-                                                                    "CERTIFICADO" ? (
+                                                                    {asistencia.decisionCertificacion === "CERTIFICADO" ? (
 
                                                                         <p className="operario-certificado">
-
                                                                             ✓ Certificado
+                                                                        </p>
 
+                                                                    ) : asistencia.decisionCertificacion === "NO_CERTIFICADO" ? (
+
+                                                                        <p className="operario-no-certificado">
+                                                                            ✕ No certificado
                                                                         </p>
 
                                                                     ) : (
 
-                                                                        <button
-                                                                            className="btn-certificar"
-                                                                            onClick={() =>
-                                                                                certificarOperario(
-                                                                                    asistencia
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            Certificar
-                                                                        </button>
+                                                                        <div className="botones-certificacion">
+
+                                                                            <button
+                                                                                className="btn-certificar"
+                                                                                onClick={() =>
+                                                                                    certificarOperario(
+                                                                                        asistencia
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                ✓ Certificar
+                                                                            </button>
+
+                                                                            <button
+                                                                                className="btn-no-certificar"
+                                                                                onClick={() =>
+                                                                                    decidirNoCertificar(
+                                                                                        asistencia
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                ✕ No certificar
+                                                                            </button>
+
+                                                                        </div>
 
                                                                     )}
 
