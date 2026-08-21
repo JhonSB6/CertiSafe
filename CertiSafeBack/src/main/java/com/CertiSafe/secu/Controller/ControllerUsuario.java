@@ -70,11 +70,11 @@ public class ControllerUsuario {
     @PutMapping("/{id}/cambiar-password")
     public ResponseEntity<Void> cambiarContrasena(
             @PathVariable Long id,
-            @RequestParam String nuevaContrasena) {
+            @RequestBody CambiarContrasenaRequest request) {
 
         serviceUsuario.cambiarContrasena(
                 id,
-                nuevaContrasena
+                request.getNuevaContrasena()
         );
 
         return ResponseEntity.noContent().build();
