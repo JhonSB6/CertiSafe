@@ -1,11 +1,12 @@
 package com.CertiSafe.secu.Controller;
 
-import com.CertiSafe.secu.Dto.CambiarContrasenaRequest;
-import com.CertiSafe.secu.Dto.LoginRequest;
-import com.CertiSafe.secu.Dto.LoginResponse;
-import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
+import com.CertiSafe.secu.Dto.*;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
+import com.CertiSafe.secu.Dto.ActualizarPerfilRequest;
+import com.CertiSafe.secu.Dto.CambiarEstadoUsuarioRequest;
+import com.CertiSafe.secu.Dto.UsuarioResponse;
+import com.CertiSafe.secu.Enum.EstadoUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,31 @@ public class ControllerUsuario {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<UsuarioResponse> cambiarEstado(
+            @PathVariable Long id,
+            @RequestBody CambiarEstadoUsuarioRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.cambiarEstado(
+                        id,
+                        request.getEstado()
+                )
+        );
+    }
+
     @PostMapping
     public ResponseEntity<Usuario> guardar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(serviceUsuario.guardar(usuario));
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<UsuarioResponse>> listarUsuariosSeguros() {
+
+        return ResponseEntity.ok(
+                serviceUsuario.listarUsuariosSeguros()
+        );
     }
 
     @PutMapping("/{id}")
@@ -106,4 +129,28 @@ public class ControllerUsuario {
                 serviceUsuario.listarCapacitadores()
         );
     }
+    @PutMapping("/{id}/perfil")
+    public ResponseEntity<UsuarioResponse> actualizarPerfil(
+            @PathVariable Long id,
+            @RequestBody ActualizarPerfilRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.actualizarPerfil(
+                        id,
+                        request
+                )
+        );
+    }
+
+    @GetMapping("/{id}/perfil")
+    public ResponseEntity<UsuarioResponse> obtenerPerfil(
+            @PathVariable Long id
+    ) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.obtenerPerfil(id)
+        );
+    }
+
 }

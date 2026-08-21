@@ -1,13 +1,17 @@
 package com.CertiSafe.secu.Service;
 
+import com.CertiSafe.secu.Dto.ActualizarPerfilRequest;
 import com.CertiSafe.secu.Dto.LoginResponse;
+import com.CertiSafe.secu.Dto.UsuarioResponse;
 import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
 import com.CertiSafe.secu.Entity.Usuario;
+import com.CertiSafe.secu.Enum.EstadoUsuario;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ServiceUsuario {
+
     List<Usuario> listarUsuarios();
 
     List<Usuario> listarOperarios();
@@ -27,4 +31,13 @@ public interface ServiceUsuario {
     LoginResponse login(String documento, String contrasena);
 
     List<Usuario> listarCapacitadores();
+
+    List<UsuarioResponse> listarUsuariosSeguros();
+
+    UsuarioResponse obtenerPerfil(Long id);
+
+    UsuarioResponse actualizarPerfil(Long id, ActualizarPerfilRequest request);
+
+    UsuarioResponse cambiarEstado(Long id, EstadoUsuario estado);
+
 }

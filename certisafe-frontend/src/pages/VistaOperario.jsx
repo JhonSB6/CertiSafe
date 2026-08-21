@@ -1,8 +1,9 @@
 import "./VistaOperario.css";
 import { useEffect, useState } from "react";
 import SolicitudOperario from "./operario/SolicitudOperario";
+import PerfilUsuario from "../components/PerfilUsuario";
 
-function VistaOperario({ usuario, cerrarSesion }) {
+function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
 
@@ -920,18 +921,10 @@ function VistaOperario({ usuario, cerrarSesion }) {
 
                 {vistaActual === "perfil" && (
 
-                    <section className="seccion-operario">
-
-                        <h1>
-                            Mi perfil
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar y actualizar
-                            tu información personal.
-                        </p>
-
-                    </section>
+                    <PerfilUsuario
+                        usuario={usuario}
+                        actualizarUsuario={actualizarUsuario}
+                    />
 
                 )}
 

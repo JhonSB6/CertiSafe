@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Dto.ActualizarPerfilRequest;
 import com.CertiSafe.secu.Dto.LoginResponse;
 import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
 import com.CertiSafe.secu.Entity.Rol;
@@ -10,10 +11,12 @@ import com.CertiSafe.secu.Repository.RepositoryRol;
 import com.CertiSafe.secu.Repository.RepositorySolicitudRegistroUsuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
+import com.CertiSafe.secu.Dto.UsuarioResponse;
 import com.CertiSafe.secu.Entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
     private final PasswordEncoder passwordEncoder;
     private final RepositorySolicitudRegistroUsuario repositorySolicitudRegistroUsuario;
 
+
     @Override
     public List<Usuario> listarUsuarios(){
         return repositoryUsuario.findAll();
@@ -34,6 +38,144 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
     @Override
     public List<Usuario> listarOperarios() {
         return repositoryUsuario.findByRolNombreAndEstado("OPERARIO", EstadoUsuario.ACTIVO);
+    }
+    @Override
+    public List<UsuarioResponse> listarUsuariosSeguros() {
+
+        return repositoryUsuario.findAll()
+                .stream()
+                .map(this::convertirUsuarioResponse)
+                .toList();
+    }
+
+
+    @Override
+    public UsuarioResponse obtenerPerfil(Long id) {
+
+        Usuario usuario = repositoryUsuario.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
+
+        return convertirUsuarioResponse(usuario);
+    }
+
+
+    @Override
+    public UsuarioResponse actualizarPerfil(
+            Long id,
+            ActualizarPerfilRequest request
+    ) {
+
+        Usuario usuario = repositoryUsuario.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
+
+        if (request.getNombre() == null ||
+                request.getNombre().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El nombre es obligatorio"
+            );
+        }
+
+        if (request.getApellido() == null ||
+                request.getApellido().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El apellido es obligatorio"
+            );
+        }
+
+        if (request.getCorreo() == null ||
+                request.getCorreo().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El correo es obligatorio"
+            );
+        }
+
+        Optional<Usuario> usuarioCorreo =
+                repositoryUsuario.findByCorreo(
+                        request.getCorreo().trim()
+                );
+
+        if (usuarioCorreo.isPresent() &&
+                !usuarioCorreo.get()
+                        .getIdusuario()
+                        .equals(id)) {
+
+            throw new RuntimeException(
+                    "El correo ya está registrado por otro usuario"
+            );
+        }
+
+        usuario.setNombre(
+                request.getNombre().trim()
+        );
+
+        usuario.setApellido(
+                request.getApellido().trim()
+        );
+
+        usuario.setCorreo(
+                request.getCorreo().trim()
+        );
+
+        Usuario actualizado =
+                repositoryUsuario.save(usuario);
+
+        return convertirUsuarioResponse(actualizado);
+    }
+
+
+    @Override
+    public UsuarioResponse cambiarEstado(
+            Long id,
+            EstadoUsuario estado
+    ) {
+
+        Usuario usuario = repositoryUsuario.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
+
+        if (estado == null) {
+
+            throw new RuntimeException(
+                    "El estado es obligatorio"
+            );
+        }
+
+        usuario.setEstado(estado);
+
+        Usuario actualizado =
+                repositoryUsuario.save(usuario);
+
+        return convertirUsuarioResponse(actualizado);
+    }
+
+
+    private UsuarioResponse convertirUsuarioResponse(
+            Usuario usuario
+    ) {
+
+        return new UsuarioResponse(
+                usuario.getIdusuario(),
+                usuario.getDocumento(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getCorreo(),
+                usuario.getEstado().name(),
+                usuario.getRol().getNombre()
+        );
     }
 
     @Override
@@ -112,6 +254,7 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
                 EstadoUsuario.ACTIVO
         );
     }
+
     @Override
     public LoginResponse login(String documento, String contrasena) {
 

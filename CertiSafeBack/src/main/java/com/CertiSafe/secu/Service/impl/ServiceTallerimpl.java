@@ -81,6 +81,12 @@ public class ServiceTallerimpl implements ServiceTaller {
                         new RuntimeException(
                                 "Taller no encontrado con id: " + id));
 
+        if (tallerExistente.getEstado() != EstadoTaller.PROGRAMADO) {
+            throw new RuntimeException(
+                    "Solo se pueden editar talleres en estado PROGRAMADO"
+            );
+        }
+
         tallerExistente.setNombre(taller.getNombre());
         tallerExistente.setDescripcion(taller.getDescripcion());
         tallerExistente.setFecha(taller.getFecha());

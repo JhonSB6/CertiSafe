@@ -7,8 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface RepositoryPasswordResetToken
-        extends JpaRepository<PasswordResetToken, Long> {
+public interface RepositoryPasswordResetToken extends JpaRepository<PasswordResetToken, Long> {
 
     Optional<PasswordResetToken> findByToken(String token);
 

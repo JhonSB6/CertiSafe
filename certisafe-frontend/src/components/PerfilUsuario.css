@@ -1,0 +1,377 @@
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.seccion-perfil {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.perfil-encabezado {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+.perfil-encabezado h1 {
+    margin: 0 0 6px;
+
+    color: #123f68;
+
+    font-size: 30px;
+}
+
+.perfil-encabezado p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.perfil-avatar {
+    width: 64px;
+    height: 64px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    box-shadow:
+            0 5px 14px rgba(23, 105, 170, 0.18);
+}
+
+
+/* =========================================================
+   CONTENEDOR DEL FORMULARIO
+========================================================= */
+
+.perfil-contenedor {
+    width: 100%;
+    max-width: 850px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.perfil-formulario {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   CAMPO
+========================================================= */
+
+.campo-perfil {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.campo-perfil label {
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.campo-perfil input {
+    width: 100%;
+
+    min-height: 44px;
+
+    padding: 10px 13px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+.campo-perfil input:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+            0 0 0 3px rgba(23, 105, 170, 0.10);
+}
+
+.campo-perfil input:disabled {
+    background: #f8fafc;
+
+    color: #64748b;
+
+    cursor: not-allowed;
+}
+
+.campo-perfil small {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.acciones-perfil {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding-top: 8px;
+
+    margin-top: 5px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+.boton-guardar-perfil {
+    min-width: 170px;
+    min-height: 44px;
+
+    padding: 10px 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 4px 10px rgba(23, 105, 170, 0.18);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.boton-guardar-perfil:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 6px 14px rgba(23, 105, 170, 0.23);
+}
+
+.boton-guardar-perfil:active {
+    transform: translateY(0);
+}
+
+.boton-guardar-perfil:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.perfil-mensaje {
+    max-width: 850px;
+
+    margin-bottom: 18px;
+
+    padding: 13px 16px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.perfil-mensaje-exito {
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    color: #047857;
+}
+
+.perfil-mensaje-error {
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #b91c1c;
+}
+
+
+/* =========================================================
+   CARGANDO
+========================================================= */
+
+.perfil-cargando {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    color: #64748b;
+}
+
+.perfil-spinner {
+    width: 30px;
+    height: 30px;
+
+    margin-bottom: 12px;
+
+    border: 3px solid #dbe5ee;
+
+    border-top-color: #1769aa;
+
+    border-radius: 50%;
+
+    animation:
+            girar-perfil 0.8s linear infinite;
+}
+
+@keyframes girar-perfil {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .perfil-formulario {
+        grid-template-columns: 1fr;
+    }
+
+    .acciones-perfil {
+        grid-column: auto;
+
+        justify-content: stretch;
+    }
+
+    .boton-guardar-perfil {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .perfil-encabezado {
+        align-items: flex-start;
+    }
+
+    .perfil-avatar {
+        width: 52px;
+        height: 52px;
+
+        border-radius: 14px;
+
+        font-size: 20px;
+    }
+
+    .perfil-encabezado h1 {
+        font-size: 25px;
+    }
+
+    .perfil-contenedor {
+        padding: 20px;
+    }
+
+}

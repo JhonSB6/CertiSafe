@@ -448,3 +448,910 @@
         width: 100%;
     }
 }
+/* =========================================================
+   CONTENEDOR DE ENCABEZADO DE EDICIÓN
+========================================================= */
+
+.encabezado-editar-taller {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+
+/* =========================================================
+   BOTÓN VOLVER
+========================================================= */
+
+.boton-volver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 120px;
+    min-height: 42px;
+
+    padding: 10px 18px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    background: white;
+    color: #123f68;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.boton-volver:hover {
+    background: #e8eef5;
+    border-color: #1769aa;
+    transform: translateY(-1px);
+}
+
+.boton-volver:active {
+    transform: translateY(0);
+}
+
+.boton-volver:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =========================================================
+   ACCIONES DEL FORMULARIO
+========================================================= */
+
+.acciones-formulario {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 28px;
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   BOTÓN CANCELAR
+========================================================= */
+
+.boton-cancelar {
+    min-width: 120px;
+    min-height: 44px;
+
+    padding: 11px 20px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    background: white;
+    color: #475569;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.boton-cancelar:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #1e293b;
+
+    transform: translateY(-1px);
+}
+
+.boton-cancelar:active {
+    transform: translateY(0);
+}
+
+.boton-cancelar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =========================================================
+   BOTÓN GUARDAR CAMBIOS
+========================================================= */
+
+.boton-guardar {
+    min-width: 160px;
+    min-height: 44px;
+
+    padding: 11px 22px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #1769aa;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 4px 10px rgba(23, 105, 170, 0.18);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.boton-guardar:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 6px 14px rgba(23, 105, 170, 0.24);
+}
+
+.boton-guardar:active {
+    transform: translateY(0);
+}
+
+.boton-guardar:disabled {
+    background: #94a3b8;
+    box-shadow: none;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .encabezado-editar-taller {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .boton-volver {
+        width: 100%;
+    }
+
+    .acciones-formulario {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .boton-cancelar,
+    .boton-guardar {
+        width: 100%;
+        min-width: 0;
+    }
+}
+/* =========================================================
+   BOTÓN CREAR NUEVO TALLER
+========================================================= */
+
+.boton-crear-taller {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-width: 190px;
+    min-height: 44px;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #1769aa;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 4px 10px rgba(23, 105, 170, 0.18);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.boton-crear-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 6px 14px rgba(23, 105, 170, 0.24);
+}
+
+.boton-crear-taller:active {
+    transform: translateY(0);
+
+    box-shadow:
+            0 3px 8px rgba(23, 105, 170, 0.16);
+}
+
+.boton-crear-taller:focus-visible {
+    outline: 3px solid rgba(23, 105, 170, 0.25);
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .boton-crear-taller {
+        width: 100%;
+        min-width: 0;
+    }
+}
+/* =========================================================
+   ENCABEZADO USUARIOS
+========================================================= */
+
+.usuarios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+.usuarios-header h1 {
+    margin-bottom: 8px;
+}
+
+.usuarios-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TOTAL USUARIOS
+========================================================= */
+
+.usuarios-total {
+    min-width: 90px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 18px;
+
+    border-radius: 14px;
+
+    background: #eef5fb;
+
+    color: #123f68;
+}
+
+.usuarios-total strong {
+    font-size: 24px;
+}
+
+.usuarios-total span {
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.usuarios-filtros {
+    display: grid;
+
+    grid-template-columns:
+        minmax(250px, 1.7fr)
+        minmax(180px, 1fr)
+        minmax(180px, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 28px;
+
+    padding: 18px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    box-shadow:
+            0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.campo-filtro {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.campo-filtro label {
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.campo-filtro input,
+.campo-filtro select {
+    width: 100%;
+
+    min-height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 9px 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.campo-filtro input:focus,
+.campo-filtro select:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+            0 0 0 3px rgba(23, 105, 170, 0.10);
+}
+
+
+/* =========================================================
+   CONTENEDOR DE CARDS
+========================================================= */
+
+.tarjetas-usuarios {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   CARD USUARIO
+========================================================= */
+
+.usuario-card {
+    width: 100%;
+
+    min-height: 135px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.2fr)
+        minmax(300px, 1.8fr)
+        minmax(190px, auto);
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 22px 26px;
+
+    box-sizing: border-box;
+
+    background: white;
+
+    border-radius: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+            0 4px 14px rgba(0, 0, 0, 0.05);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+}
+
+.usuario-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   BORDE SEGÚN ESTADO
+========================================================= */
+
+.usuario-card-activo {
+    border-left: 5px solid #16a34a;
+}
+
+.usuario-card-inactivo {
+    border-left: 5px solid #dc3545;
+}
+
+
+/* =========================================================
+   IDENTIDAD
+========================================================= */
+
+.usuario-card-identidad {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-width: 0;
+}
+
+.usuario-avatar {
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.usuario-identidad-texto {
+    min-width: 0;
+}
+
+.usuario-identidad-texto h3 {
+    margin: 0;
+
+    color: #123f68;
+
+    font-size: 18px;
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+}
+
+.usuario-rol {
+    display: inline-block;
+
+    margin-top: 5px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   DATOS
+========================================================= */
+
+.usuario-card-datos {
+    display: grid;
+
+    grid-template-columns:
+        minmax(120px, 0.7fr)
+        minmax(180px, 1.3fr);
+
+    gap: 20px;
+
+    min-width: 0;
+}
+
+.usuario-card-datos div {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.usuario-card-datos span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.usuario-card-datos strong {
+    color: #475569;
+
+    font-size: 14px;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   ESTADO + BOTÓN
+========================================================= */
+
+.usuario-card-accion {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 10px;
+}
+
+.usuario-estado {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+.usuario-estado-activo {
+    color: #15803d;
+}
+
+.usuario-estado-inactivo {
+    color: #b91c1c;
+}
+
+.estado-punto {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BOTÓN ESTADO
+========================================================= */
+
+.boton-estado-usuario {
+    width: 185px;
+
+    min-height: 42px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.boton-estado-usuario:hover {
+    transform: translateY(-1px);
+}
+
+.boton-estado-usuario:disabled {
+    opacity: 0.65;
+
+    cursor: wait;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   ACTIVO
+========================================================= */
+
+.boton-desactivar {
+    background: #16a34a;
+
+    box-shadow:
+            0 4px 10px rgba(22, 163, 74, 0.18);
+}
+
+.boton-desactivar:hover {
+    background: #15803d;
+
+    box-shadow:
+            0 6px 14px rgba(22, 163, 74, 0.23);
+}
+
+
+/* =========================================================
+   INACTIVO
+========================================================= */
+
+.boton-activar {
+    background: #dc3545;
+
+    box-shadow:
+            0 4px 10px rgba(220, 53, 69, 0.16);
+}
+
+.boton-activar:hover {
+    background: #b02a37;
+
+    box-shadow:
+            0 6px 14px rgba(220, 53, 69, 0.22);
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.usuarios-mensaje {
+    min-height: 180px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    color: #64748b;
+}
+
+.usuarios-mensaje-error {
+    color: #b91c1c;
+}
+
+.usuarios-mensaje button {
+    margin-top: 12px;
+
+    padding: 9px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.usuarios-vacio-icono {
+    font-size: 36px;
+
+    margin-bottom: 8px;
+}
+
+.usuarios-mensaje h3 {
+    margin: 5px 0;
+
+    color: #123f68;
+}
+
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.usuarios-spinner {
+    width: 28px;
+    height: 28px;
+
+    border: 3px solid #dbe5ee;
+    border-top-color: #1769aa;
+
+    border-radius: 50%;
+
+    animation:
+            girar-usuarios 0.8s linear infinite;
+
+    margin-bottom: 12px;
+}
+
+@keyframes girar-usuarios {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .usuario-card {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 20px;
+    }
+
+    .usuario-card-accion {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+
+        justify-self: end;
+    }
+
+    .usuario-card-datos {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+}
+
+
+@media (max-width: 750px) {
+
+    .usuarios-header {
+        align-items: flex-start;
+    }
+
+    .usuarios-filtros {
+        grid-template-columns: 1fr;
+    }
+
+    .usuario-card {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 17px;
+
+        padding: 20px;
+    }
+
+    .usuario-card-identidad {
+        width: 100%;
+    }
+
+    .usuario-card-datos {
+        width: 100%;
+
+        grid-template-columns: 1fr;
+        gap: 12px;
+
+        padding-top: 15px;
+
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .usuario-card-accion {
+        width: 100%;
+
+        align-items: stretch;
+
+        padding-top: 15px;
+
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .boton-estado-usuario {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .usuarios-header {
+        flex-direction: column;
+    }
+
+    .usuarios-total {
+        align-self: stretch;
+        flex-direction: row;
+        gap: 7px;
+    }
+
+}

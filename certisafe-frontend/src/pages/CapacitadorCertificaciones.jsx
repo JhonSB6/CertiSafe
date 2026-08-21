@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./CapacitadorCertificaciones.css";
+import PerfilUsuario from "../components/PerfilUsuario";
 
-function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
+function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
 
@@ -1153,18 +1154,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion }) {
 
                 {vistaActual === "perfil" && (
 
-                    <section className="seccion-capacitador">
-
-                        <h1>
-                            Mi perfil
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar y actualizar
-                            tu información personal.
-                        </p>
-
-                    </section>
+                    <PerfilUsuario
+                        usuario={usuario}
+                        actualizarUsuario={actualizarUsuario}
+                    />
 
                 )}
 

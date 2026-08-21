@@ -5,8 +5,10 @@ import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 import AdministradorHistorial from "./admin/AdministradorHistorial";
 import AdministradorSolicitudesUsuario from "./admin/AdministradorSolicitudesUsuario";
+import AdministradorUsuarios from "./admin/AdministradorUsuarios";
+import PerfilUsuario from "../components/PerfilUsuario";
 
-function VistaAdministrador({ usuario, cerrarSesion }) {
+function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
     const [notificacionesNoLeidas, setNotificacionesNoLeidas] =  useState(0);
@@ -106,6 +108,20 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                     >
                         📋
                         <span>Solicitudes usuarios</span>
+                    </button>
+
+                    <button
+                        className={
+                            vistaActual === "usuarios"
+                                ? "menu-admin-activo"
+                                : ""
+                        }
+                        onClick={() =>
+                            setVistaActual("usuarios")
+                        }
+                    >
+                        👥
+                        <span>Usuarios</span>
                     </button>
 
                     <button
@@ -253,6 +269,9 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
                     <AdministradorSolicitudesUsuario />
                 )}
 
+                {vistaActual === "usuarios" && (
+                    <AdministradorUsuarios />
+                )}
 
                 {vistaActual === "historial" && (
                     <AdministradorHistorial />
@@ -268,18 +287,10 @@ function VistaAdministrador({ usuario, cerrarSesion }) {
 
                 {vistaActual === "perfil" && (
 
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Mi perfil
-                        </h1>
-
-                        <p>
-                            Aquí podrás consultar y actualizar
-                            tu información personal.
-                        </p>
-
-                    </section>
+                    <PerfilUsuario
+                        usuario={usuario}
+                        actualizarUsuario={actualizarUsuario}
+                    />
 
                 )}
 

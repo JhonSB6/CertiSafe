@@ -1,8 +1,8 @@
-import { useState } from "react";
 import VistaOperario from "./VistaOperario";
 import VistaAdministrador from "./VistaAdministrador";
 import CapacitadorCertificaciones from "./CapacitadorCertificaciones";
 import RegistroUsuario from "./RegistroUsuario";
+import { useEffect, useState } from "react";
 
 function Inicio() {
 
@@ -21,7 +21,64 @@ function Inicio() {
     const [usuario, setUsuario] = useState(null);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
 
+    useEffect(() => {
 
+        const usuarioGuardado =
+            localStorage.getItem("certisafe_usuario");
+
+        if (usuarioGuardado) {
+
+            try {
+
+                const datosUsuario =
+                    JSON.parse(usuarioGuardado);
+
+                setUsuario(datosUsuario);
+
+            } catch (error) {
+
+                console.error(
+                    "Error recuperando la sesión:",
+                    error
+                );
+
+                localStorage.removeItem(
+                    "certisafe_usuario"
+                );
+            }
+        }
+
+    }, []);
+
+
+    const cerrarSesion = () => {
+        setUsuario(null);
+
+        // Limpiar datos del formulario de login
+        setDocumentoLogin("");
+        setContrasenaLogin("");
+        setMensajeLogin("");
+
+        // Limpiar estados relacionados con cambio de contraseña
+        setDocumentoCambio("");
+        setUsuarioValidado(null);
+        setNuevaContrasena("");
+        setConfirmarContrasena("");
+        setMensajeCambio("");
+
+        setMostrarLogin(false);
+        setMostrarCambioContrasena(false);
+    };
+
+    const actualizarUsuario = (usuarioActualizado) => {
+
+        setUsuario(usuarioActualizado);
+
+        localStorage.setItem(
+            "certisafe_usuario",
+            JSON.stringify(usuarioActualizado)
+        );
+    };
 
     const iniciarSesion = async () => {
 
@@ -66,6 +123,11 @@ function Inicio() {
                 );
 
                 setUsuario(datos);
+
+                localStorage.setItem(
+                    "certisafe_usuario",
+                    JSON.stringify(datos)
+                );
 
                 setMostrarLogin(false);
 
@@ -210,19 +272,35 @@ function Inicio() {
         }
     };
     if (usuario && usuario.rol === "OPERARIO") {
-        return <VistaOperario usuario={usuario} cerrarSesion={() => setUsuario(null)}/>;
+        return (
+            <VistaOperario
+                usuario={usuario}
+                cerrarSesion={cerrarSesion}
+                actualizarUsuario={actualizarUsuario}
+            />
+        );
     }
+
     if (usuario && usuario.rol === "ADMIN") {
-        return <VistaAdministrador usuario={usuario} cerrarSesion={() => setUsuario(null)}/>;
+        return (
+            <VistaAdministrador
+                usuario={usuario}
+                cerrarSesion={cerrarSesion}
+                actualizarUsuario={actualizarUsuario}
+            />
+        );
     }
+
     if (usuario && usuario.rol === "CAPACITADOR") {
         return (
             <CapacitadorCertificaciones
                 usuario={usuario}
-                cerrarSesion={() => setUsuario(null)}
+                cerrarSesion={cerrarSesion}
+                actualizarUsuario={actualizarUsuario}
             />
         );
     }
+
     if (mostrarRegistro) {
         return (
             <RegistroUsuario
@@ -248,7 +326,12 @@ function Inicio() {
                 <nav className="menu">
 
                     <button
-                        onClick={() => setMostrarLogin(true)}
+                        onClick={() => {
+                            setMostrarLogin(true);
+                            setDocumentoLogin("");
+                            setContrasenaLogin("");
+                            setMensajeLogin("");
+                        }}
                     >
                         Ingresar
                     </button>
