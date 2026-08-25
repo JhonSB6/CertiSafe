@@ -24,7 +24,7 @@ public class ControllerPasswordReset {
             @RequestBody ForgotPasswordRequest request) {
 
         servicePasswordReset.solicitarRecuperacion(
-                request.getCorreo()
+                request.getDocumento()
         );
 
         return ResponseEntity.ok(

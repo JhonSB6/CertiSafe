@@ -7,6 +7,7 @@ import AdministradorHistorial from "./admin/AdministradorHistorial";
 import AdministradorSolicitudesUsuario from "./admin/AdministradorSolicitudesUsuario";
 import AdministradorUsuarios from "./admin/AdministradorUsuarios";
 import PerfilUsuario from "../components/PerfilUsuario";
+import MenuUsuario from "../components/MenuUsuario";
 
 function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
 
@@ -168,30 +169,6 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                 </nav>
 
 
-                {/* =========================
-                    OPCIONES INFERIORES
-                ========================== */}
-
-                <div className="menu-admin-inferior">
-
-                    <button
-                        onClick={() =>
-                            setVistaActual("perfil")
-                        }
-                    >
-                        ⚙
-                        <span>Mi perfil</span>
-                    </button>
-
-                    <button
-                        className="btn-cerrar-sesion"
-                        onClick={cerrarSesion}
-                    >
-                        Cerrar sesión
-                    </button>
-
-                </div>
-
             </aside>
 
 
@@ -207,32 +184,13 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
 
                 <header className="header-administrador">
 
-                    <div className="usuario-administrador">
-
-                        <div className="avatar-administrador">
-
-                            {usuario.nombre
-                                ? usuario.nombre
-                                    .charAt(0)
-                                    .toUpperCase()
-                                : "A"}
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                {usuario.nombre} {usuario.apellido}
-                            </strong>
-
-                            <span>
-                                Administrador
-                            </span>
-
-                        </div>
-
-                    </div>
+                    <MenuUsuario
+                        usuario={usuario}
+                        onPerfil={() =>
+                            setVistaActual("perfil")
+                        }
+                        onCerrarSesion={cerrarSesion}
+                    />
 
                 </header>
 

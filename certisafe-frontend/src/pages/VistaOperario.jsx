@@ -2,6 +2,7 @@ import "./VistaOperario.css";
 import { useEffect, useState } from "react";
 import SolicitudOperario from "./operario/SolicitudOperario";
 import PerfilUsuario from "../components/PerfilUsuario";
+import MenuUsuario from "../components/MenuUsuario";
 
 function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
@@ -253,32 +254,6 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
                 </nav>
 
-
-                {/* ==========================================
-                    OPCIONES INFERIORES
-                ========================================== */}
-
-                <div className="menu-inferior">
-
-                    <button
-                        onClick={() =>
-                            setVistaActual("perfil")
-                        }
-                    >
-                        ⚙
-                        <span>Mi perfil</span>
-                    </button>
-
-
-                    <button
-                        className="btn-cerrar-sesion"
-                        onClick={cerrarSesion}
-                    >
-                        Cerrar sesión
-                    </button>
-
-                </div>
-
             </aside>
 
 
@@ -294,30 +269,13 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
                 <header className="header-operario">
 
-                    <div className="usuario-header">
-
-                        <div className="avatar">
-
-                            {usuario.nombre
-                                ? usuario.nombre.charAt(0).toUpperCase()
-                                : "U"}
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                {usuario.nombre} {usuario.apellido}
-                            </strong>
-
-                            <span>
-                                Operario
-                            </span>
-
-                        </div>
-
-                    </div>
+                    <MenuUsuario
+                        usuario={usuario}
+                        onPerfil={() =>
+                            setVistaActual("perfil")
+                        }
+                        onCerrarSesion={cerrarSesion}
+                    />
 
                 </header>
 

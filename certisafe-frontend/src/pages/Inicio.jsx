@@ -7,78 +7,134 @@ import { useEffect, useState } from "react";
 function Inicio() {
 
     const [mostrarLogin, setMostrarLogin] = useState(false);
-    const [mostrarCambioContrasena, setMostrarCambioContrasena] = useState(false);
-    const [documentoCambio, setDocumentoCambio] = useState("");
-    const [validandoDocumento, setValidandoDocumento] = useState(false);
-    const [mensajeCambio, setMensajeCambio] = useState("");
-    const [usuarioValidado, setUsuarioValidado] = useState(null);
-    const [nuevaContrasena, setNuevaContrasena] = useState("");
-    const [confirmarContrasena, setConfirmarContrasena] = useState("");
-    const [documentoLogin, setDocumentoLogin] = useState("");
-    const [contrasenaLogin, setContrasenaLogin] = useState("");
-    const [mensajeLogin, setMensajeLogin] = useState("");
-    const [ingresando, setIngresando] = useState(false);
-    const [usuario, setUsuario] = useState(null);
+
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
+
+    const [mostrarCambioContrasena, setMostrarCambioContrasena] = useState(false);
+
+    const [documentoCambio, setDocumentoCambio] = useState("");
+
+    const [mensajeCambio, setMensajeCambio] = useState("");
+
+    const [solicitandoRecuperacion, setSolicitandoRecuperacion] = useState(false);
+
+    const [documentoLogin, setDocumentoLogin] = useState("");
+
+    const [contrasenaLogin, setContrasenaLogin] = useState("");
+
+    const [mensajeLogin, setMensajeLogin] = useState("");
+
+    const [ingresando, setIngresando] = useState(false);
+
+    const [usuario, setUsuario] = useState(null);
+
+
+    // =========================================================
+    // RECUPERAR SESIÓN
+    // =========================================================
 
     useEffect(() => {
 
         const usuarioGuardado =
             localStorage.getItem("certisafe_usuario");
 
-        if (usuarioGuardado) {
+        if (!usuarioGuardado) {
+            return;
+        }
 
-            try {
+        try {
 
-                const datosUsuario =
-                    JSON.parse(usuarioGuardado);
+            const datosUsuario =
+                JSON.parse(usuarioGuardado);
 
-                setUsuario(datosUsuario);
-
-            } catch (error) {
-
-                console.error(
-                    "Error recuperando la sesión:",
-                    error
-                );
+            if (
+                !datosUsuario ||
+                !datosUsuario.idUsuario ||
+                !datosUsuario.rol
+            ) {
 
                 localStorage.removeItem(
                     "certisafe_usuario"
                 );
+
+                return;
             }
+
+            setUsuario(datosUsuario);
+
+        } catch (error) {
+
+            console.error(
+                "Error recuperando la sesión:",
+                error
+            );
+
+            localStorage.removeItem(
+                "certisafe_usuario"
+            );
+
+            setUsuario(null);
         }
 
     }, []);
 
 
+    // =========================================================
+    // CERRAR SESIÓN
+    // =========================================================
+
     const cerrarSesion = () => {
+
         setUsuario(null);
 
-        // Limpiar datos del formulario de login
+        localStorage.removeItem(
+            "certisafe_usuario"
+        );
+
         setDocumentoLogin("");
         setContrasenaLogin("");
         setMensajeLogin("");
 
-        // Limpiar estados relacionados con cambio de contraseña
         setDocumentoCambio("");
-        setUsuarioValidado(null);
-        setNuevaContrasena("");
-        setConfirmarContrasena("");
         setMensajeCambio("");
+        setSolicitandoRecuperacion(false);
 
         setMostrarLogin(false);
+        setMostrarRegistro(false);
         setMostrarCambioContrasena(false);
+
+        window.history.replaceState(
+            null,
+            "",
+            window.location.href
+        );
     };
 
-    const actualizarUsuario = (usuarioActualizado) => {
 
-        setUsuario(usuarioActualizado);
+    // =========================================================
+    // ACTUALIZAR USUARIO
+    // =========================================================
+
+    const actualizarUsuario = (
+        usuarioActualizado
+    ) => {
+
+        setUsuario(
+            usuarioActualizado
+        );
 
         localStorage.setItem(
             "certisafe_usuario",
-            JSON.stringify(usuarioActualizado)
+            JSON.stringify(
+                usuarioActualizado
+            )
         );
     };
+
+
+    // =========================================================
+    // INICIAR SESIÓN
+    // =========================================================
 
     const iniciarSesion = async () => {
 
@@ -86,11 +142,16 @@ function Inicio() {
             documentoLogin.trim() === "" ||
             contrasenaLogin === ""
         ) {
-            setMensajeLogin("Ingresa documento y contraseña.");
+
+            setMensajeLogin(
+                "Ingresa documento y contraseña."
+            );
+
             return;
         }
 
         setIngresando(true);
+
         setMensajeLogin("");
 
         try {
@@ -99,23 +160,30 @@ function Inicio() {
                 "http://localhost:8080/usuarios/login",
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type": "application/json"
                     },
+
                     body: JSON.stringify({
-                        documento: documentoLogin.trim(),
-                        contrasena: contrasenaLogin
+                        documento:
+                            documentoLogin.trim(),
+
+                        contrasena:
+                            contrasenaLogin
                     })
                 }
             );
 
-            // =========================================
+
+            // =================================================
             // LOGIN CORRECTO
-            // =========================================
+            // =================================================
 
             if (respuesta.ok) {
 
-                const datos = await respuesta.json();
+                const datos =
+                    await respuesta.json();
 
                 console.log(
                     "Usuario autenticado:",
@@ -131,6 +199,8 @@ function Inicio() {
 
                 setMostrarLogin(false);
 
+                setMostrarRegistro(false);
+
                 console.log(
                     "Rol:",
                     datos.rol
@@ -138,16 +208,18 @@ function Inicio() {
 
             }
 
-                // =========================================
-                // ERROR DE AUTENTICACIÓN
-            // =========================================
+            // =================================================
+            // ERROR LOGIN
+            // =================================================
 
             else {
 
-                const mensaje = await respuesta.text();
+                const mensaje =
+                    await respuesta.text();
 
                 setMensajeLogin(
-                    mensaje || "Documento o contraseña incorrectos"
+                    mensaje ||
+                    "Documento o contraseña incorrectos"
                 );
             }
 
@@ -168,46 +240,86 @@ function Inicio() {
         }
     };
 
-    const validarDocumento = async () => {
 
-        if (documentoCambio.trim() === "") {
+    // =========================================================
+    // SOLICITAR RECUPERACIÓN DE CONTRASEÑA
+    // =========================================================
+
+    const solicitarNuevaContrasena = async () => {
+
+        if (
+            documentoCambio.trim() === ""
+        ) {
+
+            setMensajeCambio(
+                "Ingresa tu número de documento."
+            );
+
             return;
         }
 
-        setValidandoDocumento(true);
+        setSolicitandoRecuperacion(true);
+
         setMensajeCambio("");
 
         try {
 
             const respuesta = await fetch(
-                `http://localhost:8080/usuarios/validar-documento?documento=${encodeURIComponent(documentoCambio.trim())}`,
+                "http://localhost:8080/api/auth/forgot-password",
                 {
-                    method: "POST"
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        documento:
+                            documentoCambio.trim()
+                    })
                 }
             );
 
-            const datos = await respuesta.json();
 
-            if (datos.valido) {
+            // =================================================
+            // SOLICITUD CORRECTA
+            // =================================================
 
-                setUsuarioValidado(datos.idUsuario);
+            if (respuesta.ok) {
+
+                const mensaje =
+                    await respuesta.text();
 
                 setMensajeCambio(
-                    "Documento validado correctamente."
+                    mensaje ||
+                    "Si el documento está registrado, recibirás un correo con las instrucciones para restablecer tu contraseña."
                 );
 
-            } else {
+                setDocumentoCambio("");
 
-                setUsuarioValidado(null);
+            }
 
-                setMensajeCambio(datos.mensaje);
+            // =================================================
+            // ERROR DEL SERVIDOR
+            // =================================================
+
+            else {
+
+                const mensaje =
+                    await respuesta.text();
+
+                setMensajeCambio(
+                    mensaje ||
+                    "No fue posible procesar la solicitud."
+                );
             }
 
         } catch (error) {
 
-            console.error("Error al validar documento:", error);
-
-            setUsuarioValidado(null);
+            console.error(
+                "Error solicitando recuperación:",
+                error
+            );
 
             setMensajeCambio(
                 "No fue posible conectar con el servidor."
@@ -215,107 +327,86 @@ function Inicio() {
 
         } finally {
 
-            setValidandoDocumento(false);
+            setSolicitandoRecuperacion(false);
         }
     };
-    const cambiarContrasena = async () => {
 
-        if (!usuarioValidado) {
-            return;
-        }
 
-        if (nuevaContrasena === "") {
-            setMensajeCambio("Ingresa una nueva contraseña.");
-            return;
-        }
+    // =========================================================
+    // VISTA OPERARIO
+    // =========================================================
 
-        if (nuevaContrasena !== confirmarContrasena) {
-            setMensajeCambio("Las contraseñas no coinciden.");
-            return;
-        }
+    if (
+        usuario &&
+        usuario.rol === "OPERARIO"
+    ) {
 
-        try {
-
-            const respuesta = await fetch(
-                "http://localhost:8080/usuarios/" +
-                usuarioValidado +
-                "/cambiar-password?nuevaContrasena=" +
-                encodeURIComponent(nuevaContrasena),
-                {
-                    method: "PUT"
-                }
-            );
-
-            if (respuesta.ok) {
-
-                setMensajeCambio(
-                    "Contraseña cambiada correctamente."
-                );
-
-                setNuevaContrasena("");
-                setConfirmarContrasena("");
-
-            } else {
-
-                setMensajeCambio(
-                    "No fue posible cambiar la contraseña."
-                );
-            }
-
-        } catch (error) {
-
-            console.error("Error al cambiar contraseña:", error);
-
-            setMensajeCambio(
-                "No fue posible conectar con el servidor."
-            );
-        }
-    };
-    if (usuario && usuario.rol === "OPERARIO") {
         return (
             <VistaOperario
                 usuario={usuario}
                 cerrarSesion={cerrarSesion}
-                actualizarUsuario={actualizarUsuario}
+                actualizarUsuario={
+                    actualizarUsuario
+                }
             />
         );
     }
 
-    if (usuario && usuario.rol === "ADMIN") {
+
+    // =========================================================
+    // VISTA ADMINISTRADOR
+    // =========================================================
+
+    if (
+        usuario &&
+        usuario.rol === "ADMIN"
+    ) {
+
         return (
             <VistaAdministrador
                 usuario={usuario}
                 cerrarSesion={cerrarSesion}
-                actualizarUsuario={actualizarUsuario}
+                actualizarUsuario={
+                    actualizarUsuario
+                }
             />
         );
     }
 
-    if (usuario && usuario.rol === "CAPACITADOR") {
+
+    // =========================================================
+    // VISTA CAPACITADOR
+    // =========================================================
+
+    if (
+        usuario &&
+        usuario.rol === "CAPACITADOR"
+    ) {
+
         return (
             <CapacitadorCertificaciones
                 usuario={usuario}
                 cerrarSesion={cerrarSesion}
-                actualizarUsuario={actualizarUsuario}
+                actualizarUsuario={
+                    actualizarUsuario
+                }
             />
         );
     }
 
-    if (mostrarRegistro) {
-        return (
-            <RegistroUsuario
-                volverInicio={() => setMostrarRegistro(false)}
-            />
-        );
-    }
 
+    // =========================================================
+    // PÁGINA PRINCIPAL
+    // =========================================================
 
     return (
+
         <div className="pagina-inicio">
 
-            {/* =========================
+
+            {/* =================================================
                 ENCABEZADO
-            ========================== */}
+            ================================================= */}
 
             <header className="encabezado">
 
@@ -323,21 +414,56 @@ function Inicio() {
                     CERTISAFE
                 </div>
 
+
                 <nav className="menu">
+
+                    {/* =================================================
+                        INGRESAR
+                    ================================================= */}
 
                     <button
                         onClick={() => {
+
                             setMostrarLogin(true);
+
+                            setMostrarRegistro(
+                                false
+                            );
+
+                            setMostrarCambioContrasena(
+                                false
+                            );
+
                             setDocumentoLogin("");
+
                             setContrasenaLogin("");
+
                             setMensajeLogin("");
+
                         }}
                     >
                         Ingresar
                     </button>
 
+
+                    {/* =================================================
+                        REGISTRARSE
+                    ================================================= */}
+
                     <button
-                        onClick={() => setMostrarRegistro(true)}
+                        onClick={() => {
+
+                            setMostrarRegistro(true);
+
+                            setMostrarLogin(
+                                false
+                            );
+
+                            setMostrarCambioContrasena(
+                                false
+                            );
+
+                        }}
                     >
                         Registrarse
                     </button>
@@ -347,9 +473,9 @@ function Inicio() {
             </header>
 
 
-            {/* =========================
+            {/* =================================================
                 CONTENIDO PRINCIPAL
-            ========================== */}
+            ================================================= */}
 
             <main>
 
@@ -372,9 +498,9 @@ function Inicio() {
                 </section>
 
 
-                {/* =========================
+                {/* =================================================
                     QUIÉNES SOMOS
-                ========================== */}
+                ================================================= */}
 
                 <section className="informacion">
 
@@ -382,7 +508,9 @@ function Inicio() {
                         ¿Quiénes somos?
                     </h2>
 
+
                     <p className="texto-quienes-somos">
+
                         CertiSafe es una plataforma orientada a la
                         gestión de la seguridad y capacitación de
                         los operarios. Nuestro objetivo es facilitar
@@ -391,6 +519,7 @@ function Inicio() {
                         actualizada la información necesaria para
                         el desarrollo seguro de las actividades
                         laborales.
+
                     </p>
 
 
@@ -449,9 +578,9 @@ function Inicio() {
             </main>
 
 
-            {/* =========================
-                PIE DE PÁGINA
-            ========================== */}
+            {/* =================================================
+                PIE
+            ================================================= */}
 
             <footer className="pie">
 
@@ -462,9 +591,9 @@ function Inicio() {
             </footer>
 
 
-            {/* =========================
-                MODAL DE INGRESO
-            ========================== */}
+            {/* =================================================
+                MODAL LOGIN
+            ================================================= */}
 
             {mostrarLogin && (
 
@@ -474,7 +603,17 @@ function Inicio() {
 
                         <button
                             className="modal-cerrar"
-                            onClick={() => setMostrarLogin(false)}
+                            onClick={() => {
+
+                                setMostrarLogin(
+                                    false
+                                );
+
+                                setMensajeLogin(
+                                    ""
+                                );
+
+                            }}
                         >
                             ×
                         </button>
@@ -483,6 +622,7 @@ function Inicio() {
                         <h2>
                             Iniciar sesión
                         </h2>
+
 
                         <p>
                             Ingresa tus datos para acceder
@@ -499,12 +639,20 @@ function Inicio() {
                             <input
                                 type="text"
                                 placeholder="Número de documento"
-                                value={documentoLogin}
-                                onChange={(e) => {
-                                    setDocumentoLogin(e.target.value);
-                                    setMensajeLogin("");
+                                value={
+                                    documentoLogin
                                 }
-                            }
+                                onChange={(e) => {
+
+                                    setDocumentoLogin(
+                                        e.target.value
+                                    );
+
+                                    setMensajeLogin(
+                                        ""
+                                    );
+
+                                }}
                             />
 
                         </div>
@@ -519,12 +667,20 @@ function Inicio() {
                             <input
                                 type="password"
                                 placeholder="Contraseña"
-                                value={contrasenaLogin}
-                                onChange={(e) => {
-                                    setContrasenaLogin(e.target.value);
-                                    setMensajeLogin("");
+                                value={
+                                    contrasenaLogin
                                 }
-                            }
+                                onChange={(e) => {
+
+                                    setContrasenaLogin(
+                                        e.target.value
+                                    );
+
+                                    setMensajeLogin(
+                                        ""
+                                    );
+
+                                }}
                             />
 
                         </div>
@@ -537,26 +693,51 @@ function Inicio() {
                                 contrasenaLogin === "" ||
                                 ingresando
                             }
-                            onClick={iniciarSesion}
+                            onClick={
+                                iniciarSesion
+                            }
                         >
-                            {ingresando ? "Ingresando..." : "Ingresar"}
+
+                            {ingresando
+                                ? "Ingresando..."
+                                : "Ingresar"}
+
                         </button>
+
+
                         {mensajeLogin && (
+
                             <p className="mensaje-login">
                                 {mensajeLogin}
                             </p>
-                        )
-                    }
 
+                        )}
+
+
+                        {/* =================================================
+                            CAMBIAR CONTRASEÑA
+                        ================================================= */}
 
                         <button
                             className="boton-cambiar"
                             onClick={() => {
-                                setMostrarLogin(false);
-                                setMostrarCambioContrasena(true);
-                                setMensajeCambio("");
-                                setDocumentoCambio("");
-                                setUsuarioValidado(null);
+
+                                setMostrarLogin(
+                                    false
+                                );
+
+                                setMostrarCambioContrasena(
+                                    true
+                                );
+
+                                setDocumentoCambio(
+                                    ""
+                                );
+
+                                setMensajeCambio(
+                                    ""
+                                );
+
                             }}
                         >
                             Cambiar contraseña
@@ -569,23 +750,115 @@ function Inicio() {
             )}
 
 
-            {/* =========================
-                MODAL CAMBIO CONTRASEÑA
-            ========================== */}
+            {/* =================================================
+                MODAL REGISTRO
+            ================================================= */}
+
+            {mostrarRegistro && (
+
+                <div
+                    className="modal-overlay"
+                    onClick={(e) => {
+
+                        if (
+                            e.target === e.currentTarget
+                        ) {
+
+                            setMostrarRegistro(
+                                false
+                            );
+
+                        }
+
+                    }}
+                >
+
+                    <div className="modal-login modal-registro">
+
+                        <button
+                            className="modal-cerrar"
+                            onClick={() =>
+                                setMostrarRegistro(
+                                    false
+                                )
+                            }
+                        >
+                            ×
+                        </button>
+
+
+                        <RegistroUsuario
+                            volverInicio={() =>
+                                setMostrarRegistro(
+                                    false
+                                )
+                            }
+                        />
+
+                    </div>
+
+                </div>
+
+            )}
+
+
+            {/* =================================================
+                MODAL RECUPERACIÓN DE CONTRASEÑA
+            ================================================= */}
 
             {mostrarCambioContrasena && (
 
-                <div className="modal-overlay">
+                <div
+                    className="modal-overlay"
+                    onClick={(e) => {
+
+                        if (
+                            e.target === e.currentTarget
+                        ) {
+
+                            setMostrarCambioContrasena(
+                                false
+                            );
+
+                            setDocumentoCambio(
+                                ""
+                            );
+
+                            setMensajeCambio(
+                                ""
+                            );
+
+                            setSolicitandoRecuperacion(
+                                false
+                            );
+
+                        }
+
+                    }}
+                >
 
                     <div className="modal-login">
 
                         <button
                             className="modal-cerrar"
                             onClick={() => {
-                                setMostrarCambioContrasena(false);
-                                setMensajeCambio("");
-                                setDocumentoCambio("");
-                                setUsuarioValidado(null);
+
+                                setMostrarCambioContrasena(
+                                    false
+                                );
+
+                                setDocumentoCambio(
+                                    ""
+                                );
+
+                                setMensajeCambio(
+                                    ""
+                                );
+
+                                setSolicitandoRecuperacion(
+                                    false
+                                );
+
                             }}
                         >
                             ×
@@ -593,12 +866,14 @@ function Inicio() {
 
 
                         <h2>
-                            Cambiar contraseña
+                            Recuperar contraseña
                         </h2>
+
 
                         <p>
                             Ingresa tu número de documento
-                            para continuar.
+                            para solicitar la recuperación
+                            de tu contraseña.
                         </p>
 
 
@@ -611,91 +886,49 @@ function Inicio() {
                             <input
                                 type="text"
                                 placeholder="Número de documento"
-                                value={documentoCambio}
+                                value={
+                                    documentoCambio
+                                }
                                 onChange={(e) => {
-                                    setDocumentoCambio(e.target.value);
-                                    setMensajeCambio("");
-                                    setUsuarioValidado(null);
+
+                                    setDocumentoCambio(
+                                        e.target.value
+                                    );
+
+                                    setMensajeCambio(
+                                        ""
+                                    );
+
                                 }}
+                                disabled={
+                                    solicitandoRecuperacion
+                                }
                             />
 
                         </div>
 
 
-                        {!usuarioValidado ? (
+                        <button
+                            className="boton-ingresar"
+                            disabled={
+                                documentoCambio.trim() === "" ||
+                                solicitandoRecuperacion
+                            }
+                            onClick={
+                                solicitarNuevaContrasena
+                            }
+                        >
 
-                            <button
-                                className="boton-ingresar"
-                                disabled={
-                                    documentoCambio.trim() === "" ||
-                                    validandoDocumento
-                                }
-                                onClick={validarDocumento}
-                            >
-                                {validandoDocumento
-                                    ? "Validando..."
-                                    : "Solicitar nueva contraseña"}
-                            </button>
+                            {solicitandoRecuperacion
+                                ? "Enviando..."
+                                : "Solicitar nueva contraseña"}
 
-                        ) : (
-
-                            <>
-                                <div className="campo">
-
-                                    <label>
-                                        Nueva contraseña
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        placeholder="Nueva contraseña"
-                                        value={nuevaContrasena}
-                                        onChange={(e) => {
-                                            setNuevaContrasena(e.target.value);
-                                            setMensajeCambio("");
-                                        }}
-                                    />
-
-                                </div>
-
-
-                                <div className="campo">
-
-                                    <label>
-                                        Confirmar contraseña
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        placeholder="Confirmar contraseña"
-                                        value={confirmarContrasena}
-                                        onChange={(e) => {
-                                            setConfirmarContrasena(e.target.value);
-                                            setMensajeCambio("");
-                                        }}
-                                    />
-
-                                </div>
-
-
-                                <button
-                                    className="boton-ingresar"
-                                    disabled={
-                                        nuevaContrasena === "" ||
-                                        confirmarContrasena === ""
-                                    }
-                                    onClick={cambiarContrasena}
-                                >
-                                    Cambiar contraseña
-                                </button>
-                            </>
-
-                        )}
+                        </button>
 
 
                         {mensajeCambio && (
 
-                            <p>
+                            <p className="mensaje-cambio">
                                 {mensajeCambio}
                             </p>
 

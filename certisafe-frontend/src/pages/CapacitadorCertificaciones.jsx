@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./CapacitadorCertificaciones.css";
 import PerfilUsuario from "../components/PerfilUsuario";
+import MenuUsuario from "../components/MenuUsuario";
 
 function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }) {
 
@@ -448,33 +449,13 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                     <header className="header-capacitador">
 
-                        <div className="usuario-capacitador">
-
-                            <div className="avatar-capacitador">
-
-                                {usuario?.nombre
-                                    ? usuario.nombre
-                                        .charAt(0)
-                                        .toUpperCase()
-                                    : "C"}
-
-                            </div>
-
-
-                            <div>
-
-                                <strong>
-                                    {usuario?.nombre}{" "}
-                                    {usuario?.apellido}
-                                </strong>
-
-                                <span>
-                                    Capacitador
-                                </span>
-
-                            </div>
-
-                        </div>
+                        <MenuUsuario
+                            usuario={usuario}
+                            onPerfil={() =>
+                                setVistaActual("perfil")
+                            }
+                            onCerrarSesion={cerrarSesion}
+                        />
 
                     </header>
 
@@ -586,39 +567,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                 </nav>
 
-
-                {/* =================================================
-                    OPCIONES INFERIORES
-                ================================================= */}
-
-                <div className="menu-capacitador-inferior">
-
-
-                    {/* PERFIL */}
-
-                    <button
-                        onClick={() =>
-                            setVistaActual("perfil")
-                        }
-                    >
-                        ⚙
-                        <span>
-                            Mi perfil
-                        </span>
-                    </button>
-
-
-                    {/* CERRAR SESIÓN */}
-
-                    <button
-                        className="boton-cerrar-sesion-capacitador"
-                        onClick={cerrarSesion}
-                    >
-                        Cerrar sesión
-                    </button>
-
-                </div>
-
             </aside>
 
 
@@ -635,33 +583,13 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                 <header className="header-capacitador">
 
-                    <div className="usuario-capacitador">
-
-                        <div className="avatar-capacitador">
-
-                            {usuario?.nombre
-                                ? usuario.nombre
-                                    .charAt(0)
-                                    .toUpperCase()
-                                : "C"}
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                {usuario?.nombre}{" "}
-                                {usuario?.apellido}
-                            </strong>
-
-                            <span>
-                                Capacitador
-                            </span>
-
-                        </div>
-
-                    </div>
+                    <MenuUsuario
+                        usuario={usuario}
+                        onPerfil={() =>
+                            setVistaActual("perfil")
+                        }
+                        onCerrarSesion={cerrarSesion}
+                    />
 
                 </header>
 

@@ -16,16 +16,28 @@ function RegistroUsuario({ volverInicio }) {
     const [error, setError] = useState("");
     const [cargando, setCargando] = useState(false);
 
+
+    // =========================================================
+    // MANEJAR CAMBIOS DEL FORMULARIO
+    // =========================================================
+
     const manejarCambio = (e) => {
 
         const { name, value } = e.target;
 
-        setFormulario({
-            ...formulario,
+        setFormulario((anterior) => ({
+            ...anterior,
             [name]: value
-        });
+        }));
 
+        setMensaje("");
+        setError("");
     };
+
+
+    // =========================================================
+    // ENVIAR SOLICITUD
+    // =========================================================
 
     const enviarSolicitud = async (e) => {
 
@@ -34,12 +46,89 @@ function RegistroUsuario({ volverInicio }) {
         setMensaje("");
         setError("");
 
-        if (!formulario.idRol) {
-            setError("Debes seleccionar un tipo de usuario.");
+
+        // -----------------------------------------------------
+        // VALIDACIONES
+        // -----------------------------------------------------
+
+        if (!formulario.documento.trim()) {
+
+            setError(
+                "Ingresa tu número de documento."
+            );
+
             return;
         }
 
+        if (!formulario.nombre.trim()) {
+
+            setError(
+                "Ingresa tu nombre."
+            );
+
+            return;
+        }
+
+        if (!formulario.apellido.trim()) {
+
+            setError(
+                "Ingresa tu apellido."
+            );
+
+            return;
+        }
+
+        if (!formulario.correo.trim()) {
+
+            setError(
+                "Ingresa tu correo electrónico."
+            );
+
+            return;
+        }
+
+        if (!formulario.contrasena) {
+
+            setError(
+                "Ingresa una contraseña."
+            );
+
+            return;
+        }
+
+        if (!formulario.idRol) {
+
+            setError(
+                "Debes seleccionar un tipo de usuario."
+            );
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // CORREO
+        // -----------------------------------------------------
+
+        const correoValido =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (
+            !correoValido.test(
+                formulario.correo.trim()
+            )
+        ) {
+
+            setError(
+                "Ingresa un correo electrónico válido."
+            );
+
+            return;
+        }
+
+
         setCargando(true);
+
 
         try {
 
@@ -47,33 +136,91 @@ function RegistroUsuario({ volverInicio }) {
                 "http://localhost:8080/api/solicitudes-registro",
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type": "application/json"
                     },
+
                     body: JSON.stringify({
-                        documento: formulario.documento,
-                        nombre: formulario.nombre,
-                        apellido: formulario.apellido,
-                        correo: formulario.correo,
-                        contrasena: formulario.contrasena,
-                        idRol: Number(formulario.idRol)
+
+                        documento:
+                            formulario.documento.trim(),
+
+                        nombre:
+                            formulario.nombre.trim(),
+
+                        apellido:
+                            formulario.apellido.trim(),
+
+                        correo:
+                            formulario.correo.trim(),
+
+                        contrasena:
+                        formulario.contrasena,
+
+                        idRol:
+                            Number(
+                                formulario.idRol
+                            )
                     })
                 }
             );
 
-            const datos = await respuesta.json();
+
+            // -------------------------------------------------
+            // RESPUESTA
+            // -------------------------------------------------
+
+            let datos;
+
+            try {
+
+                datos =
+                    await respuesta.json();
+
+            } catch {
+
+                datos = null;
+
+            }
+
 
             if (!respuesta.ok) {
+
+                let mensajeError =
+                    "No fue posible enviar la solicitud.";
+
+                if (typeof datos === "string") {
+
+                    mensajeError =
+                        datos;
+
+                } else if (
+                    datos &&
+                    typeof datos.message === "string"
+                ) {
+
+                    mensajeError =
+                        datos.message;
+
+                }
+
                 throw new Error(
-                    typeof datos === "string"
-                        ? datos
-                        : "No fue posible enviar la solicitud."
+                    mensajeError
                 );
             }
 
+
+            // -------------------------------------------------
+            // ÉXITO
+            // -------------------------------------------------
+
             setMensaje(
-                "Solicitud enviada correctamente. Un administrador debe validar tus datos antes de permitirte ingresar al sistema."
+                "Solicitud enviada correctamente. " +
+                "Un administrador debe validar tus datos " +
+                "antes de permitirte ingresar al sistema."
             );
+
 
             setFormulario({
                 documento: "",
@@ -84,115 +231,156 @@ function RegistroUsuario({ volverInicio }) {
                 idRol: ""
             });
 
+
         } catch (error) {
 
-            setError(error.message);
+            console.error(
+                "ERROR ENVIANDO SOLICITUD:",
+                error
+            );
+
+            setError(
+                error.message ||
+                "No fue posible enviar la solicitud."
+            );
 
         } finally {
 
             setCargando(false);
-
         }
     };
 
+
+    // =========================================================
+    // VISTA
+    // =========================================================
+
     return (
 
-        <div className="pagina-registro">
+        <div className="registro-modal-contenido">
 
-            <div className="registro-contenedor">
 
-                <div className="registro-encabezado">
+            {/* =================================================
+                ENCABEZADO
+            ================================================= */}
+
+            <div className="registro-encabezado">
+
+                <div>
 
                     <h1>
                         Solicitud de registro
                     </h1>
 
                     <p>
-                        Completa tus datos para solicitar acceso a CertiSafe.
+                        Completa tus datos para solicitar
+                        acceso a CertiSafe.
                     </p>
 
                 </div>
 
+            </div>
 
-                {mensaje && (
 
-                    <div className="registro-mensaje-exito">
+            {/* =================================================
+                MENSAJE DE ÉXITO
+            ================================================= */}
+
+            {mensaje && (
+
+                <div className="registro-mensaje-exito">
+
+                    <strong>
+                        Solicitud enviada
+                    </strong>
+
+                    <p>
                         {mensaje}
+                    </p>
+
+                </div>
+
+            )}
+
+
+            {/* =================================================
+                MENSAJE DE ERROR
+            ================================================= */}
+
+            {error && (
+
+                <div className="registro-mensaje-error">
+
+                    {error}
+
+                </div>
+
+            )}
+
+
+            {/* =================================================
+                FORMULARIO
+            ================================================= */}
+
+            {!mensaje && (
+
+                <form
+                    className="formulario-registro"
+                    onSubmit={enviarSolicitud}
+                >
+
+
+                    {/* =================================================
+                        DOCUMENTO
+                    ================================================= */}
+
+                    <div className="campo-registro">
+
+                        <label>
+                            Documento
+                        </label>
+
+                        <input
+                            type="text"
+                            name="documento"
+                            value={
+                                formulario.documento
+                            }
+                            onChange={
+                                manejarCambio
+                            }
+                            placeholder="Número de documento"
+                            autoComplete="off"
+                            required
+                        />
+
                     </div>
 
-                )}
 
+                    {/* =================================================
+                        NOMBRE / APELLIDO
+                    ================================================= */}
 
-                {error && (
-
-                    <div className="registro-mensaje-error">
-                        {error}
-                    </div>
-
-                )}
-
-
-                {!mensaje && (
-
-                    <form
-                        className="formulario-registro"
-                        onSubmit={enviarSolicitud}
-                    >
+                    <div className="fila-registro">
 
                         <div className="campo-registro">
 
                             <label>
-                                Documento
+                                Nombre
                             </label>
 
                             <input
                                 type="text"
-                                name="documento"
-                                value={formulario.documento}
-                                onChange={manejarCambio}
-                                placeholder="Número de documento"
+                                name="nombre"
+                                value={
+                                    formulario.nombre
+                                }
+                                onChange={
+                                    manejarCambio
+                                }
+                                placeholder="Nombre"
                                 required
                             />
-
-                        </div>
-
-
-                        <div className="fila-registro">
-
-                            <div className="campo-registro">
-
-                                <label>
-                                    Nombre
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="nombre"
-                                    value={formulario.nombre}
-                                    onChange={manejarCambio}
-                                    placeholder="Nombre"
-                                    required
-                                />
-
-                            </div>
-
-
-                            <div className="campo-registro">
-
-                                <label>
-                                    Apellido
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="apellido"
-                                    value={formulario.apellido}
-                                    onChange={manejarCambio}
-                                    placeholder="Apellido"
-                                    required
-                                />
-
-                            </div>
 
                         </div>
 
@@ -200,97 +388,157 @@ function RegistroUsuario({ volverInicio }) {
                         <div className="campo-registro">
 
                             <label>
-                                Correo electrónico
+                                Apellido
                             </label>
 
                             <input
-                                type="email"
-                                name="correo"
-                                value={formulario.correo}
-                                onChange={manejarCambio}
-                                placeholder="correo@ejemplo.com"
+                                type="text"
+                                name="apellido"
+                                value={
+                                    formulario.apellido
+                                }
+                                onChange={
+                                    manejarCambio
+                                }
+                                placeholder="Apellido"
                                 required
                             />
 
                         </div>
 
-
-                        <div className="campo-registro">
-
-                            <label>
-                                Contraseña
-                            </label>
-
-                            <input
-                                type="password"
-                                name="contrasena"
-                                value={formulario.contrasena}
-                                onChange={manejarCambio}
-                                placeholder="Crea una contraseña"
-                                required
-                            />
-
-                        </div>
+                    </div>
 
 
-                        <div className="campo-registro">
+                    {/* =================================================
+                        CORREO
+                    ================================================= */}
 
-                            <label>
-                                Tipo de usuario
-                            </label>
+                    <div className="campo-registro">
 
-                            <select
-                                name="idRol"
-                                value={formulario.idRol}
-                                onChange={manejarCambio}
-                                required
-                            >
+                        <label>
+                            Correo electrónico
+                        </label>
 
-                                <option value="">
-                                    Selecciona un rol
-                                </option>
+                        <input
+                            type="email"
+                            name="correo"
+                            value={
+                                formulario.correo
+                            }
+                            onChange={
+                                manejarCambio
+                            }
+                            placeholder="correo@ejemplo.com"
+                            autoComplete="email"
+                            required
+                        />
 
-                                <option value="2">
-                                    Operario
-                                </option>
-
-                                <option value="3">
-                                    Capacitador
-                                </option>
-
-                            </select>
-
-                        </div>
+                    </div>
 
 
-                        <button
-                            type="submit"
-                            className="boton-enviar-registro"
-                            disabled={cargando}
+                    {/* =================================================
+                        CONTRASEÑA
+                    ================================================= */}
+
+                    <div className="campo-registro">
+
+                        <label>
+                            Contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            name="contrasena"
+                            value={
+                                formulario.contrasena
+                            }
+                            onChange={
+                                manejarCambio
+                            }
+                            placeholder="Crea una contraseña"
+                            autoComplete="new-password"
+                            required
+                        />
+
+                    </div>
+
+
+                    {/* =================================================
+                        TIPO DE USUARIO
+                    ================================================= */}
+
+                    <div className="campo-registro">
+
+                        <label>
+                            Tipo de usuario
+                        </label>
+
+                        <select
+                            name="idRol"
+                            value={
+                                formulario.idRol
+                            }
+                            onChange={
+                                manejarCambio
+                            }
+                            required
                         >
 
-                            {cargando
-                                ? "Enviando solicitud..."
-                                : "Enviar solicitud"}
+                            <option value="">
+                                Selecciona un rol
+                            </option>
 
-                        </button>
+                            <option value="2">
+                                Operario
+                            </option>
 
-                    </form>
+                            <option value="3">
+                                Capacitador
+                            </option>
 
-                )}
+                        </select>
 
+                    </div>
+
+
+                    {/* =================================================
+                        BOTÓN
+                    ================================================= */}
+
+                    <button
+                        type="submit"
+                        className="boton-enviar-registro"
+                        disabled={cargando}
+                    >
+
+                        {cargando
+                            ? "Enviando solicitud..."
+                            : "Enviar solicitud"}
+
+                    </button>
+
+                </form>
+
+            )}
+
+
+            {/* =================================================
+                DESPUÉS DEL REGISTRO
+            ================================================= */}
+
+            {mensaje && (
 
                 <button
-                    className="boton-volver-registro"
+                    type="button"
+                    className="boton-cerrar-registro"
                     onClick={volverInicio}
                 >
-                    ← Volver al inicio
+                    Cerrar
                 </button>
 
-            </div>
+            )}
 
         </div>
-
     );
 }
 

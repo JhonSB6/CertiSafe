@@ -1,55 +1,46 @@
-/* =========================================
-   PÁGINA
-========================================= */
+/* =========================================================
+   CONTENIDO DEL MODAL DE REGISTRO
+========================================================= */
 
-.pagina-registro {
-    min-height: 100vh;
+.registro-modal-contenido {
     width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #f4f7fb;
-
-    padding: 30px;
     box-sizing: border-box;
 
     font-family: Arial, Helvetica, sans-serif;
 }
 
 
-/* =========================================
-   CONTENEDOR
-========================================= */
-
-.registro-contenedor {
-    width: 100%;
-    max-width: 650px;
-
-    background: white;
-
-    padding: 40px;
-
-    border-radius: 20px;
-
-    border: 1px solid #e5e7eb;
-
-    box-shadow:
-            0 8px 25px rgba(0, 0, 0, 0.08);
-
-    box-sizing: border-box;
-}
-
-
-/* =========================================
+/* =========================================================
    ENCABEZADO
-========================================= */
+========================================================= */
 
 .registro-encabezado {
-    text-align: center;
+    display: flex;
+    align-items: center;
 
-    margin-bottom: 30px;
+    gap: 14px;
+
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.registro-icono {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #eef5fb;
+
+    font-size: 22px;
 }
 
 .registro-encabezado h1 {
@@ -57,76 +48,77 @@
 
     color: #123f68;
 
-    font-size: 30px;
+    font-size: 25px;
+    font-weight: 700;
+
+    line-height: 1.25;
 }
 
 .registro-encabezado p {
-    margin-top: 10px;
+    margin: 6px 0 0;
 
     color: #64748b;
 
-    font-size: 15px;
+    font-size: 14px;
 
     line-height: 1.5;
 }
 
 
-/* =========================================
+/* =========================================================
    FORMULARIO
-========================================= */
+========================================================= */
 
 .formulario-registro {
     display: flex;
     flex-direction: column;
 
-    gap: 20px;
+    gap: 15px;
+
+    width: 100%;
 }
-
-
-/* =========================================
-   FILA
-========================================= */
 
 .fila-registro {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    gap: 18px;
+    gap: 14px;
+
+    width: 100%;
 }
 
 
-/* =========================================
+/* =========================================================
    CAMPOS
-========================================= */
+========================================================= */
 
 .campo-registro {
     display: flex;
     flex-direction: column;
 
-    gap: 8px;
+    gap: 7px;
+
+    min-width: 0;
 }
 
 .campo-registro label {
-    font-size: 15px;
+    color: #334155;
 
-    font-weight: 600;
-
-    color: #123f68;
+    font-size: 13px;
+    font-weight: 700;
 }
-
-
-/* =========================================
-   INPUTS / SELECT
-========================================= */
 
 .campo-registro input,
 .campo-registro select {
     width: 100%;
 
-    box-sizing: border-box;
+    min-height: 43px;
 
-    padding: 13px 14px;
+    padding: 10px 12px;
+
+    box-sizing: border-box;
 
     border: 1px solid #cbd5e1;
 
@@ -136,7 +128,7 @@
 
     color: #1e293b;
 
-    font-size: 15px;
+    font-size: 14px;
 
     outline: none;
 
@@ -145,26 +137,31 @@
             box-shadow 0.2s ease;
 }
 
+.campo-registro input::placeholder {
+    color: #94a3b8;
+}
 
 .campo-registro input:focus,
 .campo-registro select:focus {
     border-color: #1769aa;
 
     box-shadow:
-            0 0 0 3px rgba(23, 105, 170, 0.12);
+            0 0 0 3px rgba(23, 105, 170, 0.10);
 }
 
 
-/* =========================================
+/* =========================================================
    BOTÓN ENVIAR
-========================================= */
+========================================================= */
 
 .boton-enviar-registro {
     width: 100%;
 
-    padding: 14px;
+    min-height: 45px;
 
-    margin-top: 5px;
+    margin-top: 4px;
+
+    padding: 11px 18px;
 
     border: none;
 
@@ -174,91 +171,113 @@
 
     color: white;
 
-    font-size: 16px;
-
+    font-size: 14px;
     font-weight: 700;
 
     cursor: pointer;
 
     transition:
             background 0.2s ease,
-            transform 0.1s ease;
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
 }
-
 
 .boton-enviar-registro:hover {
     background: #0f4f83;
-}
 
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 5px 12px rgba(23, 105, 170, 0.20);
+}
 
 .boton-enviar-registro:active {
-    transform: scale(0.99);
+    transform: translateY(0);
 }
-
 
 .boton-enviar-registro:disabled {
     background: #94a3b8;
 
-    cursor: not-allowed;
+    cursor: wait;
+
+    box-shadow: none;
+
+    transform: none;
 }
 
 
-/* =========================================
-   MENSAJE ÉXITO
-========================================= */
+/* =========================================================
+   MENSAJE DE ÉXITO
+========================================================= */
 
 .registro-mensaje-exito {
+    padding: 16px;
+
+    margin-bottom: 18px;
+
+    border-radius: 11px;
+
     background: #ecfdf5;
 
     border: 1px solid #a7f3d0;
 
     color: #047857;
 
-    padding: 15px;
-
-    border-radius: 10px;
+    text-align: center;
 
     line-height: 1.5;
+}
 
-    margin-bottom: 20px;
+.registro-mensaje-exito strong {
+    display: block;
 
-    text-align: center;
+    margin-bottom: 5px;
+
+    font-size: 15px;
+}
+
+.registro-mensaje-exito p {
+    margin: 0;
+
+    font-size: 13px;
 }
 
 
-/* =========================================
-   MENSAJE ERROR
-========================================= */
+/* =========================================================
+   MENSAJE DE ERROR
+========================================================= */
 
 .registro-mensaje-error {
+    padding: 12px 14px;
+
+    margin-bottom: 4px;
+
+    border-radius: 9px;
+
     background: #fef2f2;
 
     border: 1px solid #fecaca;
 
     color: #b91c1c;
 
-    padding: 15px;
-
-    border-radius: 10px;
+    font-size: 13px;
 
     line-height: 1.5;
-
-    margin-bottom: 20px;
-
-    text-align: center;
 }
 
 
-/* =========================================
-   VOLVER
-========================================= */
+/* =========================================================
+   BOTÓN CERRAR DESPUÉS DEL REGISTRO
+========================================================= */
 
-.boton-volver-registro {
+.boton-cerrar-registro {
     width: 100%;
 
-    margin-top: 20px;
+    min-height: 43px;
 
-    padding: 12px;
+    margin-top: 5px;
+
+    padding: 10px 16px;
 
     border: 1px solid #cbd5e1;
 
@@ -268,41 +287,51 @@
 
     color: #123f68;
 
-    font-size: 15px;
-
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
 
     cursor: pointer;
 
-    transition: background 0.2s ease;
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease;
 }
 
-
-.boton-volver-registro:hover {
+.boton-cerrar-registro:hover {
     background: #f1f5f9;
+
+    border-color: #94a3b8;
 }
 
 
-/* =========================================
+/* =========================================================
    RESPONSIVE
-========================================= */
+========================================================= */
 
-@media (max-width: 600px) {
-
-    .pagina-registro {
-        padding: 15px;
-    }
-
-    .registro-contenedor {
-        padding: 25px;
-    }
+@media (max-width: 560px) {
 
     .fila-registro {
         grid-template-columns: 1fr;
     }
 
-    .registro-encabezado h1 {
-        font-size: 26px;
+    .registro-encabezado {
+        align-items: flex-start;
     }
 
+    .registro-icono {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+    .registro-encabezado h1 {
+        font-size: 22px;
+    }
+
+    .registro-encabezado p {
+        font-size: 13px;
+    }
 }

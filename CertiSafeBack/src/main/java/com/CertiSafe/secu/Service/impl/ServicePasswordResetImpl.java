@@ -34,9 +34,9 @@ public class ServicePasswordResetImpl implements ServicePasswordReset {
     }
 
     @Override
-    public void solicitarRecuperacion(String correo) {
+    public void solicitarRecuperacion(String documento) {
 
-        Usuario usuario = repositoryUsuario.findByCorreo(correo)
+        Usuario usuario = repositoryUsuario.findByDocumento(documento)
                 .orElseThrow(() ->
                         new RuntimeException("No se pudo procesar la solicitud"));
 
