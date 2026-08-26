@@ -386,18 +386,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         CERTISAFE
                     </div>
 
-
                     <nav>
-
-                        <button
-                            className="menu-capacitador-activo"
-                        >
-                            🏠
-                            <span>
-                                Inicio
-                            </span>
-                        </button>
-
 
                         <button>
                             📚
@@ -417,26 +406,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         </button>
 
                     </nav>
-
-
-                    <div className="menu-capacitador-inferior">
-
-                        <button>
-                            ⚙
-                            <span>
-                                Mi perfil
-                            </span>
-                        </button>
-
-
-                        <button
-                            className="boton-cerrar-sesion-capacitador"
-                            onClick={cerrarSesion}
-                        >
-                            Cerrar sesión
-                        </button>
-
-                    </div>
 
                 </aside>
 
@@ -505,26 +474,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                 {/* NAVEGACIÓN */}
 
                 <nav>
-
-
-                    {/* INICIO */}
-
-                    <button
-                        className={
-                            vistaActual === "inicio"
-                                ? "menu-capacitador-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("inicio")
-                        }
-                    >
-                        🏠
-                        <span>
-                            Inicio
-                        </span>
-                    </button>
-
 
                     {/* TALLERES */}
 

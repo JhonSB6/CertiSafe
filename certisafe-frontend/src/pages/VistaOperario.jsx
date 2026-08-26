@@ -6,7 +6,7 @@ import MenuUsuario from "../components/MenuUsuario";
 
 function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
-    const [vistaActual, setVistaActual] = useState("inicio");
+    const [vistaActual, setVistaActual] = useState("talleres");
 
     const [talleres, setTalleres] = useState([]);
     const [cargandoTalleres, setCargandoTalleres] = useState(false);
@@ -199,19 +199,6 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
 
                     <button
                         className={
-                            vistaActual === "inicio"
-                                ? "menu-activo"
-                                : ""
-                        }
-                        onClick={() => setVistaActual("inicio")}
-                    >
-                        🏠
-                        <span>Inicio</span>
-                    </button>
-
-
-                    <button
-                        className={
                             vistaActual === "talleres"
                                 ? "menu-activo"
                                 : ""
@@ -284,99 +271,7 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
                     INICIO
                 ========================================== */}
 
-                {vistaActual === "inicio" && (
 
-                    <section className="inicio-operario">
-
-                        <h1>
-                            Bienvenido, {usuario.nombre}
-                        </h1>
-
-                        <p>
-                            Consulta tus talleres,
-                            certificaciones y estado
-                            para ingreso a producción.
-                        </p>
-
-
-                        <div className="tarjetas-resumen">
-
-                            <article className="resumen-card">
-
-                                <h3>
-                                    Mis talleres
-                                </h3>
-
-                                <p>
-                                    Consulta los talleres
-                                    programados y tus
-                                    próximas capacitaciones.
-                                </p>
-
-                                <button
-                                    onClick={() =>
-                                        setVistaActual("talleres")
-                                    }
-                                >
-                                    Ver talleres
-                                </button>
-
-                            </article>
-
-
-                            <article className="resumen-card">
-
-                                <h3>
-                                    Mis certificaciones
-                                </h3>
-
-                                <p>
-                                    Consulta tus certificaciones
-                                    y su estado actual.
-                                </p>
-
-                                <button
-                                    onClick={() =>
-                                        setVistaActual(
-                                            "certificaciones"
-                                        )
-                                    }
-                                >
-                                    Ver certificaciones
-                                </button>
-
-                            </article>
-
-
-                            <article className="resumen-card">
-
-                                <h3>
-                                    Ingreso a producción
-                                </h3>
-
-                                <p>
-                                    Consulta si cumples
-                                    los requisitos para
-                                    ingresar a producción.
-                                </p>
-
-                                <button
-                                    onClick={() =>
-                                        setVistaActual(
-                                            "produccion"
-                                        )
-                                    }
-                                >
-                                    Consultar estado
-                                </button>
-
-                            </article>
-
-                        </div>
-
-                    </section>
-
-                )}
 
 
                 {/* ==========================================

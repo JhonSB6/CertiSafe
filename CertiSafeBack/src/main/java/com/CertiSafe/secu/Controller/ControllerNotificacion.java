@@ -59,4 +59,12 @@ public class ControllerNotificacion {
                 serviceNotificacion.contarNoLeidas(idUsuario)
         );
     }
+    @PutMapping("/usuario/{idUsuario}/leer-todas")
+    public ResponseEntity<Void> marcarTodasComoLeidas(
+            @PathVariable Long idUsuario) {
+
+        serviceNotificacion.marcarTodasComoLeidas(idUsuario);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -59,4 +59,18 @@ public class ServiceNotificacionimpl implements ServiceNotificacion {
                 .countByUsuarioIdusuarioAndLeidaFalse(
                         idUsuario);
     }
+    @Override
+    public void marcarTodasComoLeidas(Long idUsuario) {
+
+        List<Notificacion> notificaciones =
+                repositoryNotificacion
+                        .findByUsuarioIdusuarioAndLeidaFalse(idUsuario);
+
+        for (Notificacion notificacion : notificaciones) {
+
+            notificacion.setLeida(true);
+        }
+
+        repositoryNotificacion.saveAll(notificaciones);
+    }
 }

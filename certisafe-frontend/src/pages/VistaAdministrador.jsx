@@ -1,18 +1,35 @@
 import { useEffect, useState } from "react";
 import "./VistaAdministrador.css";
-import BotonCerrarSesion from "../components/BotonCerrarSesion";
+
 import AdministradorTalleres from "./admin/AdministradorTalleres";
 import AdministradorNotificaciones from "./admin/AdministradorNotificaciones";
 import AdministradorHistorial from "./admin/AdministradorHistorial";
 import AdministradorSolicitudesUsuario from "./admin/AdministradorSolicitudesUsuario";
 import AdministradorUsuarios from "./admin/AdministradorUsuarios";
+
 import PerfilUsuario from "../components/PerfilUsuario";
 import MenuUsuario from "../components/MenuUsuario";
 
-function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
 
-    const [vistaActual, setVistaActual] = useState("inicio");
-    const [notificacionesNoLeidas, setNotificacionesNoLeidas] =  useState(0);
+function VistaAdministrador({
+                                usuario,
+                                cerrarSesion,
+                                actualizarUsuario
+                            }) {
+
+    /*
+     * La vista inicial ahora es Talleres.
+     * Se elimina completamente la opción "Inicio".
+     */
+    const [vistaActual, setVistaActual] = useState("talleres");
+
+    const [notificacionesNoLeidas, setNotificacionesNoLeidas] =
+        useState(0);
+
+
+    // ==========================================
+    // CONTADOR DE NOTIFICACIONES
+    // ==========================================
 
     useEffect(() => {
 
@@ -42,48 +59,52 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                     "Error consultando notificaciones:",
                     error
                 );
+
             }
+
         };
 
+
         cargarContador();
+
 
         const intervalo = setInterval(
             cargarContador,
             10000
         );
 
+
         return () => clearInterval(intervalo);
 
     }, [usuario]);
+
 
     return (
 
         <div className="dashboard-administrador">
 
-            {/* =========================
+            {/* ==========================================
                 MENÚ LATERAL
-            ========================== */}
+            ========================================== */}
 
             <aside className="menu-administrador">
 
                 <div className="logo-administrador">
-                    CERTISAFE
+
+                    <span className="logo-admin-icono">
+                        C
+                    </span>
+
+                    <span>
+                        CERTISAFE
+                    </span>
+
                 </div>
+
 
                 <nav>
 
-                    <button
-                        className={
-                            vistaActual === "inicio"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() => setVistaActual("inicio")}
-                    >
-                        🏠
-                        <span>Inicio</span>
-                    </button>
-
+                    {/* TALLERES */}
 
                     <button
                         className={
@@ -91,11 +112,23 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                                 ? "menu-admin-activo"
                                 : ""
                         }
-                        onClick={() => setVistaActual("talleres")}
+                        onClick={() =>
+                            setVistaActual("talleres")
+                        }
                     >
-                        📚
-                        <span>Talleres</span>
+
+                        <span className="menu-admin-icono">
+                            📚
+                        </span>
+
+                        <span>
+                            Talleres
+                        </span>
+
                     </button>
+
+
+                    {/* SOLICITUDES */}
 
                     <button
                         className={
@@ -107,9 +140,19 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                             setVistaActual("solicitudes-usuario")
                         }
                     >
-                        📋
-                        <span>Solicitudes usuarios</span>
+
+                        <span className="menu-admin-icono">
+                            📋
+                        </span>
+
+                        <span>
+                            Solicitudes usuarios
+                        </span>
+
                     </button>
+
+
+                    {/* USUARIOS */}
 
                     <button
                         className={
@@ -121,9 +164,19 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                             setVistaActual("usuarios")
                         }
                     >
-                        👥
-                        <span>Usuarios</span>
+
+                        <span className="menu-admin-icono">
+                            👥
+                        </span>
+
+                        <span>
+                            Usuarios
+                        </span>
+
                     </button>
+
+
+                    {/* HISTORIAL */}
 
                     <button
                         className={
@@ -131,12 +184,23 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                                 ? "menu-admin-activo"
                                 : ""
                         }
-                        onClick={() => setVistaActual("historial")}
+                        onClick={() =>
+                            setVistaActual("historial")
+                        }
                     >
-                        📜
-                        <span>Historial certificaciones</span>
+
+                        <span className="menu-admin-icono">
+                            📜
+                        </span>
+
+                        <span>
+                            Historial certificaciones
+                        </span>
+
                     </button>
 
+
+                    {/* NOTIFICACIONES */}
 
                     <button
                         className={
@@ -149,105 +213,128 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
                         }
                     >
 
-    <span className="icono-notificacion">
-        🔔
+                        <span className="icono-notificacion">
 
-        {notificacionesNoLeidas > 0 && (
-            <span className="contador-notificaciones">
-                {notificacionesNoLeidas}
-            </span>
-        )}
+                            🔔
 
-    </span>
+                            {notificacionesNoLeidas > 0 && (
+
+                                <span className="contador-notificaciones">
+
+                                    {notificacionesNoLeidas}
+
+                                </span>
+
+                            )}
+
+                        </span>
 
                         <span>
-        Notificaciones
-    </span>
+                            Notificaciones
+                        </span>
 
                     </button>
 
                 </nav>
 
-
             </aside>
 
 
-            {/* =========================
+            {/* ==========================================
                 CONTENIDO PRINCIPAL
-            ========================== */}
+            ========================================== */}
 
             <main className="contenido-administrador">
 
-                {/* =========================
+                {/* ==========================================
                     HEADER
-                ========================== */}
+                ========================================== */}
 
                 <header className="header-administrador">
 
                     <MenuUsuario
                         usuario={usuario}
+
                         onPerfil={() =>
                             setVistaActual("perfil")
                         }
-                        onCerrarSesion={cerrarSesion}
+
+                        onCerrarSesion={
+                            cerrarSesion
+                        }
                     />
 
                 </header>
 
 
-                {/* =========================
-                    CONTENIDO TEMPORAL
-                ========================== */}
-
-                {vistaActual === "inicio" && (
-
-                    <section className="seccion-administrador">
-
-                        <h1>
-                            Bienvenido, {usuario.nombre}
-                        </h1>
-
-                        <p>
-                            Desde aquí puedes gestionar los
-                            talleres, operarios, certificaciones
-                            y notificaciones de CertiSafe.
-                        </p>
-
-                    </section>
-
-                )}
-
+                {/* ==========================================
+                    TALLERES
+                ========================================== */}
 
                 {vistaActual === "talleres" && (
+
                     <AdministradorTalleres />
+
                 )}
 
+
+                {/* ==========================================
+                    SOLICITUDES DE USUARIOS
+                ========================================== */}
 
                 {vistaActual === "solicitudes-usuario" && (
+
                     <AdministradorSolicitudesUsuario />
+
                 )}
+
+
+                {/* ==========================================
+                    USUARIOS
+                ========================================== */}
 
                 {vistaActual === "usuarios" && (
+
                     <AdministradorUsuarios />
+
                 )}
+
+
+                {/* ==========================================
+                    HISTORIAL
+                ========================================== */}
 
                 {vistaActual === "historial" && (
+
                     <AdministradorHistorial />
+
                 )}
 
 
+                {/* ==========================================
+                    NOTIFICACIONES
+                ========================================== */}
+
                 {vistaActual === "notificaciones" && (
+
                     <AdministradorNotificaciones
                         usuario={usuario}
                     />
+
                 )}
 
+
+                {/* ==========================================
+                    PERFIL
+                ========================================== */}
 
                 {vistaActual === "perfil" && (
 
                     <PerfilUsuario
                         usuario={usuario}
-                        actualizarUsuario={actualizarUsuario}
+                        actualizarUsuario={
+                            actualizarUsuario
+                        }
                     />
 
                 )}
@@ -255,7 +342,9 @@ function VistaAdministrador({ usuario, cerrarSesion, actualizarUsuario }) {
             </main>
 
         </div>
+
     );
 }
+
 
 export default VistaAdministrador;

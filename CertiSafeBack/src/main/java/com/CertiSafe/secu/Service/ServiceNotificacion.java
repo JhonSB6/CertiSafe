@@ -16,4 +16,6 @@ public interface ServiceNotificacion {
     void marcarComoLeida(Long id);
 
     long contarNoLeidas(Long idUsuario);
+
+    void marcarTodasComoLeidas(Long idUsuario);
 }

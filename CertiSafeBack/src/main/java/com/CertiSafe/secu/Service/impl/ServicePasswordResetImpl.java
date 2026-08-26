@@ -3,6 +3,7 @@ package com.CertiSafe.secu.Service.impl;
 import com.CertiSafe.secu.Entity.PasswordResetToken;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
+import com.CertiSafe.secu.Exception.DocumentoNoValidoException;
 import com.CertiSafe.secu.Repository.RepositoryPasswordResetToken;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 import com.CertiSafe.secu.Service.ServiceEmail;
@@ -38,12 +39,16 @@ public class ServicePasswordResetImpl implements ServicePasswordReset {
 
         Usuario usuario = repositoryUsuario.findByDocumento(documento)
                 .orElseThrow(() ->
-                        new RuntimeException("No se pudo procesar la solicitud"));
+                        new DocumentoNoValidoException(
+                                "Documento no válido."
+                        ));
 
         if (usuario.getEstado() == null ||
                 usuario.getEstado() != EstadoUsuario.ACTIVO) {
 
-            throw new RuntimeException("No se pudo procesar la solicitud");
+            throw new DocumentoNoValidoException(
+                    "El usuario asociado al documento no está activo."
+            );
         }
 
         repositoryPasswordResetToken
@@ -55,13 +60,17 @@ public class ServicePasswordResetImpl implements ServicePasswordReset {
 
         String token = UUID.randomUUID().toString();
 
-        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        PasswordResetToken passwordResetToken =
+                new PasswordResetToken();
 
         passwordResetToken.setToken(token);
+
         passwordResetToken.setUsuario(usuario);
+
         passwordResetToken.setFechaExpiracion(
                 LocalDateTime.now().plusMinutes(15)
         );
+
         passwordResetToken.setUsado(false);
 
         repositoryPasswordResetToken.save(passwordResetToken);

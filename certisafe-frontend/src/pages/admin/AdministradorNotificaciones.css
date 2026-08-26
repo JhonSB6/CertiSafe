@@ -1,0 +1,662 @@
+/* =========================================================
+   CERTISAFE - NOTIFICACIONES ADMINISTRADOR
+========================================================= */
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.notificaciones-encabezado {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 30px;
+}
+
+
+.notificaciones-encabezado h1 {
+    margin: 0 0 10px;
+
+    color: #172033;
+
+    font-size: clamp(30px, 4vw, 42px);
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+}
+
+
+.notificaciones-encabezado h1::after {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 3px;
+
+    margin-top: 12px;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+}
+
+
+.notificaciones-encabezado p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BOTÓN MARCAR TODAS
+========================================================= */
+
+.btn-marcar-todas {
+    flex-shrink: 0;
+
+    padding: 11px 17px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 5px 14px rgba(23, 105, 170, 0.18);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.btn-marcar-todas:hover {
+    background: #0f4f83;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 8px 20px rgba(23, 105, 170, 0.22);
+}
+
+
+.btn-marcar-todas:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   LISTA
+========================================================= */
+
+.lista-notificaciones {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin-top: 30px;
+}
+
+
+/* =========================================================
+   CARD NOTIFICACIÓN
+========================================================= */
+
+.notificacion-card {
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 20px 22px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-left: 3px solid #cbd5e1;
+
+    border-radius: 12px;
+
+    box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.05);
+
+    cursor: pointer;
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease,
+            background 0.2s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.notificacion-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+            0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+
+/* =========================================================
+   NOTIFICACIÓN NO LEÍDA
+========================================================= */
+
+.notificacion-card.no-leida {
+    border-left-color: #1769aa;
+
+    background: #ffffff;
+
+    box-shadow:
+            0 7px 22px rgba(23, 105, 170, 0.08);
+}
+
+
+.notificacion-card.no-leida:hover {
+    border-left-color: #0f4f83;
+}
+
+
+/* =========================================================
+   NOTIFICACIÓN LEÍDA
+========================================================= */
+
+.notificacion-card.leida {
+    border-left-color: #cbd5e1;
+
+    background: #f8fafc;
+
+    opacity: 0.82;
+}
+
+
+.notificacion-card.leida:hover {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   ICONO
+========================================================= */
+
+.notificacion-icono {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    font-size: 20px;
+
+    box-shadow:
+            0 4px 10px rgba(23, 105, 170, 0.08);
+}
+
+
+.notificacion-card.leida .notificacion-icono {
+    background: #f1f5f9;
+
+    filter: grayscale(0.4);
+}
+
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
+
+.notificacion-contenido {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.notificacion-titulo {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 6px;
+}
+
+
+.notificacion-titulo h3 {
+    margin: 0;
+
+    color: #123b63;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+.notificacion-card.leida .notificacion-titulo h3 {
+    color: #475569;
+}
+
+
+/* =========================================================
+   MENSAJE
+========================================================= */
+
+.notificacion-contenido p {
+    margin: 0 0 8px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+.notificacion-card.leida .notificacion-contenido p {
+    color: #64748b;
+}
+
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+.notificacion-contenido small {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ETIQUETA NUEVA
+========================================================= */
+
+.notificacion-nueva {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 4px 8px;
+
+    border-radius: 20px;
+
+    background: #dbeafe;
+
+    color: #1769aa;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   ESTADO CARGANDO
+========================================================= */
+
+.notificaciones-estado {
+    padding: 35px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================================================
+   SIN NOTIFICACIONES
+========================================================= */
+
+.notificaciones-vacias {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 250px;
+
+    padding: 40px 30px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    background: white;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 16px;
+
+    box-shadow:
+            0 8px 25px rgba(15, 23, 42, 0.04);
+}
+
+
+.notificaciones-vacias-icono {
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+
+    background: #eff6ff;
+
+    font-size: 25px;
+}
+
+
+.notificaciones-vacias h3 {
+    margin: 0 0 8px;
+
+    color: #123b63;
+
+    font-size: 20px;
+}
+
+
+.notificaciones-vacias p {
+    max-width: 500px;
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.mensaje-error {
+    margin-top: 20px;
+
+    padding: 14px 16px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 750px) {
+
+    .notificaciones-encabezado {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .btn-marcar-todas {
+        width: 100%;
+    }
+
+
+    .notificacion-card {
+        padding: 17px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .notificacion-card {
+        gap: 13px;
+
+        padding: 15px;
+    }
+
+
+    .notificacion-icono {
+        width: 38px;
+        height: 38px;
+
+        min-width: 38px;
+
+        font-size: 18px;
+    }
+
+
+    .notificacion-titulo h3 {
+        font-size: 14px;
+    }
+
+
+    .notificacion-contenido p {
+        font-size: 13px;
+    }
+
+}
+/* =========================================================
+   ACCIONES DE TALLER
+========================================================= */
+
+.notificacion-acciones {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 16px;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   BOTÓN INICIAR
+========================================================= */
+
+.btn-iniciar-taller {
+    padding: 9px 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 4px 10px rgba(23, 105, 170, 0.16);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.btn-iniciar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 6px 15px rgba(23, 105, 170, 0.22);
+}
+
+
+/* =========================================================
+   BOTÓN CANCELAR
+========================================================= */
+
+.btn-cancelar-taller {
+    padding: 9px 15px;
+
+    border: 1px solid #dc2626;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #dc2626;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+
+.btn-cancelar-taller:hover {
+    background: #dc2626;
+
+    color: white;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BOTONES DESHABILITADOS
+========================================================= */
+
+.btn-iniciar-taller:disabled,
+.btn-cancelar-taller:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .notificacion-acciones {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .btn-iniciar-taller,
+    .btn-cancelar-taller {
+        width: 100%;
+    }
+
+}

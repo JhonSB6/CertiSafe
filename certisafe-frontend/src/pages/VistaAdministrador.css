@@ -1,813 +1,257 @@
-/* =========================================
-   CONTENEDOR PRINCIPAL
-========================================= */
+/* =========================================================
+   CERTISAFE - DASHBOARD ADMINISTRADOR
+   IDENTIDAD VISUAL ACTUAL
+========================================================= */
+
+
+/* =========================================================
+   VARIABLES VISUALES
+========================================================= */
 
 .dashboard-administrador {
-    display: flex;
+    --cs-azul-oscuro: #123b63;
+    --cs-azul: #1769aa;
+    --cs-azul-profundo: #0b2035;
+    --cs-azul-claro: #8ed1ff;
+
+    --cs-fondo: #f8fafc;
+    --cs-fondo-secundario: #f1f5f9;
+
+    --cs-texto: #172033;
+    --cs-texto-secundario: #64748b;
+    --cs-texto-suave: #94a3b8;
+
+    --cs-borde: #e2e8f0;
+    --cs-blanco: #ffffff;
+
     min-height: 100vh;
     width: 100%;
-    background: #f4f7fb;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #1e293b;
+
+    display: flex;
+
+    background: var(--cs-fondo);
+
+    color: var(--cs-texto);
+
+    font-family:
+            Inter,
+            "Segoe UI",
+            Arial,
+            Helvetica,
+            sans-serif;
 }
 
 
-/* =========================================
+/* =========================================================
    MENÚ LATERAL
-========================================= */
+========================================================= */
 
-.menu-administrador {
-    width: 280px;
-    min-height: 100vh;
-    background: #123f68;
-    color: white;
-    padding: 30px 20px;
+.dashboard-administrador .menu-administrador {
+    position: sticky;
+    top: 0;
+
+    width: 265px;
+    min-width: 265px;
+    height: 100vh;
+
     box-sizing: border-box;
 
     display: flex;
     flex-direction: column;
 
-    flex-shrink: 0;
-}
+    padding: 30px 20px;
 
+    background:
+            linear-gradient(
+                    180deg,
+                    #0b2035 0%,
+                    #123b63 55%,
+                    #1769aa 100%
+            );
 
-/* =========================================
-   LOGO
-========================================= */
-
-.logo-administrador {
-    text-align: center;
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 55px;
-}
-
-
-/* =========================================
-   NAVEGACIÓN
-========================================= */
-
-.menu-administrador nav {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-
-.menu-administrador nav button {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    gap: 18px;
-
-    background: transparent;
-    border: none;
     color: white;
 
-    padding: 17px 20px;
-    border-radius: 14px;
+    box-shadow:
+            8px 0 30px rgba(15, 23, 42, 0.08);
+
+    z-index: 20;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.dashboard-administrador .logo-administrador {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 45px;
+
+    margin-bottom: 55px;
+
+    color: white;
+
+    font-size: 22px;
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    user-select: none;
+}
+
+
+.dashboard-administrador .logo-administrador::before {
+    content: "✓";
+
+    width: 32px;
+    height: 32px;
+
+    margin-right: 10px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #1769aa;
+
+    color: white;
 
     font-size: 17px;
+    font-weight: 800;
+
+    box-shadow:
+            0 5px 14px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+.dashboard-administrador .menu-administrador nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.dashboard-administrador .menu-administrador nav button {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 13px 16px;
+
+    box-sizing: border-box;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
     text-align: left;
 
     cursor: pointer;
 
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease,
+            border-color 0.2s ease;
 }
 
 
-.menu-administrador nav button:hover {
-    background: rgba(255, 255, 255, 0.12);
+.dashboard-administrador .menu-administrador nav button:hover {
+    background: rgba(255, 255, 255, 0.09);
+
+    color: white;
+
+    transform: translateX(2px);
 }
 
 
-.menu-administrador nav button.menu-admin-activo {
-    background: rgba(255, 255, 255, 0.20);
+/* =========================================================
+   MENÚ ACTIVO
+========================================================= */
+
+.dashboard-administrador
+.menu-administrador
+nav
+button.menu-admin-activo {
+    background:
+            rgba(255, 255, 255, 0.14);
+
+    border-color:
+            rgba(255, 255, 255, 0.10);
+
+    color: white;
+
+    box-shadow:
+            inset 3px 0 0 #8ed1ff;
 }
 
 
-/* =========================================
-   MENÚ INFERIOR
-========================================= */
+.dashboard-administrador
+.menu-administrador
+nav
+button.menu-admin-activo::after {
+    content: "";
 
-.menu-admin-inferior {
-    margin-top: auto;
+    position: absolute;
 
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+    right: 14px;
 
-
-.menu-admin-inferior button {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    padding: 13px 16px;
-
-    border: none;
-    border-radius: 10px;
-
-    font-size: 16px;
-
-    cursor: pointer;
-
-    background: white;
-    color: #123f68;
-
-    transition: background 0.2s ease;
-}
-
-
-.menu-admin-inferior button:hover {
-    background: #e8eef5;
-}
-
-
-/* =========================================
-   CONTENIDO PRINCIPAL
-========================================= */
-
-.contenido-administrador {
-    flex: 1;
-
-    padding: 40px 50px;
-
-    box-sizing: border-box;
-
-    overflow-x: hidden;
-}
-
-
-/* =========================================
-   HEADER
-========================================= */
-
-.header-administrador {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    margin-bottom: 40px;
-}
-
-
-.usuario-administrador {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-
-.usuario-administrador strong {
-    display: block;
-
-    font-size: 16px;
-
-    color: #123f68;
-}
-
-
-.usuario-administrador span {
-    display: block;
-
-    margin-top: 4px;
-
-    font-size: 14px;
-
-    color: #64748b;
-}
-
-
-/* =========================================
-   AVATAR
-========================================= */
-
-.avatar-administrador {
-    width: 48px;
-    height: 48px;
+    width: 6px;
+    height: 6px;
 
     border-radius: 50%;
 
-    background: #1769aa;
-    color: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 20px;
-    font-weight: bold;
+    background: #8ed1ff;
 }
 
 
-/* =========================================
-   SECCIONES
-========================================= */
-
-.seccion-administrador {
-    background: white;
-
-    border-radius: 18px;
-
-    padding: 35px;
-
-    border: 1px solid #e5e7eb;
-
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.06);
-}
-
-
-.seccion-administrador h1 {
-    margin-top: 0;
-    margin-bottom: 12px;
-
-    font-size: 32px;
-
-    color: #123f68;
-}
-
-
-.seccion-administrador p {
-    margin: 0;
-
-    color: #64748b;
-
-    font-size: 16px;
-
-    line-height: 1.6;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 900px) {
-
-    .menu-administrador {
-        width: 220px;
-    }
-
-    .contenido-administrador {
-        padding: 30px;
-    }
-
-}
-
-
-@media (max-width: 650px) {
-
-    .menu-administrador {
-        width: 80px;
-
-        padding: 25px 10px;
-    }
-
-
-    .logo-administrador {
-        font-size: 0;
-    }
-
-
-    .menu-administrador nav button {
-        justify-content: center;
-
-        padding: 15px;
-    }
-
-
-    .menu-administrador nav button span {
-        display: none;
-    }
-
-
-    .menu-admin-inferior button {
-        justify-content: center;
-
-        padding: 13px;
-    }
-
-
-    .menu-admin-inferior button span {
-        display: none;
-    }
-
-
-    .contenido-administrador {
-        padding: 20px;
-    }
- }
- /* ==========================================
-    FORMULARIO CREAR TALLER
- ========================================== */
-
- .formulario-taller {
-     margin-top: 30px;
-     background: #ffffff;
-     padding: 35px;
-     border-radius: 18px;
-     border: 1px solid #e5e7eb;
-     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-
-     max-width: 900px;
-     box-sizing: border-box;
- }
-
-
- /* ==========================================
-    ENCABEZADO DEL FORMULARIO
- ========================================== */
-
- .encabezado-formulario {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-
-     margin-bottom: 25px;
- }
-
- .encabezado-formulario h1 {
-     margin: 0;
- }
-
- .encabezado-formulario p {
-     margin-top: 8px;
- }
-
-
- /* ==========================================
-    CAMPOS
- ========================================== */
-
- .campo-formulario {
-     display: flex;
-     flex-direction: column;
-     gap: 8px;
-
-     margin-bottom: 22px;
- }
-
- .campo-formulario label {
-     font-size: 16px;
-     font-weight: 600;
-     color: #123f68;
- }
-
-
- /* ==========================================
-    INPUTS
- ========================================== */
-
- .campo-formulario input,
- .campo-formulario textarea,
- .campo-formulario select {
-     width: 100%;
-     box-sizing: border-box;
-
-     padding: 12px 14px;
-
-     border: 1px solid #cbd5e1;
-     border-radius: 9px;
-
-     font-size: 16px;
-     font-family: inherit;
-
-     background: #ffffff;
-     color: #1e293b;
-
-     outline: none;
-
-     transition:
-         border-color 0.2s ease,
-         box-shadow 0.2s ease;
- }
-
- .campo-formulario input:focus,
- .campo-formulario textarea:focus,
- .campo-formulario select:focus {
-     border-color: #1769aa;
-
-     box-shadow:
-         0 0 0 3px rgba(23, 105, 170, 0.12);
- }
-
- .campo-formulario textarea {
-     resize: vertical;
-     min-height: 110px;
- }
-
-
- /* ==========================================
-    FILA FECHA / HORAS
- ========================================== */
-
- .fila-formulario {
-     display: grid;
-     grid-template-columns: 1fr 1fr 1fr;
-     gap: 20px;
- }
-
-
- /* ==========================================
-    BOTÓN VOLVER
- ========================================== */
-
- .encabezado-formulario button {
-     border: none;
-     border-radius: 9px;
-
-     padding: 10px 18px;
-
-     background: #e8eef5;
-     color: #123f68;
-
-     font-size: 15px;
-     font-weight: 600;
-
-     cursor: pointer;
-
-     transition: 0.2s ease;
- }
-
- .encabezado-formulario button:hover {
-     background: #d6e2ee;
- }
-
-
- /* ==========================================
-    NUEVA CERTIFICACIÓN
- ========================================== */
-
- .boton-nueva-certificacion {
-     border: 1px solid #1769aa;
-     border-radius: 9px;
-
-     padding: 11px 18px;
-
-     background: white;
-     color: #1769aa;
-
-     font-size: 15px;
-     font-weight: 600;
-
-     cursor: pointer;
-
-     transition: 0.2s ease;
-
-     margin-bottom: 20px;
- }
-
- .boton-nueva-certificacion:hover {
-     background: #1769aa;
-     color: white;
- }
-
-
- /* ==========================================
-    PANEL NUEVA CERTIFICACIÓN
- ========================================== */
-
- .nueva-certificacion {
-     background: #f4f7fb;
-
-     border: 1px solid #dbe4ee;
-     border-radius: 12px;
-
-     padding: 20px;
-
-     margin-bottom: 25px;
- }
-
- .nueva-certificacion label {
-     display: block;
-
-     margin-bottom: 8px;
-
-     font-weight: 600;
-     color: #123f68;
- }
-
- .nueva-certificacion input {
-     width: 100%;
-     box-sizing: border-box;
-
-     padding: 12px;
-
-     border: 1px solid #cbd5e1;
-     border-radius: 8px;
-
-     font-size: 15px;
-
-     margin-bottom: 15px;
- }
-
- .nueva-certificacion div {
-     display: flex;
-     gap: 10px;
- }
-
- .nueva-certificacion button {
-     border: none;
-     border-radius: 8px;
-
-     padding: 10px 16px;
-
-     cursor: pointer;
-
-     font-size: 14px;
- }
-
-
- /* ==========================================
-    CREAR TALLER
- ========================================== */
-
- .boton-guardar-taller {
-     width: 100%;
-
-     margin-top: 15px;
-
-     padding: 14px 20px;
-
-     border: none;
-     border-radius: 10px;
-
-     background: #1769aa;
-     color: white;
-
-     font-size: 16px;
-     font-weight: 700;
-
-     cursor: pointer;
-
-     transition: background 0.2s ease;
- }
-
- .boton-guardar-taller:hover {
-     background: #0f4f83;
- }
-
- .boton-guardar-taller:disabled {
-     opacity: 0.6;
-     cursor: not-allowed;
- }
-
-
- /* ==========================================
-    MENSAJES
- ========================================== */
-
- .mensaje-exito {
-     background: #ecfdf5;
-     color: #047857;
-
-     border: 1px solid #a7f3d0;
-
-     padding: 12px 16px;
-
-     border-radius: 9px;
-
-     margin: 15px 0;
- }
-
- .mensaje-error {
-     background: #fef2f2;
-     color: #b91c1c;
-
-     border: 1px solid #fecaca;
-
-     padding: 12px 16px;
-
-     border-radius: 9px;
-
-     margin: 15px 0;
- }
-
-
- /* ==========================================
-    RESPONSIVE
- ========================================== */
-
- @media (max-width: 800px) {
-
-     .fila-formulario {
-         grid-template-columns: 1fr;
-         gap: 0;
-     }
-
-     .formulario-taller {
-         padding: 25px;
-     }
-
-     .encabezado-formulario {
-         flex-direction: column;
-         align-items: flex-start;
-         gap: 15px;
-     }
- }
- .tarjetas-talleres-admin {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-     gap: 25px;
-     margin-top: 30px;
- }
-
- .taller-admin-card {
-     background: #ffffff;
-     border-radius: 16px;
-     padding: 25px;
-     box-sizing: border-box;
-     border: 1px solid #e5e7eb;
-     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-     transition: transform 0.2s ease,
-                 box-shadow 0.2s ease;
- }
-
- .taller-admin-card:hover {
-     transform: translateY(-3px);
-     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
- }
-
- .taller-admin-card h2 {
-     margin-top: 0;
-     margin-bottom: 15px;
-     color: #123f68;
-     font-size: 22px;
- }
-
- .taller-admin-card p {
-     margin: 8px 0;
-     color: #64748b;
-     line-height: 1.5;
- }
-
- .taller-admin-card strong {
-     color: #475569;
- }
-
- .resumen-aforo {
-     margin-top: 20px;
-     padding: 15px;
-     background: #f4f7fb;
-     border-radius: 12px;
-     border-left: 4px solid #1769aa;
- }
-
- .resumen-aforo p {
-     margin: 6px 0;
- }
-
- .boton-programar-operarios {
-     margin-top: 20px;
-     width: 100%;
-     padding: 12px 16px;
-     border: none;
-     border-radius: 8px;
-     background: #1769aa;
-     color: white;
-     font-size: 15px;
-     cursor: pointer;
- }
-
- .boton-programar-operarios:hover {
-     background: #0f4f83;
- }
- .boton-programar-taller {
-     width: 100%;
-     margin-top: 20px;
-     padding: 12px 16px;
-
-     border: none;
-     border-radius: 8px;
-
-     background: #1769aa;
-     color: white;
-
-     font-size: 15px;
-     cursor: pointer;
-
-     transition: background 0.2s ease;
- }
-
- .boton-programar-taller:hover {
-     background: #0f4f83;
- }
- .tarjetas-talleres-admin {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-     gap: 25px;
-     margin-top: 30px;
- }
-
- .taller-admin-card {
-     background: #ffffff;
-     border-radius: 16px;
-     padding: 25px;
-     box-sizing: border-box;
-
-     border: 1px solid #e5e7eb;
-
-     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-
-     transition: transform 0.2s ease,
-                 box-shadow 0.2s ease;
- }
-
- .taller-admin-card:hover {
-     transform: translateY(-3px);
-     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
- }
-
- .taller-admin-card h2 {
-     margin-top: 0;
-     margin-bottom: 15px;
-
-     color: #123f68;
-     font-size: 22px;
- }
-
- .taller-admin-card p {
-     margin: 8px 0;
-     color: #64748b;
-     line-height: 1.5;
- }
- .resumen-aforo {
-     margin-top: 20px;
-     padding: 15px;
-
-     background: #f4f7fb;
-     border-radius: 12px;
-
-     border-left: 4px solid #1769aa;
- }
-
- .resumen-aforo p {
-     margin: 6px 0;
- }
-
- .resumen-aforo strong {
-     color: #475569;
- }
-.lista-notificaciones {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 25px;
-}
-
-.notificacion-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-
-    background: white;
-    border-left: 5px solid #0d47a1;
-
-    padding: 20px;
-
-    border-radius: 10px;
-
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-.notificacion-icono {
-    font-size: 28px;
-}
-
-.notificacion-contenido {
-    flex: 1;
-}
-
-.notificacion-contenido h3 {
-    margin: 0 0 8px 0;
-    color: #0d47a1;
-}
-
-.notificacion-contenido p {
-    margin: 0 0 10px 0;
-    color: #333;
-}
-
-.notificacion-contenido small {
-    color: #777;
-}
-.icono-notificacion {
+/* =========================================================
+   CONTADOR DE NOTIFICACIONES
+========================================================= */
+
+.dashboard-administrador .icono-notificacion {
     position: relative;
+
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
+
+    width: 20px;
 }
 
-.contador-notificaciones {
+
+.dashboard-administrador .contador-notificaciones {
     position: absolute;
 
     top: -9px;
@@ -819,25 +263,792 @@
     padding: 0 4px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    background-color: #d32f2f;
+    background: #dc2626;
+
     color: white;
 
     border-radius: 50%;
 
-    font-size: 11px;
-    font-weight: bold;
-}
-.boton-programar:disabled {
-    background: #6b7280;
-    color: #d1d5db;
-    cursor: not-allowed;
-    opacity: 0.6;
+    font-size: 10px;
+    font-weight: 800;
+
+    line-height: 1;
 }
 
-.boton-programar:disabled:hover {
-    background: #6b7280;
+
+/* =========================================================
+   CONTENIDO PRINCIPAL
+========================================================= */
+
+.dashboard-administrador .contenido-administrador {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    padding: 28px 5% 70px;
+
+    overflow-x: hidden;
+
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dashboard-administrador .header-administrador {
+    min-height: 60px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    margin-bottom: 45px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #e5eaf0;
+}
+
+
+/* =========================================================
+   SECCIÓN PRINCIPAL
+========================================================= */
+
+.dashboard-administrador .seccion-administrador {
+    width: min(1180px, 100%);
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   TÍTULOS
+========================================================= */
+
+.dashboard-administrador .seccion-administrador h1 {
+    margin: 0 0 10px;
+
+    color: #172033;
+
+    font-size: clamp(30px, 4vw, 42px);
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+}
+
+
+.dashboard-administrador .seccion-administrador h1::after {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 3px;
+
+    margin-top: 12px;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+}
+
+
+.dashboard-administrador .seccion-administrador > p {
+    max-width: 720px;
+
+    margin: 0 0 32px;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   USUARIO / HEADER
+   MenuUsuario sigue controlando su estructura.
+========================================================= */
+
+.dashboard-administrador .usuario-administrador {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.dashboard-administrador .usuario-administrador strong {
+    display: block;
+
+    color: #123b63;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+.dashboard-administrador .usuario-administrador span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.dashboard-administrador .avatar-administrador {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #123b63,
+                    #1769aa
+            );
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    box-shadow:
+            0 5px 14px rgba(23, 105, 170, 0.18);
+}
+
+
+/* =========================================================
+   FORMULARIO CREAR TALLER
+========================================================= */
+
+.dashboard-administrador .formulario-taller {
+    width: min(900px, 100%);
+
+    margin: 30px auto 0;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 16px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+            0 8px 25px rgba(15, 23, 42, 0.06);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ENCABEZADO FORMULARIO
+========================================================= */
+
+.dashboard-administrador .encabezado-formulario {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.dashboard-administrador .encabezado-formulario h1 {
+    margin: 0;
+
+    color: #123b63;
+}
+
+
+.dashboard-administrador .encabezado-formulario p {
+    margin-top: 8px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+.dashboard-administrador .campo-formulario {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 22px;
+}
+
+
+.dashboard-administrador .campo-formulario label {
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #123b63;
+}
+
+
+.dashboard-administrador
+.campo-formulario
+input,
+.dashboard-administrador
+.campo-formulario
+textarea,
+.dashboard-administrador
+.campo-formulario
+select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-family: inherit;
+
+    background: white;
+
+    color: #172033;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.dashboard-administrador
+.campo-formulario
+input:focus,
+.dashboard-administrador
+.campo-formulario
+textarea:focus,
+.dashboard-administrador
+.campo-formulario
+select:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+            0 0 0 3px rgba(23, 105, 170, 0.12);
+}
+
+
+.dashboard-administrador
+.campo-formulario
+textarea {
+    resize: vertical;
+
+    min-height: 110px;
+}
+
+
+/* =========================================================
+   FILA FORMULARIO
+========================================================= */
+
+.dashboard-administrador .fila-formulario {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.dashboard-administrador .boton-guardar-taller {
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 13px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.dashboard-administrador .boton-guardar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 7px 18px rgba(23, 105, 170, 0.20);
+}
+
+
+.dashboard-administrador .boton-guardar-taller:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
     transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   BOTONES DE TALLER
+========================================================= */
+
+.dashboard-administrador .boton-programar-operarios,
+.dashboard-administrador .boton-programar-taller {
+    width: 100%;
+
+    margin-top: 18px;
+
+    padding: 12px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.dashboard-administrador
+.boton-programar-operarios:hover,
+.dashboard-administrador
+.boton-programar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 7px 18px rgba(23, 105, 170, 0.18);
+}
+
+
+/* =========================================================
+   TARJETAS TALLERES
+========================================================= */
+
+.dashboard-administrador .tarjetas-talleres-admin {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 22px;
+
+    margin-top: 35px;
+}
+
+
+.dashboard-administrador .taller-admin-card {
+    position: relative;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    box-shadow:
+            0 8px 25px rgba(15, 23, 42, 0.06);
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
+}
+
+
+.dashboard-administrador .taller-admin-card:hover {
+    transform: translateY(-4px);
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+            0 15px 32px rgba(15, 23, 42, 0.10);
+}
+
+
+.dashboard-administrador .taller-admin-card h2 {
+    margin: 0 0 14px;
+
+    color: #123b63;
+
+    font-size: 21px;
+
+    line-height: 1.25;
+}
+
+
+.dashboard-administrador .taller-admin-card p {
+    margin: 0 0 12px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.65;
+}
+
+
+.dashboard-administrador .taller-admin-card strong {
+    color: #334155;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RESUMEN AFORO
+========================================================= */
+
+.dashboard-administrador .resumen-aforo {
+    margin-top: 20px;
+
+    padding: 16px;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+
+    border-left: 3px solid #1769aa;
+}
+
+
+.dashboard-administrador .resumen-aforo p {
+    margin: 6px 0;
+}
+
+
+/* =========================================================
+   NUEVA CERTIFICACIÓN
+========================================================= */
+
+.dashboard-administrador .boton-nueva-certificacion {
+    border: 1px solid #1769aa;
+
+    border-radius: 8px;
+
+    padding: 11px 18px;
+
+    background: white;
+
+    color: #1769aa;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease;
+}
+
+
+.dashboard-administrador .boton-nueva-certificacion:hover {
+    background: #1769aa;
+
+    color: white;
+}
+
+
+.dashboard-administrador .nueva-certificacion {
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    margin-bottom: 25px;
+}
+
+
+.dashboard-administrador .nueva-certificacion label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: 700;
+
+    color: #123b63;
+}
+
+
+.dashboard-administrador .nueva-certificacion input {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    margin-bottom: 15px;
+}
+
+
+.dashboard-administrador .nueva-certificacion div {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.dashboard-administrador .nueva-certificacion button {
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 10px 16px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.dashboard-administrador .mensaje-exito {
+    background: #ecfdf5;
+
+    color: #047857;
+
+    border: 1px solid #a7f3d0;
+
+    padding: 12px 16px;
+
+    border-radius: 9px;
+
+    margin: 15px 0;
+}
+
+
+.dashboard-administrador .mensaje-error {
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    border: 1px solid #fecaca;
+
+    padding: 12px 16px;
+
+    border-radius: 9px;
+
+    margin: 15px 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .dashboard-administrador .menu-administrador {
+        width: 230px;
+
+        min-width: 230px;
+    }
+
+    .dashboard-administrador .contenido-administrador {
+        padding-left: 4%;
+
+        padding-right: 4%;
+    }
+
+    .dashboard-administrador .tarjetas-talleres-admin {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    .dashboard-administrador {
+        display: block;
+    }
+
+    .dashboard-administrador .menu-administrador {
+        position: relative;
+
+        width: 100%;
+
+        min-width: 0;
+
+        height: auto;
+
+        min-height: auto;
+
+        padding: 15px 18px;
+    }
+
+    .dashboard-administrador .logo-administrador {
+        margin-bottom: 15px;
+
+        justify-content: flex-start;
+    }
+
+    .dashboard-administrador .menu-administrador nav {
+        flex-direction: row;
+
+        overflow-x: auto;
+
+        padding-bottom: 3px;
+    }
+
+    .dashboard-administrador
+    .menu-administrador
+    nav
+    button {
+        min-width: max-content;
+    }
+
+    .dashboard-administrador
+    .menu-administrador
+    nav
+    button.menu-admin-activo::after {
+        display: none;
+    }
+
+    .dashboard-administrador .contenido-administrador {
+        min-height: auto;
+
+        padding: 25px 5% 50px;
+    }
+
+    .dashboard-administrador .header-administrador {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-administrador .fila-formulario {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+    .dashboard-administrador .encabezado-formulario {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .dashboard-administrador .contenido-administrador {
+        padding-left: 20px;
+
+        padding-right: 20px;
+    }
+
+    .dashboard-administrador
+    .seccion-administrador
+    h1 {
+        font-size: 30px;
+    }
+
+    .dashboard-administrador .taller-admin-card,
+    .dashboard-administrador .formulario-taller {
+        padding: 21px;
+    }
+
+    .dashboard-administrador
+    .menu-administrador
+    nav
+    button {
+        padding: 11px 13px;
+
+        font-size: 13px;
+    }
 }
