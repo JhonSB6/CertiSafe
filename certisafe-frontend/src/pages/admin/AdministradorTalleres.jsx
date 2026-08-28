@@ -45,6 +45,50 @@ function AdministradorTalleres() {
 
             const datos = await respuesta.json();
 
+            const ahora = new Date();
+
+            const talleresOrdenados = [...datos].sort((a, b) => {
+
+                const fechaA = new Date(
+                    `${a.fecha}T${a.horaInicio}`
+                );
+
+                const fechaB = new Date(
+                    `${b.fecha}T${b.horaInicio}`
+                );
+
+                const futuroA = fechaA >= ahora;
+                const futuroB = fechaB >= ahora;
+
+                // ==========================================
+                // PRIMERO LOS TALLERES FUTUROS
+                // ==========================================
+
+                if (futuroA && !futuroB) {
+                    return -1;
+                }
+
+                if (!futuroA && futuroB) {
+                    return 1;
+                }
+
+                // ==========================================
+                // PRÓXIMOS: EL MÁS CERCANO PRIMERO
+                // ==========================================
+
+                if (futuroA && futuroB) {
+                    return fechaA - fechaB;
+                }
+
+                // ==========================================
+                // PASADOS: EL MÁS RECIENTE PRIMERO
+                // ==========================================
+
+                return fechaB - fechaA;
+            });
+
+            setTalleres(talleresOrdenados);
+
             setTalleres(datos);
 
 
@@ -542,28 +586,29 @@ function AdministradorTalleres() {
                                     PROGRAMAR OPERARIOS
                                 ================================================= */}
 
-                                {taller.estado ===
-                                "FINALIZADO" ? (
+                                {/* =================================================
+    PROGRAMAR OPERARIOS
+================================================= */}
+
+                                {taller.estado === "PROGRAMADO" ? (
 
                                     <button
-                                        className="boton-programar-taller boton-deshabilitado"
-                                        disabled
-                                        title="No se pueden programar operarios en un taller finalizado"
+                                        className="boton-programar-taller"
+                                        onClick={() =>
+                                            setTallerSeleccionado(taller)
+                                        }
                                     >
-                                        👥 Programación cerrada
+                                        👥 Programar operarios
                                     </button>
 
                                 ) : (
 
                                     <button
-                                        className="boton-programar-taller"
-                                        onClick={() =>
-                                            setTallerSeleccionado(
-                                                taller
-                                            )
-                                        }
+                                        className="boton-programar-taller boton-deshabilitado"
+                                        disabled
+                                        title="La programación de operarios está cerrada"
                                     >
-                                        👥 Programar operarios
+                                        🔒 Programación cerrada
                                     </button>
 
                                 )}

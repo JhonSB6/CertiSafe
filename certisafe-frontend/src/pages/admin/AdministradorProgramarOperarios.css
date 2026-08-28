@@ -1,0 +1,926 @@
+/* =========================================================
+   CERTISAFE - PROGRAMACIÓN DE OPERARIOS
+========================================================= */
+
+.programacion-operarios {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.encabezado-programacion {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+}
+
+
+.encabezado-programacion h1 {
+    margin: 0 0 10px;
+
+    color: #172033;
+
+    font-size: clamp(30px, 4vw, 42px);
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+}
+
+
+.encabezado-programacion h1::after {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 3px;
+
+    margin-top: 12px;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+}
+
+
+.encabezado-programacion p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BOTÓN VOLVER
+========================================================= */
+
+.boton-volver {
+    flex-shrink: 0;
+
+    padding: 10px 17px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease;
+}
+
+
+.boton-volver:hover {
+    background: #f8fafc;
+
+    border-color: #b8c4d2;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL TALLER
+========================================================= */
+
+.informacion-taller-programacion {
+    margin-bottom: 25px;
+
+    padding: 24px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+
+.cabecera-info-taller {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.etiqueta-programacion {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #1769aa;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.cabecera-info-taller h2 {
+    margin: 0;
+
+    color: #123b63;
+
+    font-size: 23px;
+
+    line-height: 1.3;
+}
+
+
+.descripcion-taller-programacion {
+    margin: 12px 0 20px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.badge-estado-programado,
+.badge-estado-cerrado {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+}
+
+
+.badge-estado-programado {
+    background: #dcfce7;
+
+    color: #15803d;
+}
+
+
+.badge-estado-cerrado {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   DATOS DEL TALLER
+========================================================= */
+
+.datos-taller {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #eef2f7;
+}
+
+
+.datos-taller div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.datos-taller span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.datos-taller strong {
+    color: #334155;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.mensaje-exito,
+.mensaje-error {
+    margin: 20px 0;
+
+    padding: 14px 17px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.mensaje-exito {
+    border: 1px solid #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+
+.mensaje-error {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+
+/* =========================================================
+   CARGANDO
+========================================================= */
+
+.estado-programacion {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 220px;
+
+    padding: 30px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+}
+
+
+.estado-programacion p {
+    margin: 15px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+.spinner-programacion {
+    width: 28px;
+    height: 28px;
+
+    border: 3px solid #dbeafe;
+
+    border-top-color: #1769aa;
+
+    border-radius: 50%;
+
+    animation: girar-spinner 0.8s linear infinite;
+}
+
+
+@keyframes girar-spinner {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   SIN OPERARIOS
+========================================================= */
+
+.sin-operarios {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 260px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: white;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 14px;
+}
+
+
+.sin-operarios-icono {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+
+    background: #eff6ff;
+
+    font-size: 25px;
+}
+
+
+.sin-operarios h3 {
+    margin: 0 0 8px;
+
+    color: #123b63;
+
+    font-size: 20px;
+}
+
+
+.sin-operarios p {
+    max-width: 500px;
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CONTENEDOR TABLA
+========================================================= */
+
+.contenedor-tabla-operarios {
+    overflow: hidden;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   ENCABEZADO TABLA
+========================================================= */
+
+.encabezado-tabla-operarios {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+.encabezado-tabla-operarios h2 {
+    margin: 0 0 5px;
+
+    color: #172033;
+
+    font-size: 19px;
+}
+
+
+.encabezado-tabla-operarios p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.contador-seleccion {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px 13px;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+}
+
+
+.contador-seleccion span {
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.contador-seleccion strong {
+    color: #1769aa;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.tabla-responsive {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.tabla-operarios {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+
+.tabla-operarios thead {
+    background: #f8fafc;
+}
+
+
+.tabla-operarios th {
+    padding: 14px 18px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.tabla-operarios td {
+    padding: 15px 18px;
+
+    border-bottom: 1px solid #eef2f7;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    vertical-align: middle;
+}
+
+
+.tabla-operarios tbody tr {
+    transition:
+            background 0.2s ease;
+}
+
+
+.tabla-operarios tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+.tabla-operarios tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.tabla-operarios .columna-checkbox {
+    width: 50px;
+
+    padding-left: 22px;
+
+    padding-right: 8px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.tabla-operarios input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+
+    margin: 0;
+
+    accent-color: #1769aa;
+
+    cursor: pointer;
+}
+
+
+.tabla-operarios input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.45;
+}
+
+
+/* =========================================================
+   FILA SELECCIONADA
+========================================================= */
+
+.tabla-operarios tbody tr.fila-operario-seleccionada {
+    background: #eff6ff;
+}
+
+
+.tabla-operarios tbody tr.fila-operario-seleccionada:hover {
+    background: #e0f2fe;
+}
+
+
+/* =========================================================
+   NOMBRE OPERARIO
+========================================================= */
+
+.nombre-operario {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.avatar-operario {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #dbeafe;
+
+    color: #1769aa;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.nombre-operario strong {
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   BADGE OPERARIO
+========================================================= */
+
+.badge-operario-disponible {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #dcfce7;
+
+    color: #15803d;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   PIE DE TABLA
+========================================================= */
+
+.pie-tabla-operarios {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px 22px;
+
+    background: #f8fafc;
+
+    border-top: 1px solid #e2e8f0;
+}
+
+
+.seleccionar-todos-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+
+.seleccionar-todos-info span {
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+.boton-seleccionar-todos {
+    padding: 8px 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease;
+}
+
+
+.boton-seleccionar-todos:hover {
+    background: #eff6ff;
+
+    border-color: #93c5fd;
+
+    color: #1769aa;
+}
+
+
+.boton-seleccionar-todos:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BOTÓN PROGRAMAR
+========================================================= */
+
+.boton-programar-operarios {
+    flex-shrink: 0;
+
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 5px 14px rgba(23, 105, 170, 0.18);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.boton-programar-operarios:hover {
+    background: #0f4f83;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 8px 20px rgba(23, 105, 170, 0.22);
+}
+
+
+.boton-programar-operarios:disabled {
+    background: #94a3b8;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .encabezado-programacion {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .boton-volver {
+        width: 100%;
+    }
+
+
+    .datos-taller {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .encabezado-tabla-operarios {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .contador-seleccion {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        justify-content: space-between;
+    }
+
+
+    .pie-tabla-operarios {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .boton-programar-operarios {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .informacion-taller-programacion {
+        padding: 18px;
+    }
+
+
+    .cabecera-info-taller {
+        flex-direction: column;
+    }
+
+
+    .datos-taller {
+        grid-template-columns: 1fr;
+    }
+
+
+    .encabezado-tabla-operarios {
+        padding: 18px;
+    }
+
+
+    .pie-tabla-operarios {
+        padding: 16px;
+    }
+
+
+    .seleccionar-todos-info {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+
+    .boton-seleccionar-todos {
+        width: 100%;
+    }
+
+}

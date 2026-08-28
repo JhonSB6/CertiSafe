@@ -9,17 +9,17 @@ import AdministradorUsuarios from "./admin/AdministradorUsuarios";
 
 import PerfilUsuario from "../components/PerfilUsuario";
 import MenuUsuario from "../components/MenuUsuario";
-
+import CargaMasivaUsuarios from "../components/CargaMasivaUsuarios";
 
 function VistaAdministrador({
-                                usuario,
-                                cerrarSesion,
-                                actualizarUsuario
-                            }) {
+    usuario,
+    cerrarSesion,
+    actualizarUsuario
+}) {
 
     /*
-     * La vista inicial ahora es Talleres.
-     * Se elimina completamente la opción "Inicio".
+     * Vista inicial:
+     * Talleres
      */
     const [vistaActual, setVistaActual] = useState("talleres");
 
@@ -43,175 +43,215 @@ function VistaAdministrador({
 
                 const respuesta = await fetch(
                     `http://localhost:8080/api/notificaciones/usuario/${usuario.idUsuario}/no-leidas/count`
-                );
+    );
 
-                if (!respuesta.ok) {
-                    return;
-                }
+if (!respuesta.ok) {
+    return;
+}
 
-                const cantidad = await respuesta.json();
+const cantidad = await respuesta.json();
 
-                setNotificacionesNoLeidas(cantidad);
+setNotificacionesNoLeidas(cantidad);
 
-            } catch (error) {
+} catch (error) {
 
-                console.error(
-                    "Error consultando notificaciones:",
-                    error
-                );
+    console.error(
+        "Error consultando notificaciones:",
+        error
+    );
 
-            }
+}
 
-        };
-
-
-        cargarContador();
+};
 
 
-        const intervalo = setInterval(
-            cargarContador,
-            10000
-        );
+cargarContador();
 
 
-        return () => clearInterval(intervalo);
+const intervalo = setInterval(
+    cargarContador,
+    10000
+);
 
-    }, [usuario]);
+
+return () => clearInterval(intervalo);
+
+}, [usuario]);
 
 
-    return (
+return (
 
-        <div className="dashboard-administrador">
+    <div className="dashboard-administrador">
 
-            {/* ==========================================
+        {/* ==========================================
                 MENÚ LATERAL
             ========================================== */}
 
-            <aside className="menu-administrador">
+        <aside className="menu-administrador">
 
-                <div className="logo-administrador">
+            <div className="logo-administrador">
 
                     <span className="logo-admin-icono">
                         C
                     </span>
 
-                    <span>
+                <span>
                         CERTISAFE
                     </span>
 
-                </div>
+            </div>
 
 
-                <nav>
+            <nav>
 
-                    {/* TALLERES */}
+                {/* =================================
+                        TALLERES
+                    ================================== */}
 
-                    <button
-                        className={
-                            vistaActual === "talleres"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("talleres")
-                        }
-                    >
+                <button
+                    className={
+                        vistaActual === "talleres"
+                            ? "menu-admin-activo"
+                            : ""
+                    }
+                    onClick={() =>
+                        setVistaActual("talleres")
+                    }
+                >
 
                         <span className="menu-admin-icono">
                             📚
                         </span>
 
-                        <span>
+                    <span>
                             Talleres
                         </span>
 
-                    </button>
+                </button>
 
 
-                    {/* SOLICITUDES */}
+                {/* =================================
+                        CARGA MASIVA DE USUARIOS
+                    ================================== */}
 
-                    <button
-                        className={
-                            vistaActual === "solicitudes-usuario"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("solicitudes-usuario")
-                        }
-                    >
+                <button
+                    className={
+                        vistaActual === "carga-masiva-usuarios"
+                            ? "opcion-menu activa"
+                            : "opcion-menu"
+                    }
+                    onClick={() =>
+                        setVistaActual(
+                            "carga-masiva-usuarios"
+                        )
+                    }
+                >
+
+                        <span className="menu-admin-icono">
+                            📤
+                        </span>
+
+                    <span>
+                            Carga masiva de usuarios
+                        </span>
+
+                </button>
+
+
+                {/* =================================
+                        SOLICITUDES DE USUARIOS
+                    ================================== */}
+
+                <button
+                    className={
+                        vistaActual === "solicitudes-usuario"
+                            ? "menu-admin-activo"
+                            : ""
+                    }
+                    onClick={() =>
+                        setVistaActual(
+                            "solicitudes-usuario"
+                        )
+                    }
+                >
 
                         <span className="menu-admin-icono">
                             📋
                         </span>
 
-                        <span>
+                    <span>
                             Solicitudes usuarios
                         </span>
 
-                    </button>
+                </button>
 
 
-                    {/* USUARIOS */}
+                {/* =================================
+                        USUARIOS
+                    ================================== */}
 
-                    <button
-                        className={
-                            vistaActual === "usuarios"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("usuarios")
-                        }
-                    >
+                <button
+                    className={
+                        vistaActual === "usuarios"
+                            ? "menu-admin-activo"
+                            : ""
+                    }
+                    onClick={() =>
+                        setVistaActual("usuarios")
+                    }
+                >
 
                         <span className="menu-admin-icono">
                             👥
                         </span>
 
-                        <span>
+                    <span>
                             Usuarios
                         </span>
 
-                    </button>
+                </button>
 
 
-                    {/* HISTORIAL */}
+                {/* =================================
+                        HISTORIAL
+                    ================================== */}
 
-                    <button
-                        className={
-                            vistaActual === "historial"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("historial")
-                        }
-                    >
+                <button
+                    className={
+                        vistaActual === "historial"
+                            ? "menu-admin-activo"
+                            : ""
+                    }
+                    onClick={() =>
+                        setVistaActual("historial")
+                    }
+                >
 
                         <span className="menu-admin-icono">
                             📜
                         </span>
 
-                        <span>
+                    <span>
                             Historial certificaciones
                         </span>
 
-                    </button>
+                </button>
 
 
-                    {/* NOTIFICACIONES */}
+                {/* =================================
+                        NOTIFICACIONES
+                    ================================== */}
 
-                    <button
-                        className={
-                            vistaActual === "notificaciones"
-                                ? "menu-admin-activo"
-                                : ""
-                        }
-                        onClick={() =>
-                            setVistaActual("notificaciones")
-                        }
-                    >
+                <button
+                    className={
+                        vistaActual === "notificaciones"
+                            ? "menu-admin-activo"
+                            : ""
+                    }
+                    onClick={() =>
+                        setVistaActual("notificaciones")
+                    }
+                >
 
                         <span className="icono-notificacion">
 
@@ -229,121 +269,132 @@ function VistaAdministrador({
 
                         </span>
 
-                        <span>
+                    <span>
                             Notificaciones
                         </span>
 
-                    </button>
+                </button>
 
-                </nav>
+            </nav>
 
-            </aside>
+        </aside>
 
 
-            {/* ==========================================
+        {/* ==========================================
                 CONTENIDO PRINCIPAL
             ========================================== */}
 
-            <main className="contenido-administrador">
+        <main className="contenido-administrador">
 
-                {/* ==========================================
+            {/* ==========================================
                     HEADER
                 ========================================== */}
 
-                <header className="header-administrador">
+            <header className="header-administrador">
 
-                    <MenuUsuario
-                        usuario={usuario}
+                <MenuUsuario
+                    usuario={usuario}
 
-                        onPerfil={() =>
-                            setVistaActual("perfil")
-                        }
+                    onPerfil={() =>
+                        setVistaActual("perfil")
+                    }
 
-                        onCerrarSesion={
-                            cerrarSesion
-                        }
-                    />
+                    onCerrarSesion={
+                        cerrarSesion
+                    }
+                />
 
-                </header>
+            </header>
 
 
-                {/* ==========================================
+            {/* ==========================================
                     TALLERES
                 ========================================== */}
 
-                {vistaActual === "talleres" && (
+            {vistaActual === "talleres" && (
 
-                    <AdministradorTalleres />
+                <AdministradorTalleres />
 
-                )}
+            )}
 
 
-                {/* ==========================================
+            {/* ==========================================
+                    CARGA MASIVA DE USUARIOS
+                ========================================== */}
+
+            {vistaActual === "carga-masiva-usuarios" && (
+
+                <CargaMasivaUsuarios />
+
+            )}
+
+
+            {/* ==========================================
                     SOLICITUDES DE USUARIOS
                 ========================================== */}
 
-                {vistaActual === "solicitudes-usuario" && (
+            {vistaActual === "solicitudes-usuario" && (
 
-                    <AdministradorSolicitudesUsuario />
+                <AdministradorSolicitudesUsuario />
 
-                )}
+            )}
 
 
-                {/* ==========================================
+            {/* ==========================================
                     USUARIOS
                 ========================================== */}
 
-                {vistaActual === "usuarios" && (
+            {vistaActual === "usuarios" && (
 
-                    <AdministradorUsuarios />
+                <AdministradorUsuarios />
 
-                )}
+            )}
 
 
-                {/* ==========================================
+            {/* ==========================================
                     HISTORIAL
                 ========================================== */}
 
-                {vistaActual === "historial" && (
+            {vistaActual === "historial" && (
 
-                    <AdministradorHistorial />
+                <AdministradorHistorial />
 
-                )}
+            )}
 
 
-                {/* ==========================================
+            {/* ==========================================
                     NOTIFICACIONES
                 ========================================== */}
 
-                {vistaActual === "notificaciones" && (
+            {vistaActual === "notificaciones" && (
 
-                    <AdministradorNotificaciones
-                        usuario={usuario}
-                    />
+                <AdministradorNotificaciones
+                    usuario={usuario}
+                />
 
-                )}
+            )}
 
 
-                {/* ==========================================
+            {/* ==========================================
                     PERFIL
                 ========================================== */}
 
-                {vistaActual === "perfil" && (
+            {vistaActual === "perfil" && (
 
-                    <PerfilUsuario
-                        usuario={usuario}
-                        actualizarUsuario={
-                            actualizarUsuario
-                        }
-                    />
+                <PerfilUsuario
+                    usuario={usuario}
+                    actualizarUsuario={
+                        actualizarUsuario
+                    }
+                />
 
-                )}
+            )}
 
-            </main>
+        </main>
 
-        </div>
+    </div>
 
-    );
+);
 }
 
 

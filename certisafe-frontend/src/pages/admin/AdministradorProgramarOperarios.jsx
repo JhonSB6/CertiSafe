@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./AdministradorProgramarOperarios.css";
 
 function AdministradorProgramarOperarios({ taller, volver }) {
 
@@ -29,6 +30,7 @@ function AdministradorProgramarOperarios({ taller, volver }) {
             );
 
             if (!respuesta.ok) {
+
                 throw new Error(
                     "No fue posible cargar los operarios disponibles"
                 );
@@ -55,7 +57,7 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
 
     // ==========================================
-    // CARGAR AL ENTRAR A LA VISTA
+    // CARGAR AL ENTRAR
     // ==========================================
 
     useEffect(() => {
@@ -66,14 +68,13 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
 
     // ==========================================
-    // SELECCIONAR / DESELECCIONAR OPERARIO
+    // SELECCIONAR / DESELECCIONAR
     // ==========================================
 
     const cambiarSeleccion = (idUsuario) => {
 
         setSeleccionados((anteriores) => {
 
-            // Si ya está seleccionado, lo quitamos
             if (anteriores.includes(idUsuario)) {
 
                 return anteriores.filter(
@@ -81,11 +82,16 @@ function AdministradorProgramarOperarios({ taller, volver }) {
                 );
             }
 
-            // No permitir superar el aforo
             if (anteriores.length >= taller.aforo) {
+
+                setError(
+                    `No puedes seleccionar más de ${taller.aforo} operarios porque ese es el aforo del taller.`
+                );
 
                 return anteriores;
             }
+
+            setError("");
 
             return [
                 ...anteriores,
@@ -93,6 +99,61 @@ function AdministradorProgramarOperarios({ taller, volver }) {
             ];
         });
     };
+
+
+    // ==========================================
+    // SELECCIONAR TODOS
+    // ==========================================
+
+    const seleccionarTodos = () => {
+
+        if (seleccionados.length === operarios.length) {
+
+            setSeleccionados([]);
+
+            return;
+        }
+
+        const cantidadMaxima =
+            Math.min(
+                operarios.length,
+                taller.aforo
+            );
+
+        const idsSeleccionados =
+            operarios
+                .slice(0, cantidadMaxima)
+                .map(
+                    (operario) =>
+                        operario.idusuario
+                );
+
+        setSeleccionados(idsSeleccionados);
+
+        if (operarios.length > taller.aforo) {
+
+            setError(
+                `Hay ${operarios.length} operarios disponibles, pero el aforo permite seleccionar máximo ${taller.aforo}.`
+            );
+
+        } else {
+
+            setError("");
+        }
+    };
+
+
+    // ==========================================
+    // ESTADO DEL SELECTOR GENERAL
+    // ==========================================
+
+    const todosSeleccionados =
+        operarios.length > 0 &&
+        seleccionados.length ===
+        Math.min(
+            operarios.length,
+            taller.aforo
+        );
 
 
     // ==========================================
@@ -118,7 +179,8 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
             for (const idUsuario of seleccionados) {
 
-                const parametros = new URLSearchParams();
+                const parametros =
+                    new URLSearchParams();
 
                 parametros.append(
                     "idTaller",
@@ -135,14 +197,12 @@ function AdministradorProgramarOperarios({ taller, volver }) {
                     "INICIAL"
                 );
 
-
                 const respuesta = await fetch(
                     `http://localhost:8080/api/inscripciones-taller/programar?${parametros.toString()}`,
                     {
                         method: "POST"
                     }
                 );
-
 
                 if (!respuesta.ok) {
 
@@ -155,7 +215,6 @@ function AdministradorProgramarOperarios({ taller, volver }) {
                     );
                 }
             }
-
 
             setMensaje(
                 `${seleccionados.length} operario(s) programado(s) correctamente.`
@@ -170,6 +229,7 @@ function AdministradorProgramarOperarios({ taller, volver }) {
             console.error(error);
 
             setError(
+                error.message ||
                 "No fue posible completar la programación de los operarios."
             );
 
@@ -182,7 +242,7 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
     return (
 
-        <section className="seccion-administrador">
+        <section className="seccion-administrador programacion-operarios">
 
             {/* ==========================================
                 ENCABEZADO
@@ -203,7 +263,6 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
                 </div>
 
-
                 <button
                     className="boton-volver"
                     onClick={volver}
@@ -220,37 +279,71 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
             <article className="informacion-taller-programacion">
 
-                <h2>
-                    {taller.nombre}
-                </h2>
+                <div className="cabecera-info-taller">
 
-                <p>
-                    {taller.descripcion}
-                </p>
+                    <div>
+
+                        <span className="etiqueta-programacion">
+                            TALLER
+                        </span>
+
+                        <h2>
+                            {taller.nombre}
+                        </h2>
+
+                    </div>
+
+                    <span
+                        className={
+                            taller.estado === "PROGRAMADO"
+                                ? "badge-estado-programado"
+                                : "badge-estado-cerrado"
+                        }
+                    >
+                        {taller.estado}
+                    </span>
+
+                </div>
+
+
+                {taller.descripcion && (
+
+                    <p className="descripcion-taller-programacion">
+                        {taller.descripcion}
+                    </p>
+
+                )}
+
 
                 <div className="datos-taller">
 
-                    <span>
-                        <strong>Fecha:</strong>{" "}
-                        {taller.fecha}
-                    </span>
+                    <div>
+                        <span>Fecha</span>
+                        <strong>{taller.fecha}</strong>
+                    </div>
 
-                    <span>
-                        <strong>Horario:</strong>{" "}
-                        {taller.horaInicio}
-                        {" - "}
-                        {taller.horaFin}
-                    </span>
+                    <div>
+                        <span>Horario</span>
+                        <strong>
+                            {taller.horaInicio}
+                            {" - "}
+                            {taller.horaFin}
+                        </strong>
+                    </div>
 
-                    <span>
-                        <strong>Aforo:</strong>{" "}
-                        {taller.aforo}
-                    </span>
+                    <div>
+                        <span>Aforo</span>
+                        <strong>
+                            {taller.aforo}
+                        </strong>
+                    </div>
 
-                    <span>
-                        <strong>Certificación:</strong>{" "}
-                        {taller.tipoCertificacion?.nombre}
-                    </span>
+                    <div>
+                        <span>Certificación</span>
+                        <strong>
+                            {taller.tipoCertificacion?.nombre}
+                        </strong>
+                    </div>
 
                 </div>
 
@@ -263,18 +356,22 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
             {mensaje && (
 
-                <p className="mensaje-exito">
-                    {mensaje}
-                </p>
+                <div className="mensaje-exito">
+
+                    ✓ {mensaje}
+
+                </div>
 
             )}
 
 
             {error && (
 
-                <p className="mensaje-error">
-                    {error}
-                </p>
+                <div className="mensaje-error">
+
+                    ⚠ {error}
+
+                </div>
 
             )}
 
@@ -285,9 +382,15 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
             {cargando && (
 
-                <p>
-                    Cargando operarios disponibles...
-                </p>
+                <div className="estado-programacion">
+
+                    <div className="spinner-programacion"></div>
+
+                    <p>
+                        Cargando operarios disponibles...
+                    </p>
+
+                </div>
 
             )}
 
@@ -301,6 +404,10 @@ function AdministradorProgramarOperarios({ taller, volver }) {
                 operarios.length === 0 && (
 
                     <div className="sin-operarios">
+
+                        <div className="sin-operarios-icono">
+                            👥
+                        </div>
 
                         <h3>
                             No hay operarios disponibles
@@ -318,111 +425,255 @@ function AdministradorProgramarOperarios({ taller, volver }) {
 
 
             {/* ==========================================
-                LISTA DE OPERARIOS
+                TABLA
             ========================================== */}
 
             {!cargando &&
                 operarios.length > 0 && (
 
-                    <>
+                    <div className="contenedor-tabla-operarios">
 
-                        <div className="encabezado-operarios">
+                        <div className="encabezado-tabla-operarios">
 
-                            <h2>
-                                Operarios disponibles
-                            </h2>
+                            <div>
 
-                            <span>
-                                Seleccionados:{" "}
-                                {seleccionados.length} / {taller.aforo}
-                            </span>
+                                <h2>
+                                    Operarios disponibles
+                                </h2>
+
+                                <p>
+                                    Selecciona los participantes
+                                    que deseas programar.
+                                </p>
+
+                            </div>
+
+                            <div className="contador-seleccion">
+
+                                <span>
+                                    Seleccionados
+                                </span>
+
+                                <strong>
+                                    {seleccionados.length}
+                                    {" / "}
+                                    {taller.aforo}
+                                </strong>
+
+                            </div>
 
                         </div>
 
 
-                        <div className="lista-operarios">
+                        <div className="tabla-responsive">
 
-                            {operarios.map((operario) => (
+                            <table className="tabla-operarios">
 
-                                <label
-                                    className={
-                                        seleccionados.includes(
-                                            operario.idusuario
-                                        )
-                                            ? "operario-item operario-seleccionado"
-                                            : "operario-item"
-                                    }
-                                    key={operario.idusuario}
-                                >
+                                <thead>
 
-                                    <input
-                                        type="checkbox"
-                                        checked={
+                                <tr>
+
+                                    <th className="columna-checkbox">
+
+                                        <input
+                                            type="checkbox"
+                                            checked={
+                                                todosSeleccionados
+                                            }
+                                            onChange={
+                                                seleccionarTodos
+                                            }
+                                            disabled={
+                                                programando
+                                            }
+                                        />
+
+                                    </th>
+
+                                    <th>
+                                        Operario
+                                    </th>
+
+                                    <th>
+                                        Documento
+                                    </th>
+
+                                    <th>
+                                        Correo
+                                    </th>
+
+                                    <th>
+                                        Estado
+                                    </th>
+
+                                </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                {operarios.map(
+                                    (operario) => {
+
+                                        const seleccionado =
                                             seleccionados.includes(
                                                 operario.idusuario
-                                            )
-                                        }
-                                        disabled={
-                                            !seleccionados.includes(
-                                                operario.idusuario
-                                            ) &&
-                                            seleccionados.length >= taller.aforo
-                                        }
-                                        onChange={() =>
-                                            cambiarSeleccion(
-                                                operario.idusuario
-                                            )
-                                        }
-                                    />
+                                            );
+
+                                        const bloqueado =
+                                            !seleccionado &&
+                                            seleccionados.length >=
+                                            taller.aforo;
+
+                                        return (
+
+                                            <tr
+                                                key={
+                                                    operario.idusuario
+                                                }
+
+                                                className={
+                                                    seleccionado
+                                                        ? "fila-operario-seleccionada"
+                                                        : ""
+                                                }
+                                            >
+
+                                                <td className="columna-checkbox">
+
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={
+                                                            seleccionado
+                                                        }
+                                                        disabled={
+                                                            bloqueado ||
+                                                            programando
+                                                        }
+                                                        onChange={() =>
+                                                            cambiarSeleccion(
+                                                                operario.idusuario
+                                                            )
+                                                        }
+                                                    />
+
+                                                </td>
 
 
-                                    <div className="operario-info">
+                                                <td>
 
-                                        <strong>
-                                            {operario.nombre}{" "}
-                                            {operario.apellido}
-                                        </strong>
+                                                    <div className="nombre-operario">
 
-                                        <span>
-                                            Documento:{" "}
-                                            {operario.documento}
-                                        </span>
+                                                        <div className="avatar-operario">
+                                                            {operario.nombre
+                                                                ?.charAt(0)
+                                                                .toUpperCase()}
+                                                        </div>
 
-                                        <span>
-                                            Correo:{" "}
-                                            {operario.correo}
-                                        </span>
+                                                        <div>
 
-                                    </div>
+                                                            <strong>
+                                                                {operario.nombre}{" "}
+                                                                {operario.apellido}
+                                                            </strong>
 
-                                </label>
+                                                        </div>
 
-                            ))}
+                                                    </div>
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    {operario.documento}
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    {operario.correo}
+
+                                                </td>
+
+
+                                                <td>
+
+                                                        <span className="badge-operario-disponible">
+
+                                                            Disponible
+
+                                                        </span>
+
+                                                </td>
+
+                                            </tr>
+
+                                        );
+                                    }
+                                )}
+
+                                </tbody>
+
+                            </table>
 
                         </div>
 
 
                         {/* ==========================================
-                            BOTÓN PROGRAMAR
+                            PIE DE TABLA
                         ========================================== */}
 
-                        <button
-                            className="boton-programar-operarios"
-                            onClick={programarOperarios}
-                            disabled={
-                                programando ||
-                                seleccionados.length === 0
-                            }
-                        >
+                        <div className="pie-tabla-operarios">
 
-                            {programando
-                                ? "Programando..."
-                                : `Programar seleccionados (${seleccionados.length})`
-                            }
+                            <div className="seleccionar-todos-info">
 
-                        </button>
+                                <button
+                                    type="button"
+                                    className="boton-seleccionar-todos"
+                                    onClick={seleccionarTodos}
+                                    disabled={programando}
+                                >
+                                    {todosSeleccionados
+                                        ? "✓ Deseleccionar todos"
+                                        : "☑ Seleccionar todos"
+                                    }
+                                </button>
 
-                    </>
+                                <span>
+                                    Máximo permitido:
+                                    {" "}
+                                    {taller.aforo}
+                                    {" "}
+                                    operarios
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                className="boton-programar-operarios"
+                                onClick={
+                                    programarOperarios
+                                }
+                                disabled={
+                                    programando ||
+                                    seleccionados.length === 0
+                                }
+                            >
+
+                                {programando
+                                    ? "Programando..."
+                                    : `Programar seleccionados (${seleccionados.length})`
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 )}
 

@@ -1,0 +1,433 @@
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+========================================================= */
+
+.seccion-carga-masiva {
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.encabezado-carga-masiva {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.encabezado-carga-masiva h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.encabezado-carga-masiva p {
+    margin: 0;
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   PANELES
+========================================================= */
+
+.panel-plantilla-carga,
+.panel-subir-carga,
+.panel-resultado-carga {
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 22px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.panel-plantilla-carga h2,
+.panel-subir-carga h2 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+}
+
+.panel-plantilla-carga p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   PLANTILLA
+========================================================= */
+
+.panel-plantilla-carga {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.boton-descargar-plantilla {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    background: #2563eb;
+    color: #ffffff;
+    transition: 0.2s ease;
+}
+
+.boton-descargar-plantilla:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   ZONA DE ARCHIVO
+========================================================= */
+
+.zona-archivo {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+    padding: 35px 20px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    text-align: center;
+    background: #f8fafc;
+}
+
+.icono-archivo {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.zona-archivo h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.zona-archivo p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BOTÓN SELECCIONAR
+========================================================= */
+
+.boton-seleccionar-archivo {
+    display: inline-block;
+    padding: 11px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #334155;
+    color: #ffffff;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.boton-seleccionar-archivo:hover {
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   ARCHIVO SELECCIONADO
+========================================================= */
+
+.archivo-seleccionado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+
+.archivo-seleccionado strong {
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   MENSAJE ERROR GENERAL
+========================================================= */
+
+.mensaje-error-carga {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ACCIONES DE VALIDACIÓN
+========================================================= */
+
+.acciones-carga {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.boton-validar-carga {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    cursor: pointer;
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.boton-validar-carga:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   RESULTADO EXITOSO
+========================================================= */
+
+.resultado-exitoso,
+.resultado-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.resultado-exitoso {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.resultado-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.resultado-exitoso > span,
+.resultado-error > span {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.resultado-exitoso h2,
+.resultado-error h2 {
+    margin: 0 0 5px 0;
+    font-size: 19px;
+}
+
+.resultado-exitoso p,
+.resultado-error p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.resumen-carga {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.resumen-carga > div {
+    padding: 18px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.resumen-carga span {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.resumen-carga strong {
+    display: block;
+    font-size: 24px;
+}
+
+
+/* =========================================================
+   TÍTULOS RESULTADO
+========================================================= */
+
+.panel-resultado-carga h3 {
+    margin: 0 0 15px 0;
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   TABLA DE USUARIOS
+========================================================= */
+
+.tabla-usuarios-carga {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.tabla-usuarios-carga .fila {
+    min-width: 700px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 2fr 1.2fr;
+    gap: 15px;
+    padding: 13px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    box-sizing: border-box;
+}
+
+.tabla-usuarios-carga .fila:last-child {
+    border-bottom: none;
+}
+
+.tabla-usuarios-carga .encabezado-tabla {
+    font-weight: 700;
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   TABLA DE ERRORES
+========================================================= */
+
+.tabla-errores-carga {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+}
+
+.tabla-errores-carga .fila-error {
+    min-width: 750px;
+    display: grid;
+    grid-template-columns: 70px 130px 1.3fr 2fr;
+    gap: 15px;
+    padding: 13px 15px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #fee2e2;
+}
+
+.tabla-errores-carga .fila-error:last-child {
+    border-bottom: none;
+}
+
+.tabla-errores-carga .encabezado-error {
+    font-weight: 700;
+    background: #fef2f2;
+}
+
+
+/* =========================================================
+   ACCIONES CONFIRMACIÓN
+========================================================= */
+
+.acciones-confirmacion {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.boton-cancelar-carga,
+.boton-confirmar-carga,
+.boton-nueva-carga {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.boton-cancelar-carga {
+    background: #e2e8f0;
+}
+
+.boton-confirmar-carga {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.boton-confirmar-carga:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ACCIONES ERROR
+========================================================= */
+
+.acciones-error-carga {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.boton-nueva-carga {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .seccion-carga-masiva {
+        padding: 20px;
+    }
+
+    .panel-plantilla-carga {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resumen-carga {
+        grid-template-columns: 1fr;
+    }
+
+    .acciones-confirmacion,
+    .acciones-error-carga,
+    .acciones-carga {
+        justify-content: stretch;
+    }
+
+    .boton-cancelar-carga,
+    .boton-confirmar-carga,
+    .boton-nueva-carga,
+    .boton-validar-carga {
+        width: 100%;
+    }
+}

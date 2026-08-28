@@ -2,6 +2,7 @@ package com.CertiSafe.secu.Service.impl;
 
 import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Enum.EstadoInscripcion;
+import com.CertiSafe.secu.Enum.EstadoTaller;
 import com.CertiSafe.secu.Repository.RepositoryCertificacion;
 import com.CertiSafe.secu.Repository.RepositoryInscripcionTaller;
 import com.CertiSafe.secu.Repository.RepositoryTaller;
@@ -120,6 +121,18 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
                         new RuntimeException(
                                 "Taller no encontrado con id: " + idTaller));
 
+        // =========================================================
+        // VALIDAR ESTADO DEL TALLER
+        // =========================================================
+
+        if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
+
+            throw new RuntimeException(
+                    "La programación de operarios está cerrada. "
+                            + "El taller ya no se encuentra en estado PROGRAMADO."
+            );
+        }
+
         Usuario usuario = repositoryUsuario.findById(idUsuario)
                 .orElseThrow(() ->
                         new RuntimeException(
@@ -129,12 +142,14 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
             throw new RuntimeException(
                     "El usuario seleccionado no es un operario");
         }
+
         Long inscripcionesActivas =
                 inscripcionRepository.countInscripcionesActivas(idTaller);
 
         if (inscripcionesActivas >= taller.getAforo()) {
             throw new RuntimeException(
-                    "No se puede programar el operario. El aforo del taller ya está completo."
+                    "No se puede programar el operario. "
+                            + "El aforo del taller ya está completo."
             );
         }
 
@@ -171,7 +186,8 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
 
         inscripcion.setTaller(taller);
         inscripcion.setUsuario(usuario);
-        inscripcion.setFechaInscripcion(new Date(System.currentTimeMillis()));
+        inscripcion.setFechaInscripcion(
+                new Date(System.currentTimeMillis()));
         inscripcion.setEstado(EstadoInscripcion.PENDIENTE);
         inscripcion.setEstadoTipoProgramacion(tipoProgramacion);
 
