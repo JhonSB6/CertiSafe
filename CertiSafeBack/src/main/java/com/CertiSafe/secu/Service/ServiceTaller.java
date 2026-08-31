@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Service;
 
+import com.CertiSafe.secu.Dto.DetalleTallerResponse;
 import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
@@ -28,7 +29,7 @@ public interface ServiceTaller {
 
     void revisarAforoUnMinutoAntes(Long idTaller);
 
-    void iniciarAutomaticamente(Long idTaller);
+    //void iniciarAutomaticamente(Long idTaller);
 
     Map<String, Object> obtenerResumen(Long idTaller);
 
@@ -38,4 +39,7 @@ public interface ServiceTaller {
 
     void finalizarTaller(Long idTaller);
 
+    void eliminarTaller(Long idTaller);
+
+    DetalleTallerResponse obtenerDetalleTaller(Long idTaller);
 }

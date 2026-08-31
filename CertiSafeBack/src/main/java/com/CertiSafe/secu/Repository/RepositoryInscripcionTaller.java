@@ -22,6 +22,8 @@ public interface RepositoryInscripcionTaller extends JpaRepository<InscripcionTa
             Long idUsuario,
             EstadoInscripcion estado);
 
+    List<InscripcionTaller> findByTallerIdtaller(Long idTaller);
+
     Long countByTallerIdtallerAndEstadoAndEstadoTipoProgramacion(
             Long idTaller,
             EstadoInscripcion estado,

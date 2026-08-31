@@ -1,5 +1,6 @@
 package com.CertiSafe.secu.Controller;
 
+import com.CertiSafe.secu.Dto.DetalleTallerResponse;
 import com.CertiSafe.secu.Entity.Taller;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoTaller;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +104,65 @@ public class ControllerTaller {
                         idCapacitador,
                         EstadoTaller.FINALIZADO
                 )
+        );
+    }
+
+    @PutMapping("/{id}/finalizar")
+    public ResponseEntity<Void> finalizarTaller(
+            @PathVariable Long id) {
+
+        serviceTaller.finalizarTaller(id);
+
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/capacitador/{idCapacitador}/activos")
+    public ResponseEntity<List<Taller>> listarTalleresActivos(
+            @PathVariable Long idCapacitador) {
+
+        List<Taller> talleresProgramados =
+                serviceTaller.listarPorCapacitador(
+                        idCapacitador,
+                        EstadoTaller.PROGRAMADO
+                );
+
+        List<Taller> talleresEnCurso =
+                serviceTaller.listarPorCapacitador(
+                        idCapacitador,
+                        EstadoTaller.EN_CURSO
+                );
+
+        List<Taller> talleres = new ArrayList<>();
+
+        talleres.addAll(talleresProgramados);
+        talleres.addAll(talleresEnCurso);
+
+        talleres.sort(
+                Comparator.comparing(
+                        Taller::getFecha
+                ).thenComparing(
+                        Taller::getHoraInicio
+                )
+        );
+
+        return ResponseEntity.ok(talleres);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarTaller(
+            @PathVariable Long id) {
+
+        serviceTaller.eliminarTaller(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/{id}/detalle")
+    public ResponseEntity<DetalleTallerResponse> obtenerDetalleTaller(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                serviceTaller.obtenerDetalleTaller(id)
         );
     }
 

@@ -73,11 +73,11 @@ public class ServicioProgramacionTallerimpl {
 
 
                 // Llegó la hora de inicio
-                if (!ahora.isBefore(inicio)) {
+                {/*if (!ahora.isBefore(inicio)) {
 
                     serviceTaller.iniciarAutomaticamente(
                             taller.getIdtaller());
-                }
+                } */}
             }
 
 

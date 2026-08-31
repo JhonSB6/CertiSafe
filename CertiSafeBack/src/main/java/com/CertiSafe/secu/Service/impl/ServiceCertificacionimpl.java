@@ -79,6 +79,63 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
                 .findByUsuarioIdusuario(idUsuario);
     }
     @Override
+    public void noCertificarOperario(
+            Long idTaller,
+            Long idAsistencia,
+            Long idCapacitador) {
+
+        Taller taller = repositoryTaller.findById(idTaller)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Taller no encontrado con id: " + idTaller));
+
+        if (taller.getEstado() != EstadoTaller.FINALIZADO) {
+            throw new RuntimeException(
+                    "El taller todavía no ha finalizado");
+        }
+
+        if (taller.getCapacitador() == null ||
+                !taller.getCapacitador()
+                        .getIdusuario()
+                        .equals(idCapacitador)) {
+
+            throw new RuntimeException(
+                    "El capacitador no está asignado a este taller");
+        }
+
+        AsistenciaTaller asistencia =
+                repositoryAsistenciaTaller.findById(idAsistencia)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Asistencia no encontrada con id: "
+                                                + idAsistencia));
+
+        if (!asistencia.getTaller()
+                .getIdtaller()
+                .equals(idTaller)) {
+
+            throw new RuntimeException(
+                    "La asistencia no pertenece a este taller");
+        }
+
+        if (asistencia.getEstado() != EstadoAsistencia.PRESENTE) {
+            throw new RuntimeException(
+                    "El operario no tiene asistencia registrada como PRESENTE");
+        }
+
+        if (asistencia.getDecisionCertificacion()
+                == EstadoDecisionCertificacion.CERTIFICADO) {
+
+            throw new RuntimeException(
+                    "El operario ya fue certificado");
+        }
+
+        asistencia.setDecisionCertificacion(
+                EstadoDecisionCertificacion.NO_CERTIFICADO);
+
+        repositoryAsistenciaTaller.save(asistencia);
+    }
+    @Override
     public Certificacion certificarOperario(
             Long idTaller,
             Long idAsistencia,

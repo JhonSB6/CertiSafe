@@ -9,6 +9,7 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
     const [vistaActual, setVistaActual] = useState("talleres");
 
     const [talleres, setTalleres] = useState([]);
+    const [talleresAforoCompleto, setTalleresAforoCompleto] = useState([]);
     const [cargandoTalleres, setCargandoTalleres] = useState(false);
     const [errorTalleres, setErrorTalleres] = useState("");
 
@@ -79,6 +80,29 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
             if (!respuesta.ok) {
 
                 const mensaje = await respuesta.text();
+
+                // ==========================================
+                // AFORO COMPLETO
+                // ==========================================
+
+                if (respuesta.status === 409) {
+
+                    setTalleresAforoCompleto((anteriores) => {
+
+                        if (anteriores.includes(idInscripcion)) {
+                            return anteriores;
+                        }
+
+                        return [
+                            ...anteriores,
+                            idInscripcion
+                        ];
+                    });
+
+                    alert("Aforo Completo");
+
+                    return;
+                }
 
                 throw new Error(
                     mensaje || "No fue posible confirmar la inscripción"
@@ -353,6 +377,11 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
                                                 inscripcionPendiente &&
                                                 estadoTaller === "PROGRAMADO";
 
+                                            const aforoCompleto =
+                                                talleresAforoCompleto.includes(
+                                                    inscripcion.idinscripcion
+                                                );
+
                                             return (
 
                                                 <article
@@ -495,6 +524,17 @@ function VistaOperario({ usuario, cerrarSesion, actualizarUsuario }) {
                                                             }
                                                         >
                                                             Inscribirme
+                                                        </button>
+
+                                                    )}
+
+                                                    {puedeInscribirse && aforoCompleto && (
+
+                                                        <button
+                                                            className="boton-inscribirse boton-deshabilitado"
+                                                            disabled
+                                                        >
+                                                            Aforo Completo
                                                         </button>
 
                                                     )}

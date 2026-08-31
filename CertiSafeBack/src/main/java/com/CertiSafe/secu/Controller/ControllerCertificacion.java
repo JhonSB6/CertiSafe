@@ -49,7 +49,20 @@ public class ControllerCertificacion {
                 serviceCertificacion.listarPorUsuario(idUsuario)
         );
     }
+    @PostMapping("/no-certificar/{idTaller}/{idAsistencia}/{idCapacitador}")
+    public ResponseEntity<Void> noCertificarOperario(
+            @PathVariable Long idTaller,
+            @PathVariable Long idAsistencia,
+            @PathVariable Long idCapacitador) {
 
+        serviceCertificacion.noCertificarOperario(
+                idTaller,
+                idAsistencia,
+                idCapacitador
+        );
+
+        return ResponseEntity.noContent().build();
+    }
 }
 
 

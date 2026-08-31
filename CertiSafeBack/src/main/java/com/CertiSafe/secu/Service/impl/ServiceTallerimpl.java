@@ -1,8 +1,12 @@
 package com.CertiSafe.secu.Service.impl;
 
+import com.CertiSafe.secu.Dto.DetalleOperarioTallerResponse;
+import com.CertiSafe.secu.Dto.DetalleTallerResponse;
 import com.CertiSafe.secu.Entity.*;
 import com.CertiSafe.secu.Enum.*;
+import com.CertiSafe.secu.Exception.ReglaNegocioException;
 import com.CertiSafe.secu.Observer.EventoTaller;
+import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import com.CertiSafe.secu.Observer.PublisherTaller;
 import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceTaller;
@@ -98,27 +102,48 @@ public class ServiceTallerimpl implements ServiceTaller {
 
         return repositoryTaller.save(tallerExistente);
     }
+
     @Override
     public void finalizarTaller(Long idTaller) {
 
         Taller taller =
                 repositoryTaller.findById(idTaller)
                         .orElseThrow(() ->
-                                new RuntimeException(
+                                new ReglaNegocioException(
                                         "Taller no encontrado con id: "
-                                                + idTaller));
+                                                + idTaller
+                                ));
 
         if (taller.getEstado() != EstadoTaller.EN_CURSO) {
-            return;
+
+            throw new ReglaNegocioException(
+                    "Solo se puede finalizar un taller que se encuentre EN_CURSO"
+            );
         }
 
-        taller.setEstado(EstadoTaller.FINALIZADO);
+        LocalDateTime fechaHoraFinProgramada =
+                LocalDateTime.of(
+                        taller.getFecha(),
+                        taller.getHoraFin()
+                );
+
+        LocalDateTime ahora =
+                LocalDateTime.now();
+
+        if (ahora.isBefore(fechaHoraFinProgramada)) {
+
+            throw new ReglaNegocioException(
+                    "El taller todavía no puede finalizar. "
+                            + "La hora programada de finalización es "
+                            + taller.getHoraFin()
+            );
+        }
+
+        taller.setEstado(
+                EstadoTaller.FINALIZADO
+        );
 
         repositoryTaller.save(taller);
-
-        System.out.println(
-                "Taller finalizado automáticamente: "
-                        + taller.getNombre());
     }
 
     @Override
@@ -138,14 +163,18 @@ public class ServiceTallerimpl implements ServiceTaller {
     @Override
     public void iniciarTaller(Long id, boolean forzarInicio) {
 
-        Taller taller = repositoryTaller.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Taller no encontrado con id: " + id));
+        Taller taller =
+                repositoryTaller.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Taller no encontrado con id: "
+                                                + id));
 
         if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
+
             throw new RuntimeException(
-                    "El taller no se encuentra en estado PROGRAMADO");
+                    "El taller no se encuentra en estado PROGRAMADO"
+            );
         }
 
         long confirmadas =
@@ -159,7 +188,7 @@ public class ServiceTallerimpl implements ServiceTaller {
             long faltantes =
                     taller.getAforo() - confirmadas;
 
-            throw new RuntimeException(
+            throw new ReglaNegocioException(
                     "No se puede iniciar el taller. "
                             + "Faltan "
                             + faltantes
@@ -173,30 +202,58 @@ public class ServiceTallerimpl implements ServiceTaller {
                                 id,
                                 EstadoInscripcion.CONFIRMADA);
 
-        for (InscripcionTaller inscripcion : inscripcionesConfirmadas) {
+        /*
+         * Registrar asistencia de los operarios
+         * confirmados al momento de iniciar el taller.
+         */
+        for (InscripcionTaller inscripcion :
+                inscripcionesConfirmadas) {
 
-            AsistenciaTaller asistencia = new AsistenciaTaller();
+            AsistenciaTaller asistencia =
+                    new AsistenciaTaller();
 
             asistencia.setTaller(taller);
-            asistencia.setUsuario(inscripcion.getUsuario());
+
+            asistencia.setUsuario(
+                    inscripcion.getUsuario()
+            );
 
             asistencia.setFechainicio(
-                    java.sql.Date.valueOf(taller.getFecha()));
+                    java.sql.Date.valueOf(
+                            taller.getFecha()
+                    )
+            );
 
             asistencia.setFechafin(
-                    java.sql.Date.valueOf(taller.getFecha()));
+                    java.sql.Date.valueOf(
+                            taller.getFecha()
+                    )
+            );
 
             asistencia.setEstado(
-                    EstadoAsistencia.PRESENTE);
+                    EstadoAsistencia.PRESENTE
+            );
 
-            repositoryAsistenciaTaller.save(asistencia);
+            asistencia.setDecisionCertificacion(null);
+
+            repositoryAsistenciaTaller.save(
+                    asistencia
+            );
         }
 
-        taller.setEstado(EstadoTaller.EN_CURSO);
+        /*
+         * EL ESTADO CAMBIA ÚNICAMENTE POR ACCIÓN
+         * DEL CAPACITADOR.
+         */
+        taller.setEstado(
+                EstadoTaller.EN_CURSO
+        );
 
         repositoryTaller.save(taller);
     }
-    @Override
+
+    // Si se quiere el taller con inicio automatico al llegar la hora
+    {/*@Override
     public void iniciarAutomaticamente(Long idTaller) {
 
         Taller taller =
@@ -215,7 +272,8 @@ public class ServiceTallerimpl implements ServiceTaller {
         System.out.println(
                 "Taller iniciado automáticamente: "
                         + taller.getNombre());
-    }
+    } */}
+
 
     @Override
     public List<Usuario> buscarOperariosDisponibles(Long idTaller) {
@@ -328,6 +386,7 @@ public class ServiceTallerimpl implements ServiceTaller {
             repositoryInscripcionTaller.save(inscripcion);
         }
     }
+
     @Override
     public void revisarAforoUnMinutoAntes(Long idTaller) {
 
@@ -362,6 +421,7 @@ public class ServiceTallerimpl implements ServiceTaller {
 
         publisherTaller.notificarObservers(evento);
     }
+
     @Override
     public Map<String, Object> obtenerResumen(Long idTaller) {
 
@@ -395,6 +455,7 @@ public class ServiceTallerimpl implements ServiceTaller {
 
         return resumen;
     }
+
     @Override
     public List<Taller> listarTalleresFinalizadosPorCapacitador(
             Long idCapacitador) {
@@ -405,6 +466,7 @@ public class ServiceTallerimpl implements ServiceTaller {
                         EstadoTaller.FINALIZADO
                 );
     }
+
     @Override
     public List<Taller> listarPorCapacitador(
             Long idCapacitador,
@@ -415,5 +477,217 @@ public class ServiceTallerimpl implements ServiceTaller {
                         idCapacitador,
                         estado);
     }
+
+    @Override
+    public void eliminarTaller(Long idTaller) {
+
+        Taller taller =
+                repositoryTaller.findById(idTaller)
+                        .orElseThrow(() ->
+                                new ReglaNegocioException(
+                                        "Taller no encontrado con id: "
+                                                + idTaller
+                                )
+                        );
+
+        /*
+         * Solo se permite eliminar un taller
+         * que todavía esté PROGRAMADO.
+         */
+        if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
+
+            throw new ReglaNegocioException(
+                    "Solo se pueden eliminar talleres en estado PROGRAMADO"
+            );
+        }
+
+        repositoryTaller.delete(taller);
+    }
+
+    @Override
+    public DetalleTallerResponse obtenerDetalleTaller(Long idTaller) {
+
+        Taller taller =
+                repositoryTaller.findById(idTaller)
+                        .orElseThrow(() ->
+                                new ReglaNegocioException(
+                                        "Taller no encontrado con id: "
+                                                + idTaller
+                                )
+                        );
+
+        /*
+         * =========================================
+         * RESUMEN
+         * =========================================
+         */
+
+        long programados =
+                repositoryInscripcionTaller
+                        .countInscripcionesActivas(idTaller);
+
+        long confirmados =
+                repositoryInscripcionTaller
+                        .countByTallerIdtallerAndEstado(
+                                idTaller,
+                                EstadoInscripcion.CONFIRMADA
+                        );
+
+        long pendientes =
+                repositoryInscripcionTaller
+                        .countByTallerIdtallerAndEstado(
+                                idTaller,
+                                EstadoInscripcion.PENDIENTE
+                        );
+
+
+        /*
+         * =========================================
+         * OPERARIOS
+         * =========================================
+         */
+
+        List<InscripcionTaller> inscripciones =
+                repositoryInscripcionTaller
+                        .findByTallerIdtaller(idTaller);
+
+
+        List<DetalleOperarioTallerResponse> operarios =
+                inscripciones.stream()
+                        .map(inscripcion -> {
+
+                            Usuario usuario =
+                                    inscripcion.getUsuario();
+
+                            String certificacion = "No certifica";
+                            String motivo = "";
+
+
+                            /*
+                             * =====================================
+                             * BUSCAR CERTIFICACIÓN DEL OPERARIO
+                             * =====================================
+                             */
+
+                            Long idTipoCertificacion =
+                                    taller.getTipoCertificacion()
+                                            .getIdTipoCertificacion();
+
+
+                            Optional<Certificacion> certificacionEncontrada =
+                                    repositoryCertificacion
+                                            .findByUsuarioIdusuarioAndTipoCertificacionIdTipoCertificacionAndEstado(
+                                                    usuario.getIdusuario(),
+                                                    idTipoCertificacion,
+                                                    EstadoCertificacion.VIGENTE
+                                            );
+
+
+                            if (certificacionEncontrada.isPresent()) {
+
+                                certificacion = "Sí";
+
+                            } else {
+
+                                /*
+                                 * El motivo solamente debe aparecer
+                                 * cuando corresponda.
+                                 *
+                                 * El caso normal será que el operario
+                                 * no tenga una certificación vigente
+                                 * para este tipo de taller.
+                                 */
+
+                                if (inscripcion.getEstado()
+                                        == EstadoInscripcion.CANCELADA) {
+
+                                    motivo = "Inscripción cancelada";
+
+                                } else {
+
+                                    motivo =
+                                            "No cuenta con certificación vigente";
+                                }
+                            }
+
+
+                            return new DetalleOperarioTallerResponse(
+
+                                    usuario.getDocumento(),
+
+                                    usuario.getNombre(),
+
+                                    usuario.getApellido(),
+
+                                    inscripcion.getEstado() != null
+                                            ? inscripcion.getEstado().name()
+                                            : "",
+
+                                    certificacion,
+
+                                    motivo
+                            );
+
+                        })
+                        .collect(Collectors.toList());
+
+
+        /*
+         * =========================================
+         * CAPACITADOR
+         * =========================================
+         */
+
+        String capacitador = "Sin asignar";
+
+        if (taller.getCapacitador() != null) {
+
+            capacitador =
+                    taller.getCapacitador().getNombre()
+                            + " "
+                            + taller.getCapacitador().getApellido();
+        }
+
+
+        /*
+         * =========================================
+         * CREAR RESPUESTA
+         * =========================================
+         */
+
+        return new DetalleTallerResponse(
+
+                taller.getIdtaller(),
+
+                taller.getNombre(),
+
+                taller.getDescripcion(),
+
+                taller.getFecha(),
+
+                taller.getHoraInicio(),
+
+                taller.getHoraFin(),
+
+                taller.getAforo(),
+
+                taller.getTipoCertificacion()
+                        .getNombre(),
+
+                taller.getEstado()
+                        .name(),
+
+                capacitador,
+
+                programados,
+
+                confirmados,
+
+                pendientes,
+
+                operarios
+        );
+    }
+
 
 }

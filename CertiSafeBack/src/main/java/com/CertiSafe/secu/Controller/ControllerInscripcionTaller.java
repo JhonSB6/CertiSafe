@@ -2,8 +2,10 @@ package com.CertiSafe.secu.Controller;
 
 import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Enum.EstadoTipoProgramacion;
+import com.CertiSafe.secu.Exception.AforoCompletoException;
 import com.CertiSafe.secu.Service.ServiceInscripcionTaller;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,13 +56,24 @@ public class ControllerInscripcionTaller {
     }
 
     @PutMapping("/{id}/confirmar")
-    public ResponseEntity<Void> confirmar(
+    public ResponseEntity<?> confirmar(
             @PathVariable Long id) {
 
-        serviceInscripcionTaller.confirmarInscripcion(id);
+        try {
 
-        return ResponseEntity.noContent().build();
+            serviceInscripcionTaller.confirmarInscripcion(id);
+
+            return ResponseEntity.noContent().build();
+
+        } catch (AforoCompletoException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
     }
+
+
 
     @PutMapping("/{id}/cancelar")
     public ResponseEntity<Void> cancelar(

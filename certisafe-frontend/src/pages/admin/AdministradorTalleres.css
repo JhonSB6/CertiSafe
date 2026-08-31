@@ -1,0 +1,971 @@
+/* =========================================================
+   FILTROS DE TALLERES
+========================================================= */
+
+.filtros-talleres-admin {
+    display: grid;
+
+    grid-template-columns:
+        minmax(280px, 1.7fr)
+        minmax(180px, 1fr);
+
+    gap: 16px;
+
+    margin: 25px 0 28px 0;
+
+    padding: 18px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.04);
+
+    box-sizing: border-box;
+}
+
+
+.filtro-taller-admin {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.filtro-taller-admin label {
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.filtro-taller-admin input,
+.filtro-taller-admin select {
+    width: 100%;
+
+    min-height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 9px 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.filtro-taller-admin input:focus,
+.filtro-taller-admin select:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 105, 170, 0.10);
+}
+
+
+/* =========================================================
+   CONTENEDOR DE TARJETAS
+========================================================= */
+
+.tarjetas-talleres-admin {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(360px, 1fr));
+
+    gap: 22px;
+
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   CARD DEL TALLER
+========================================================= */
+
+.taller-admin-card {
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+
+    padding: 24px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.taller-admin-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.08);
+
+    border-color: #cbd5e1;
+}
+
+
+/* =========================================================
+   TITULO
+========================================================= */
+
+.taller-admin-card h2 {
+    margin: 0 0 12px 0;
+
+    color: #123f68;
+
+    font-size: 21px;
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   INFORMACIÓN
+========================================================= */
+
+.taller-admin-card > p {
+    margin: 6px 0;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+
+.taller-admin-card > p strong {
+    color: #123f68;
+}
+
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.estado-taller-programado,
+.estado-taller-en-curso,
+.estado-taller-finalizado,
+.estado-taller {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.estado-taller-programado {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+
+.estado-taller-en-curso {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+.estado-taller-finalizado {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+.estado-taller {
+    background: #e2e8f0;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   RESUMEN DEL AFORO
+========================================================= */
+
+.resumen-aforo {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+    padding: 15px;
+
+    background: #f4f7fb;
+
+    border: 1px solid #dbe4ee;
+
+    border-radius: 12px;
+}
+
+
+.resumen-aforo p {
+    margin: 0;
+
+    padding: 10px;
+
+    background: white;
+
+    border-radius: 9px;
+
+    color: #475569;
+
+    font-size: 13px;
+}
+
+
+.resumen-aforo strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #123f68;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   CONTENEDOR DE ACCIONES
+========================================================= */
+
+.acciones-taller-admin {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   BOTÓN DETALLE
+========================================================= */
+
+.boton-detalle-taller {
+    width: 100%;
+
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    border: 1px solid #1769aa;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #1769aa;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.boton-detalle-taller:hover {
+    background: #1769aa;
+
+    color: white;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(23, 105, 170, 0.18);
+}
+
+
+/* =========================================================
+   BOTÓN EDITAR
+========================================================= */
+
+.boton-editar-taller {
+    width: 100%;
+
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.boton-editar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(23, 105, 170, 0.20);
+}
+
+
+/* =========================================================
+   BOTÓN ELIMINAR
+========================================================= */
+
+.boton-eliminar-taller {
+    width: 100%;
+
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    border: 1px solid #dc3545;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #dc3545;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.boton-eliminar-taller:hover {
+    background: #dc3545;
+
+    color: white;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(220, 53, 69, 0.18);
+}
+
+
+/* =========================================================
+   BOTÓN PROGRAMAR
+========================================================= */
+
+.boton-programar-taller {
+    width: 100%;
+
+    min-height: 42px;
+
+    margin-top: 10px;
+
+    padding: 10px 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #123f68;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.boton-programar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(18, 63, 104, 0.20);
+}
+
+
+/* =========================================================
+   BOTONES DESHABILITADOS
+========================================================= */
+
+.boton-deshabilitado {
+    background: #cbd5e1 !important;
+
+    color: #64748b !important;
+
+    border-color: #cbd5e1 !important;
+
+    cursor: not-allowed !important;
+
+    box-shadow: none !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   VISTA DETALLE DEL TALLER
+========================================================= */
+
+.detalle-taller-admin {
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ENCABEZADO DETALLE
+========================================================= */
+
+.encabezado-detalle-taller {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+
+.encabezado-detalle-taller h1 {
+    margin: 0 0 7px 0;
+
+    color: #123f68;
+
+    font-size: 30px;
+}
+
+
+.encabezado-detalle-taller p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   BOTÓN VOLVER
+========================================================= */
+
+.boton-volver-detalle {
+    min-width: 120px;
+
+    min-height: 42px;
+
+    padding: 10px 16px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #123f68;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.boton-volver-detalle:hover {
+    background: #f1f5f9;
+
+    border-color: #1769aa;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BLOQUES DE DETALLE
+========================================================= */
+
+.detalle-taller-bloque {
+    margin-bottom: 22px;
+
+    padding: 22px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+}
+
+
+.detalle-taller-bloque h2 {
+    margin: 0 0 18px 0;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #123f68;
+
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL TALLER
+========================================================= */
+
+.detalle-taller-informacion {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+
+.detalle-taller-campo {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 12px 14px;
+
+    background: #f8fafc;
+
+    border-radius: 10px;
+
+    border: 1px solid #e5e7eb;
+
+    min-width: 0;
+}
+
+
+.detalle-taller-campo span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.detalle-taller-campo strong {
+    color: #334155;
+
+    font-size: 14px;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   RESUMEN DETALLE
+========================================================= */
+
+.detalle-resumen-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+.detalle-resumen-card {
+    padding: 17px;
+
+    background: #f4f7fb;
+
+    border: 1px solid #dbe4ee;
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+
+.detalle-resumen-card span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.detalle-resumen-card strong {
+    color: #123f68;
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   TABLA OPERARIOS
+========================================================= */
+
+.detalle-operarios-contenedor {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+}
+
+
+.tabla-detalle-operarios {
+    width: 100%;
+
+    min-width: 850px;
+
+    border-collapse: collapse;
+
+    font-size: 13px;
+}
+
+
+.tabla-detalle-operarios thead {
+    background: #123f68;
+
+    color: white;
+}
+
+
+.tabla-detalle-operarios th {
+    padding: 13px 12px;
+
+    text-align: left;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.tabla-detalle-operarios td {
+    padding: 13px 12px;
+
+    color: #475569;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    vertical-align: middle;
+}
+
+
+.tabla-detalle-operarios tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.tabla-detalle-operarios tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   ESTADOS TABLA
+========================================================= */
+
+.estado-inscripcion-detalle,
+.estado-certificacion-detalle {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 9px;
+
+    border-radius: 15px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.estado-inscripcion-confirmada {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+.estado-inscripcion-pendiente {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+.estado-inscripcion-cancelada {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+.estado-certificacion-certificado {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+.estado-certificacion-no-certificado {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+.estado-certificacion-pendiente {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+/* =========================================================
+   MOTIVO
+========================================================= */
+
+.motivo-no-certificacion {
+    color: #b91c1c;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+}
+
+
+.motivo-vacio {
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MENSAJE SIN OPERARIOS
+========================================================= */
+
+.detalle-sin-operarios {
+    padding: 30px;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .tarjetas-talleres-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-resumen-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .filtros-talleres-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .acciones-taller-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-taller-informacion {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-resumen-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .encabezado-detalle-taller {
+        flex-direction: column;
+    }
+
+    .boton-volver-detalle {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .taller-admin-card {
+        padding: 18px;
+    }
+
+    .resumen-aforo {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-taller-bloque {
+        padding: 16px;
+    }
+
+    .detalle-resumen-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

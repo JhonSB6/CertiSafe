@@ -3,6 +3,7 @@ package com.CertiSafe.secu.Service.impl;
 import com.CertiSafe.secu.Entity.InscripcionTaller;
 import com.CertiSafe.secu.Enum.EstadoInscripcion;
 import com.CertiSafe.secu.Enum.EstadoTaller;
+import com.CertiSafe.secu.Exception.AforoCompletoException;
 import com.CertiSafe.secu.Repository.RepositoryCertificacion;
 import com.CertiSafe.secu.Repository.RepositoryInscripcionTaller;
 import com.CertiSafe.secu.Repository.RepositoryTaller;
@@ -85,8 +86,8 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
                                 EstadoInscripcion.CONFIRMADA);
 
         if (confirmadas >= taller.getAforo()) {
-            throw new RuntimeException(
-                    "El aforo del taller ya está completo");
+            throw new AforoCompletoException(
+                    "Aforo Completo");
         }
 
         inscripcion.setEstado(EstadoInscripcion.CONFIRMADA);

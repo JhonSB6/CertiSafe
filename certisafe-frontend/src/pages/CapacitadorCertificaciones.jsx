@@ -3,11 +3,17 @@ import "./CapacitadorCertificaciones.css";
 import PerfilUsuario from "../components/PerfilUsuario";
 import MenuUsuario from "../components/MenuUsuario";
 
-function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }) {
+function CapacitadorCertificaciones({
+    usuario,
+    cerrarSesion,
+    actualizarUsuario
+}) {
 
     const [vistaActual, setVistaActual] = useState("inicio");
 
-    const [talleres, setTalleres] = useState([]);
+    const [talleresActivos, setTalleresActivos] = useState([]);
+    const [talleresFinalizados, setTalleresFinalizados] = useState([]);
+
     const [cargando, setCargando] = useState(true);
     const [mensaje, setMensaje] = useState("");
 
@@ -15,9 +21,23 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
     const [tallerSeleccionado, setTallerSeleccionado] = useState(null);
     const [cargandoAsistencias, setCargandoAsistencias] = useState(false);
 
+    // =========================================================
+    // MODAL NO CERTIFICAR
+    // =========================================================
+
+    const [modalNoCertificar, setModalNoCertificar] = useState(false);
+    const [asistenciaNoCertificar, setAsistenciaNoCertificar] =
+        useState(null);
+
+    const [motivoNoCertificacion, setMotivoNoCertificacion] =
+        useState("");
+
+    const [procesandoDecision, setProcesandoDecision] =
+        useState(false);
+
 
     // =========================================================
-    // CARGAR TALLERES FINALIZADOS DEL CAPACITADOR
+    // CARGAR TALLERES DEL CAPACITADOR
     // =========================================================
 
     useEffect(() => {
@@ -26,26 +46,72 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
             try {
 
-                const url =
-                    `http://localhost:8080/api/talleres/capacitador/${usuario.idUsuario}/finalizados`;
+                setCargando(true);
+                setMensaje("");
 
-                const respuesta = await fetch(url);
+                const idCapacitador =
+                    usuario?.idUsuario ?? usuario?.idusuario;
 
-                if (!respuesta.ok) {
-
+                if (!idCapacitador) {
                     throw new Error(
-                        "No fue posible cargar los talleres"
+                        "No se encontró el ID del capacitador."
                     );
                 }
 
-                const datos = await respuesta.json();
+
+                // =================================================
+                // TALLERES ACTIVOS
+                // PROGRAMADO + EN_CURSO
+                // =================================================
+
+                const respuestaActivos = await fetch(
+                    `http://localhost:8080/api/talleres/capacitador/${idCapacitador}/activos`
+                );
+
+                if (!respuestaActivos.ok) {
+
+                    throw new Error(
+                        "No fue posible cargar los talleres activos."
+                    );
+                }
+
+                const datosActivos =
+                    await respuestaActivos.json();
+
+                console.log(
+                    "TALLERES ACTIVOS DEL CAPACITADOR:",
+                    datosActivos
+                );
+
+                setTalleresActivos(datosActivos);
+
+
+                // =================================================
+                // TALLERES FINALIZADOS
+                // =================================================
+
+                const respuestaFinalizados = await fetch(
+                    `http://localhost:8080/api/talleres/capacitador/${idCapacitador}/finalizados`
+                );
+
+                if (!respuestaFinalizados.ok) {
+
+                    throw new Error(
+                        "No fue posible cargar los talleres finalizados."
+                    );
+                }
+
+                const datosFinalizados =
+                    await respuestaFinalizados.json();
 
                 console.log(
                     "TALLERES FINALIZADOS:",
-                    datos
+                    datosFinalizados
                 );
 
-                setTalleres(datos);
+                setTalleresFinalizados(
+                    datosFinalizados
+                );
 
             } catch (error) {
 
@@ -55,7 +121,8 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                 );
 
                 setMensaje(
-                    "No fue posible cargar los talleres finalizados."
+                    error.message ||
+                    "No fue posible cargar los talleres."
                 );
 
             } finally {
@@ -64,18 +131,231 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             }
         };
 
-        if (usuario?.idUsuario) {
+
+        if (
+            usuario?.idUsuario ||
+            usuario?.idusuario
+        ) {
             cargarTalleres();
         }
 
-    }, [usuario?.idUsuario]);
+    }, [
+        usuario?.idUsuario,
+        usuario?.idusuario
+    ]);
+
+
+    // =========================================================
+    // RECARGAR TALLERES
+    // =========================================================
+
+    const recargarTalleres = async () => {
+
+        try {
+
+            const idCapacitador =
+                usuario?.idUsuario ?? usuario?.idusuario;
+
+            if (!idCapacitador) {
+                return;
+            }
+
+
+            const respuestaActivos = await fetch(
+                `http://localhost:8080/api/talleres/capacitador/${idCapacitador}/activos`
+            );
+
+            if (respuestaActivos.ok) {
+
+                const datosActivos =
+                    await respuestaActivos.json();
+
+                setTalleresActivos(datosActivos);
+            }
+
+
+            const respuestaFinalizados = await fetch(
+                `http://localhost:8080/api/talleres/capacitador/${idCapacitador}/finalizados`
+            );
+
+            if (respuestaFinalizados.ok) {
+
+                const datosFinalizados =
+                    await respuestaFinalizados.json();
+
+                setTalleresFinalizados(
+                    datosFinalizados
+                );
+            }
+
+        } catch (error) {
+
+            console.error(
+                "ERROR ACTUALIZANDO TALLERES:",
+                error
+            );
+        }
+    };
+
+
+    // =========================================================
+    // INICIAR TALLER
+    // =========================================================
+
+    const iniciarTaller = async (taller) => {
+
+        try {
+
+            setMensaje("");
+
+            const respuesta = await fetch(
+                `http://localhost:8080/api/talleres/${taller.idtaller}/iniciar?forzarInicio=false`,
+                {
+                    method: "POST"
+                }
+            );
+
+            // =====================================================
+            // RESPUESTA CON ERROR DE NEGOCIO
+            // =====================================================
+
+            if (!respuesta.ok) {
+
+                let mensajeError =
+                    "No fue posible iniciar el taller. Falta aforo para completar";
+
+                try {
+
+                    const datosError =
+                        await respuesta.json();
+
+                    if (datosError?.mensaje) {
+
+                        mensajeError =
+                            datosError.mensaje;
+
+                    }
+
+                } catch {
+
+                    const textoError =
+                        await respuesta.text();
+
+                    if (textoError) {
+                        mensajeError = textoError;
+                    }
+                }
+
+                throw new Error(mensajeError);
+            }
+
+
+            // =====================================================
+            // INICIO CORRECTO
+            // =====================================================
+
+            setMensaje(
+                `El taller "${taller.nombre}" fue iniciado correctamente.`
+            );
+
+            await recargarTalleres();
+
+        } catch (error) {
+
+            console.error(
+                "ERROR INICIANDO TALLER:",
+                error
+            );
+
+            setMensaje(
+                error.message ||
+                "No fue posible iniciar el taller."
+            );
+        }
+    };
+
+    // =========================================================
+    // FINALIZAR TALLER
+    // =========================================================
+
+    const finalizarTaller = async (taller) => {
+
+        try {
+
+            setMensaje("");
+
+            const respuesta = await fetch(
+                `http://localhost:8080/api/talleres/${taller.idtaller}/finalizar`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            // =====================================================
+            // RESPUESTA CON ERROR DE NEGOCIO
+            // =====================================================
+
+            if (!respuesta.ok) {
+
+                let mensajeError =
+                    "No fue posible finalizar el taller.";
+
+                try {
+
+                    const datosError =
+                        await respuesta.json();
+
+                    if (datosError?.mensaje) {
+
+                        mensajeError =
+                            datosError.mensaje;
+
+                    }
+
+                } catch {
+
+                    const textoError =
+                        await respuesta.text();
+
+                    if (textoError) {
+                        mensajeError = textoError;
+                    }
+                }
+
+                throw new Error(mensajeError);
+            }
+
+
+            // =====================================================
+            // FINALIZACIÓN CORRECTA
+            // =====================================================
+
+            setMensaje(
+                `El taller "${taller.nombre}" fue finalizado correctamente.`
+            );
+
+            await recargarTalleres();
+
+        } catch (error) {
+
+            console.error(
+                "ERROR FINALIZANDO TALLER:",
+                error
+            );
+
+            setMensaje(
+                error.message ||
+                "No fue posible finalizar el taller."
+            );
+        }
+    };
 
 
     // =========================================================
     // CARGAR OPERARIOS PRESENTES
     // =========================================================
 
-    const cargarAsistencias = async (idTaller) => {
+    const cargarAsistencias = async (taller) => {
 
         try {
 
@@ -83,37 +363,36 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             setMensaje("");
 
             const respuesta = await fetch(
-                `http://localhost:8080/api/asistencias/taller/${idTaller}/presentes`
+                `http://localhost:8080/api/asistencias/taller/${taller.idtaller}/presentes`
             );
 
             if (!respuesta.ok) {
 
                 throw new Error(
-                    "No fue posible cargar los operarios"
+                    "No fue posible cargar los operarios."
                 );
             }
 
             const datos = await respuesta.json();
 
             console.log(
-                "ASISTENCIAS PRESENTES:",
-                datos
+                "ASISTENCIA COMPLETA:",
+                JSON.stringify(datos, null, 2)
             );
 
 
             // =================================================
-            // OBTENER TIPO DE CERTIFICACIÓN DEL TALLER
+            // ID TIPO CERTIFICACIÓN
             // =================================================
 
             const tipoCertificacion =
-                talleres.find(
-                    (taller) =>
-                        taller.idtaller === idTaller
-                )?.tipoCertificacion?.idTipoCertificacion;
+                taller
+                    ?.tipoCertificacion
+                    ?.idTipoCertificacion;
 
 
             // =================================================
-            // VERIFICAR CERTIFICACIÓN DE CADA OPERARIO
+            // VERIFICAR CERTIFICACIÓN
             // =================================================
 
             const asistenciasConCertificacion =
@@ -121,33 +400,95 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                     datos.map(async (asistencia) => {
 
-                        const respuestaCertificacion =
-                            await fetch(
-                                `http://localhost:8080/api/certificaciones/verificar/${asistencia.usuario.idUsuario}/${tipoCertificacion}`
-                            );
+                        const idUsuario =
+                            asistencia?.usuario?.idUsuario ??
+                            asistencia?.usuario?.idusuario;
 
-                        if (!respuestaCertificacion.ok) {
+
+                        // =================================================
+                        // SI NO VIENE USUARIO
+                        // =================================================
+
+                        if (!idUsuario) {
+
+                            console.error(
+                                "ASISTENCIA SIN ID DE USUARIO:",
+                                asistencia
+                            );
 
                             return {
                                 ...asistencia,
                                 estadoCertificacion:
-                                    "NO_CERTIFICADO"
+                                    "NO_CERTIFICADO",
+                                decisionCertificacion:
+                                    asistencia.decisionCertificacion ??
+                                    null
                             };
                         }
 
-                        const certificado =
-                            await respuestaCertificacion.json();
 
-                        return {
-                            ...asistencia,
-                            estadoCertificacion:
-                                certificado
-                                    ? "CERTIFICADO"
-                                    : "NO_CERTIFICADO",
-                            decisionCertificacion:
-                                asistencia.decisionCertificacion ||
-                                null
-                        };
+                        // =================================================
+                        // VERIFICAR CERTIFICACIÓN EXISTENTE
+                        // =================================================
+
+                        try {
+
+                            const respuestaCertificacion =
+                                await fetch(
+                                    `http://localhost:8080/api/certificaciones/verificar/${idUsuario}/${tipoCertificacion}`
+                                );
+
+
+                            if (!respuestaCertificacion.ok) {
+
+                                return {
+                                    ...asistencia,
+                                    estadoCertificacion:
+                                        "NO_CERTIFICADO",
+                                    decisionCertificacion:
+                                        asistencia.decisionCertificacion ??
+                                        null
+                                };
+                            }
+
+
+                            const certificado =
+                                await respuestaCertificacion.json();
+
+
+                            return {
+
+                                ...asistencia,
+
+                                estadoCertificacion:
+                                    certificado
+                                        ? "CERTIFICADO"
+                                        : "NO_CERTIFICADO",
+
+                                decisionCertificacion:
+                                    asistencia.decisionCertificacion ??
+                                    null
+                            };
+
+                        } catch (error) {
+
+                            console.error(
+                                "ERROR VERIFICANDO CERTIFICACIÓN:",
+                                error
+                            );
+
+                            return {
+
+                                ...asistencia,
+
+                                estadoCertificacion:
+                                    "NO_CERTIFICADO",
+
+                                decisionCertificacion:
+                                    asistencia.decisionCertificacion ??
+                                    null
+                            };
+                        }
 
                     })
 
@@ -159,7 +500,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             );
 
             setTallerSeleccionado(
-                idTaller
+                taller.idtaller
             );
 
         } catch (error) {
@@ -170,6 +511,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             );
 
             setMensaje(
+                error.message ||
                 "No fue posible cargar los operarios presentes."
             );
 
@@ -189,13 +531,20 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
         try {
 
             const idTaller =
-                asistencia.taller.idtaller;
+                asistencia.taller?.idtaller ??
+                asistencia.idtaller;
 
             const idAsistencia =
                 asistencia.idasistencia;
 
             const idCapacitador =
-                usuario.idUsuario;
+                usuario?.idUsuario ??
+                usuario?.idusuario;
+
+
+            // =================================================
+            // REGISTRAR DECISIÓN
+            // =================================================
 
             const respuestaDecision = await fetch(
                 `http://localhost:8080/api/asistencias/${idAsistencia}/decision-certificacion?decision=CERTIFICADO`,
@@ -216,9 +565,12 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             }
 
 
+            // =================================================
+            // CREAR CERTIFICACIÓN
+            // =================================================
+
             const url =
                 `http://localhost:8080/api/certificaciones/certificar/${idTaller}/${idAsistencia}/${idCapacitador}`;
-
 
             console.log(
                 "CERTIFICANDO:",
@@ -249,7 +601,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             const certificacion =
                 await respuesta.json();
 
-
             console.log(
                 "CERTIFICACIÓN CREADA:",
                 certificacion
@@ -257,29 +608,41 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
 
             // =================================================
-            // ACTUALIZAR ESTADO VISUAL
+            // ACTUALIZAR VISUALMENTE
             // =================================================
 
             setAsistencias(
-                asistencias.map((item) =>
+                (asistenciasActuales) =>
+                    asistenciasActuales.map(
+                        (item) =>
 
-                    item.idasistencia ===
-                    asistencia.idasistencia
+                            item.idasistencia ===
+                            asistencia.idasistencia
 
-                        ? {
-                            ...item,
-                            estadoCertificacion:
-                                "CERTIFICADO"
-                        }
+                                ? {
+                                    ...item,
 
-                        : item
+                                    estadoCertificacion:
+                                        "CERTIFICADO",
 
-                )
+                                    decisionCertificacion:
+                                        "CERTIFICADO"
+                                }
+
+                                : item
+                    )
             );
 
 
+            const nombre =
+                asistencia.usuario?.nombre ?? "";
+
+            const apellido =
+                asistencia.usuario?.apellido ?? "";
+
+
             setMensaje(
-                `${asistencia.usuario.nombre} ${asistencia.usuario.apellido} fue certificado correctamente.`
+                `${nombre} ${apellido} fue certificado correctamente.`
             );
 
         } catch (error) {
@@ -295,16 +658,92 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
             );
         }
     };
-    const decidirNoCertificar = async (asistencia) => {
+
+
+    // =========================================================
+    // ABRIR MODAL NO CERTIFICAR
+    // =========================================================
+
+    const abrirModalNoCertificar = (asistencia) => {
+
+        setAsistenciaNoCertificar(
+            asistencia
+        );
+
+        setMotivoNoCertificacion("");
+
+        setModalNoCertificar(true);
+
+        setMensaje("");
+    };
+
+
+    // =========================================================
+    // CERRAR MODAL
+    // =========================================================
+
+    const cerrarModalNoCertificar = () => {
+
+        if (procesandoDecision) {
+            return;
+        }
+
+        setModalNoCertificar(false);
+
+        setAsistenciaNoCertificar(null);
+
+        setMotivoNoCertificacion("");
+    };
+
+
+    // =========================================================
+    // REGISTRAR NO CERTIFICACIÓN
+    // =========================================================
+
+    const confirmarNoCertificar = async () => {
+
+        if (
+            !asistenciaNoCertificar
+        ) {
+            return;
+        }
+
+
+        const motivo =
+            motivoNoCertificacion.trim();
+
+
+        if (!motivo) {
+
+            setMensaje(
+                "Debe ingresar el motivo de la no certificación."
+            );
+
+            return;
+        }
+
 
         try {
 
+            setProcesandoDecision(true);
+
+            const idAsistencia =
+                asistenciaNoCertificar.idasistencia;
+
+
+            /*
+             * El motivo se envía junto con la decisión.
+             * Se utiliza encodeURIComponent para evitar
+             * problemas con espacios y caracteres especiales.
+             */
+
             const respuesta = await fetch(
-                `http://localhost:8080/api/asistencias/${asistencia.idasistencia}/decision-certificacion?decision=NO_CERTIFICADO`,
+                `http://localhost:8080/api/asistencias/${idAsistencia}/decision-certificacion?decision=NO_CERTIFICADO&motivo=${encodeURIComponent(motivo)}`,
                 {
                     method: "PATCH"
                 }
             );
+
 
             if (!respuesta.ok) {
 
@@ -313,29 +752,59 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                 throw new Error(
                     mensajeError ||
-                    "No fue posible registrar la decisión."
+                    "No fue posible registrar la no certificación."
                 );
             }
 
+
+            // =================================================
+            // ACTUALIZAR ESTADO VISUAL
+            // =================================================
+
             setAsistencias(
-                asistencias.map((item) =>
+                (asistenciasActuales) =>
+                    asistenciasActuales.map(
+                        (item) =>
 
-                    item.idasistencia === asistencia.idasistencia
+                            item.idasistencia ===
+                            idAsistencia
 
-                        ? {
-                            ...item,
-                            estadoCertificacion:
-                                "NO_CERTIFICADO",
-                            decisionCertificacion:
-                                "NO_CERTIFICADO"
-                        }
+                                ? {
+                                    ...item,
 
-                        : item
-                )
+                                    estadoCertificacion:
+                                        "NO_CERTIFICADO",
+
+                                    decisionCertificacion:
+                                        "NO_CERTIFICADO",
+
+                                    motivoNoCertificacion:
+                                        motivo
+                                }
+
+                                : item
+                    )
             );
 
+
+            const nombre =
+                asistenciaNoCertificar.usuario?.nombre ??
+                "";
+
+            const apellido =
+                asistenciaNoCertificar.usuario?.apellido ??
+                "";
+
+
+            setModalNoCertificar(false);
+
+            setAsistenciaNoCertificar(null);
+
+            setMotivoNoCertificacion("");
+
+
             setMensaje(
-                `${asistencia.usuario.nombre} ${asistencia.usuario.apellido} no fue certificado.`
+                `${nombre} ${apellido} no fue certificado.`
             );
 
         } catch (error) {
@@ -347,19 +816,24 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
             setMensaje(
                 error.message ||
-                "No fue posible registrar la decisión."
+                "No fue posible registrar la no certificación."
             );
+
+        } finally {
+
+            setProcesandoDecision(false);
         }
     };
 
 
     // =========================================================
-    // CERRAR OPERARIOS DEL TALLER SELECCIONADO
+    // CERRAR OPERARIOS
     // =========================================================
 
     const cerrarOperarios = () => {
 
         setTallerSeleccionado(null);
+
         setAsistencias([]);
 
         setMensaje("");
@@ -376,10 +850,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
             <div className="dashboard-capacitador">
 
-                {/* =========================================
-                    MENÚ LATERAL
-                ========================================== */}
-
                 <aside className="menu-capacitador">
 
                     <div className="logo-capacitador">
@@ -388,7 +858,16 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                     <nav>
 
-                        <button>
+                        <button
+                            className={
+                                vistaActual === "talleres"
+                                    ? "menu-capacitador-activo"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setVistaActual("talleres")
+                            }
+                        >
                             📚
                             <span>
                                 Mis talleres
@@ -397,7 +876,16 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
 
                         <button
-                            className="menu-capacitador-activo"
+                            className={
+                                vistaActual === "certificaciones"
+                                    ? "menu-capacitador-activo"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setVistaActual(
+                                    "certificaciones"
+                                )
+                            }
                         >
                             🏆
                             <span>
@@ -409,10 +897,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                 </aside>
 
-
-                {/* =========================================
-                    CONTENIDO
-                ========================================== */}
 
                 <main className="contenido-capacitador">
 
@@ -432,11 +916,11 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                     <section className="seccion-capacitador">
 
                         <h1>
-                            Certificaciones
+                            Cargando...
                         </h1>
 
                         <p>
-                            Cargando talleres finalizados...
+                            Cargando información del capacitador...
                         </p>
 
                     </section>
@@ -463,19 +947,12 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
             <aside className="menu-capacitador">
 
-
-                {/* LOGO */}
-
                 <div className="logo-capacitador">
                     CERTISAFE
                 </div>
 
 
-                {/* NAVEGACIÓN */}
-
                 <nav>
-
-                    {/* TALLERES */}
 
                     <button
                         className={
@@ -493,8 +970,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         </span>
                     </button>
 
-
-                    {/* CERTIFICACIONES */}
 
                     <button
                         className={
@@ -520,15 +995,10 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
 
             {/* =================================================
-                CONTENIDO PRINCIPAL
+                CONTENIDO
             ================================================= */}
 
             <main className="contenido-capacitador">
-
-
-                {/* =================================================
-                    HEADER
-                ================================================= */}
 
                 <header className="header-capacitador">
 
@@ -557,9 +1027,9 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         </h1>
 
                         <p>
-                            Desde aquí puedes consultar tus
-                            talleres finalizados y certificar
-                            a los operarios que asistieron.
+                            Desde aquí puedes administrar tus
+                            talleres y certificar a los operarios
+                            que asistieron.
                         </p>
 
 
@@ -568,12 +1038,37 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                             <article className="resumen-capacitador-card">
 
                                 <h3>
+                                    Mis talleres
+                                </h3>
+
+                                <p>
+                                    Consulta tus talleres programados
+                                    y en curso.
+                                </p>
+
+                                <button
+                                    onClick={() =>
+                                        setVistaActual(
+                                            "talleres"
+                                        )
+                                    }
+                                >
+                                    Ver mis talleres
+                                </button>
+
+                            </article>
+
+
+                            <article className="resumen-capacitador-card">
+
+                                <h3>
                                     Certificaciones
                                 </h3>
 
                                 <p>
-                                    Consulta tus talleres finalizados
-                                    y certifica a los operarios presentes.
+                                    Certifica a los operarios
+                                    presentes en tus talleres
+                                    finalizados.
                                 </p>
 
                                 <button
@@ -608,17 +1103,26 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         </h1>
 
                         <p>
-                            Consulta los talleres finalizados
-                            asociados a tu usuario.
+                            Administra tus talleres programados
+                            y en curso.
                         </p>
 
 
-                        {talleres.length === 0 ? (
+                        {mensaje && (
+
+                            <p className="mensaje-certificacion">
+                                {mensaje}
+                            </p>
+
+                        )}
+
+
+                        {talleresActivos.length === 0 ? (
 
                             <div className="capacitador-vacio">
 
-                                No tienes talleres finalizados
-                                actualmente.
+                                No tienes talleres programados
+                                o en curso actualmente.
 
                             </div>
 
@@ -626,64 +1130,124 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                             <div className="talleres-container">
 
-                                {talleres.map((taller) => (
+                                {talleresActivos.map(
+                                    (taller) => (
 
-                                    <article
-                                        className="taller-card"
-                                        key={
-                                            taller.idtaller
-                                        }
-                                    >
-
-                                        <h3>
-                                            {taller.nombre}
-                                        </h3>
-
-                                        <p className="taller-descripcion">
-                                            {taller.descripcion}
-                                        </p>
-
-                                        <p>
-                                            <strong>
-                                                Fecha:
-                                            </strong>{" "}
-                                            {taller.fecha}
-                                        </p>
-
-                                        <p>
-                                            <strong>
-                                                Horario:
-                                            </strong>{" "}
-                                            {taller.horaInicio}
-                                            {" - "}
-                                            {taller.horaFin}
-                                        </p>
-
-                                        <p>
-                                            <strong>
-                                                Certificación:
-                                            </strong>{" "}
-                                            {
-                                                taller
-                                                    .tipoCertificacion
-                                                    ?.nombre
+                                        <article
+                                            className="taller-card"
+                                            key={
+                                                taller.idtaller
                                             }
-                                        </p>
+                                        >
 
-                                        <p>
-                                            <strong>
-                                                Estado:
-                                            </strong>{" "}
+                                            <h3>
+                                                {taller.nombre}
+                                            </h3>
 
-                                            <span className="taller-estado-finalizado">
-                                                {taller.estado}
-                                            </span>
 
-                                        </p>
+                                            <p className="taller-descripcion">
+                                                {taller.descripcion}
+                                            </p>
 
-                                    </article>
 
-                                ))}
+                                            <div className="taller-info">
+
+                                                <p>
+                                                    <strong>
+                                                        Fecha:
+                                                    </strong>{" "}
+                                                    {taller.fecha}
+                                                </p>
+
+
+                                                <p>
+                                                    <strong>
+                                                        Horario:
+                                                    </strong>{" "}
+                                                    {taller.horaInicio}
+                                                    {" - "}
+                                                    {taller.horaFin}
+                                                </p>
+
+
+                                                <p>
+                                                    <strong>
+                                                        Certificación:
+                                                    </strong>{" "}
+                                                    {
+                                                        taller
+                                                            .tipoCertificacion
+                                                            ?.nombre
+                                                    }
+                                                </p>
+
+
+                                                <p>
+                                                    <strong>
+                                                        Estado:
+                                                    </strong>{" "}
+
+                                                    <span
+                                                        className={
+                                                            taller.estado ===
+                                                            "EN_CURSO"
+                                                                ? "taller-estado-en-curso"
+                                                                : "taller-estado-programado"
+                                                        }
+                                                    >
+                                                        {taller.estado}
+                                                    </span>
+
+                                                </p>
+
+                                            </div>
+
+
+                                            {/* =================================================
+                                                BOTÓN INICIAR
+                                            ================================================= */}
+
+                                            {taller.estado ===
+                                                "PROGRAMADO" && (
+
+                                                    <button
+                                                        className="btn-iniciar-taller"
+                                                        onClick={() =>
+                                                            iniciarTaller(
+                                                                taller
+                                                            )
+                                                        }
+                                                    >
+                                                        ▶ Iniciar taller
+                                                    </button>
+
+                                                )}
+
+
+                                            {/* =================================================
+                                                BOTÓN FINALIZAR
+                                            ================================================= */}
+
+                                            {taller.estado ===
+                                                "EN_CURSO" && (
+
+                                                    <button
+                                                        className="btn-finalizar-taller"
+                                                        onClick={() =>
+                                                            finalizarTaller(
+                                                                taller
+                                                            )
+                                                        }
+                                                    >
+                                                        ■ Finalizar taller
+                                                    </button>
+
+                                                )}
+
+                                        </article>
+
+                                    )
+                                )}
 
                             </div>
 
@@ -701,7 +1265,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                 {vistaActual === "certificaciones" && (
 
                     <section className="seccion-capacitador">
-
 
                         <div className="capacitador-header">
 
@@ -723,10 +1286,6 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         </h2>
 
 
-                        {/* =================================================
-                            MENSAJE
-                        ================================================= */}
-
                         {mensaje && (
 
                             <p className="mensaje-certificacion">
@@ -736,11 +1295,7 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         )}
 
 
-                        {/* =================================================
-                            SIN TALLERES
-                        ================================================= */}
-
-                        {talleres.length === 0 ? (
+                        {talleresFinalizados.length === 0 ? (
 
                             <div className="capacitador-vacio">
 
@@ -751,270 +1306,281 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
 
                         ) : (
 
-
-                            /* =================================================
-                               TALLERES
-                            ================================================= */
-
                             <div className="talleres-container">
 
-                                {talleres.map((taller) => (
+                                {talleresFinalizados.map(
+                                    (taller) => (
 
-                                    <article
-                                        className="taller-card"
-                                        key={
-                                            taller.idtaller
-                                        }
-                                    >
-
-
-                                        {/* INFORMACIÓN */}
-
-                                        <h3>
-                                            {taller.nombre}
-                                        </h3>
-
-
-                                        <p className="taller-descripcion">
-                                            {taller.descripcion}
-                                        </p>
-
-
-                                        <div className="taller-info">
-
-                                            <p>
-                                                <strong>
-                                                    Fecha:
-                                                </strong>{" "}
-                                                {taller.fecha}
-                                            </p>
-
-
-                                            <p>
-                                                <strong>
-                                                    Horario:
-                                                </strong>{" "}
-                                                {taller.horaInicio}
-                                                {" - "}
-                                                {taller.horaFin}
-                                            </p>
-
-
-                                            <p>
-                                                <strong>
-                                                    Certificación:
-                                                </strong>{" "}
-                                                {
-                                                    taller
-                                                        .tipoCertificacion
-                                                        ?.nombre
-                                                }
-                                            </p>
-
-
-                                            <p>
-                                                <strong>
-                                                    Estado:
-                                                </strong>{" "}
-
-                                                <span className="taller-estado-finalizado">
-                                                    {taller.estado}
-                                                </span>
-
-                                            </p>
-
-                                        </div>
-
-
-                                        {/* =================================================
-                                            BOTÓN MOSTRAR OPERARIOS
-                                        ================================================= */}
-
-                                        <button
-                                            className="btn-certificar-operarios"
-                                            onClick={() =>
-                                                cargarAsistencias(
-                                                    taller.idtaller
-                                                )
+                                        <article
+                                            className="taller-card"
+                                            key={
+                                                taller.idtaller
                                             }
                                         >
-                                            Certificar operarios
-                                        </button>
+
+                                            <h3>
+                                                {taller.nombre}
+                                            </h3>
 
 
-                                        {/* =================================================
-                                            OPERARIOS PRESENTES
-                                        ================================================= */}
-
-                                        {tallerSeleccionado ===
-                                            taller.idtaller && (
-
-                                                <div className="operarios-container">
+                                            <p className="taller-descripcion">
+                                                {taller.descripcion}
+                                            </p>
 
 
-                                                    <div className="operarios-header">
+                                            <div className="taller-info">
 
-                                                        <h4>
-                                                            Operarios presentes
-                                                        </h4>
+                                                <p>
+                                                    <strong>
+                                                        Fecha:
+                                                    </strong>{" "}
+                                                    {taller.fecha}
+                                                </p>
 
 
-                                                        <button
-                                                            className="btn-cerrar-operarios"
-                                                            onClick={
-                                                                cerrarOperarios
-                                                            }
-                                                        >
-                                                            Cerrar
-                                                        </button>
+                                                <p>
+                                                    <strong>
+                                                        Horario:
+                                                    </strong>{" "}
+                                                    {taller.horaInicio}
+                                                    {" - "}
+                                                    {taller.horaFin}
+                                                </p>
+
+
+                                                <p>
+                                                    <strong>
+                                                        Certificación:
+                                                    </strong>{" "}
+                                                    {
+                                                        taller
+                                                            .tipoCertificacion
+                                                            ?.nombre
+                                                    }
+                                                </p>
+
+
+                                                <p>
+                                                    <strong>
+                                                        Estado:
+                                                    </strong>{" "}
+
+                                                    <span className="taller-estado-finalizado">
+                                                        {taller.estado}
+                                                    </span>
+
+                                                </p>
+
+                                            </div>
+
+
+                                            {/* =================================================
+                                                BOTÓN OPERARIOS
+                                            ================================================= */}
+
+                                            <button
+                                                className="btn-certificar-operarios"
+                                                onClick={() =>
+                                                    cargarAsistencias(
+                                                        taller
+                                                    )
+                                                }
+                                            >
+                                                Certificar operarios
+                                            </button>
+
+
+                                            {/* =================================================
+                                                OPERARIOS
+                                            ================================================= */}
+
+                                            {tallerSeleccionado ===
+                                                taller.idtaller && (
+
+                                                    <div className="operarios-container">
+
+                                                        <div className="operarios-header">
+
+                                                            <h4>
+                                                                Operarios presentes
+                                                            </h4>
+
+
+                                                            <button
+                                                                className="btn-cerrar-operarios"
+                                                                onClick={
+                                                                    cerrarOperarios
+                                                                }
+                                                            >
+                                                                Cerrar
+                                                            </button>
+
+                                                        </div>
+
+
+                                                        {cargandoAsistencias ? (
+
+                                                            <p className="mensaje-cargando">
+                                                                Cargando operarios...
+                                                            </p>
+
+                                                        ) : asistencias.length ===
+                                                        0 ? (
+
+                                                            <p className="mensaje-vacio">
+                                                                No hay operarios presentes.
+                                                            </p>
+
+                                                        ) : (
+
+                                                            asistencias.map(
+                                                                (asistencia) => (
+
+                                                                    <div
+                                                                        className="operario-card"
+                                                                        key={
+                                                                            asistencia.idasistencia
+                                                                        }
+                                                                    >
+
+                                                                        <p className="operario-nombre">
+
+                                                                            <strong>
+
+                                                                                {
+                                                                                    asistencia
+                                                                                        .usuario
+                                                                                        ?.nombre
+                                                                                }{" "}
+
+                                                                                {
+                                                                                    asistencia
+                                                                                        .usuario
+                                                                                        ?.apellido
+                                                                                }
+
+                                                                            </strong>
+
+                                                                        </p>
+
+
+                                                                        <p>
+
+                                                                            <strong>
+                                                                                Documento:
+                                                                            </strong>{" "}
+
+                                                                            {
+                                                                                asistencia
+                                                                                    .usuario
+                                                                                    ?.documento
+                                                                            }
+
+                                                                        </p>
+
+
+                                                                        <p>
+
+                                                                            <strong>
+                                                                                Estado:
+                                                                            </strong>{" "}
+
+                                                                            <span className="estado-presente">
+
+                                                                                {
+                                                                                    asistencia
+                                                                                        .estado
+                                                                                }
+
+                                                                            </span>
+
+                                                                        </p>
+
+
+                                                                        {/* =================================================
+                                                                            CERTIFICADO
+                                                                        ================================================= */}
+
+                                                                        {asistencia.decisionCertificacion ===
+                                                                            "CERTIFICADO" ? (
+
+                                                                            <p className="operario-certificado">
+                                                                                ✓ Certificado
+                                                                            </p>
+
+                                                                        ) : asistencia.decisionCertificacion ===
+                                                                            "NO_CERTIFICADO" ? (
+
+                                                                            <div>
+
+                                                                                <p className="operario-no-certificado">
+                                                                                    ✕ No certificado
+                                                                                </p>
+
+                                                                                {asistencia.motivoNoCertificacion && (
+
+                                                                                    <p className="motivo-no-certificacion">
+
+                                                                                        <strong>
+                                                                                            Motivo:
+                                                                                        </strong>{" "}
+
+                                                                                        {
+                                                                                            asistencia.motivoNoCertificacion
+                                                                                        }
+
+                                                                                    </p>
+
+                                                                                )}
+
+                                                                            </div>
+
+                                                                        ) : (
+
+                                                                            <div className="botones-certificacion">
+
+                                                                                <button
+                                                                                    className="btn-certificar"
+                                                                                    onClick={() =>
+                                                                                        certificarOperario(
+                                                                                            asistencia
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    ✓ Certificar
+                                                                                </button>
+
+
+                                                                                <button
+                                                                                    className="btn-no-certificar"
+                                                                                    onClick={() =>
+                                                                                        abrirModalNoCertificar(
+                                                                                            asistencia
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    ✕ No certificar
+                                                                                </button>
+
+                                                                            </div>
+
+                                                                        )}
+
+                                                                    </div>
+
+                                                                )
+                                                            )
+
+                                                        )}
 
                                                     </div>
 
+                                                )}
 
-                                                    {cargandoAsistencias ? (
+                                        </article>
 
-                                                        <p className="mensaje-cargando">
-                                                            Cargando operarios...
-                                                        </p>
-
-                                                    ) : asistencias.length ===
-                                                    0 ? (
-
-                                                        <p className="mensaje-vacio">
-                                                            No hay operarios presentes.
-                                                        </p>
-
-                                                    ) : (
-
-                                                        asistencias.map(
-                                                            (asistencia) => (
-
-                                                                <div
-                                                                    className="operario-card"
-                                                                    key={
-                                                                        asistencia.idasistencia
-                                                                    }
-                                                                >
-
-
-                                                                    {/* NOMBRE */}
-
-                                                                    <p className="operario-nombre">
-
-                                                                        <strong>
-
-                                                                            {
-                                                                                asistencia
-                                                                                    .usuario
-                                                                                    .nombre
-                                                                            }{" "}
-
-                                                                            {
-                                                                                asistencia
-                                                                                    .usuario
-                                                                                    .apellido
-                                                                            }
-
-                                                                        </strong>
-
-                                                                    </p>
-
-
-                                                                    {/* DOCUMENTO */}
-
-                                                                    <p>
-
-                                                                        <strong>
-                                                                            Documento:
-                                                                        </strong>{" "}
-
-                                                                        {
-                                                                            asistencia
-                                                                                .usuario
-                                                                                .documento
-                                                                        }
-
-                                                                    </p>
-
-
-                                                                    {/* ESTADO ASISTENCIA */}
-
-                                                                    <p>
-
-                                                                        <strong>
-                                                                            Estado:
-                                                                        </strong>{" "}
-
-                                                                        <span className="estado-presente">
-
-                                                                        {
-                                                                            asistencia
-                                                                                .estado
-                                                                        }
-
-                                                                    </span>
-
-                                                                    </p>
-
-
-                                                                    {/* ESTADO CERTIFICACIÓN */}
-
-                                                                    {asistencia.decisionCertificacion === "CERTIFICADO" ? (
-
-                                                                        <p className="operario-certificado">
-                                                                            ✓ Certificado
-                                                                        </p>
-
-                                                                    ) : asistencia.decisionCertificacion === "NO_CERTIFICADO" ? (
-
-                                                                        <p className="operario-no-certificado">
-                                                                            ✕ No certificado
-                                                                        </p>
-
-                                                                    ) : (
-
-                                                                        <div className="botones-certificacion">
-
-                                                                            <button
-                                                                                className="btn-certificar"
-                                                                                onClick={() =>
-                                                                                    certificarOperario(
-                                                                                        asistencia
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                ✓ Certificar
-                                                                            </button>
-
-                                                                            <button
-                                                                                className="btn-no-certificar"
-                                                                                onClick={() =>
-                                                                                    decidirNoCertificar(
-                                                                                        asistencia
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                ✕ No certificar
-                                                                            </button>
-
-                                                                        </div>
-
-                                                                    )}
-
-                                                                </div>
-
-                                                            )
-                                                        )
-
-                                                    )}
-
-                                                </div>
-
-                                            )}
-
-                                    </article>
-
-                                ))}
+                                    )
+                                )}
 
                             </div>
 
@@ -1035,6 +1601,134 @@ function CapacitadorCertificaciones({ usuario, cerrarSesion, actualizarUsuario }
                         usuario={usuario}
                         actualizarUsuario={actualizarUsuario}
                     />
+
+                )}
+
+
+                {/* =================================================
+                    MODAL NO CERTIFICAR
+                ================================================= */}
+
+                {modalNoCertificar && (
+
+                    <div
+                        className="modal-overlay-certificacion"
+                        onClick={
+                            cerrarModalNoCertificar
+                        }
+                    >
+
+                        <div
+                            className="modal-no-certificar"
+                            onClick={(evento) =>
+                                evento.stopPropagation()
+                            }
+                        >
+
+                            <div className="modal-no-certificar-header">
+
+                                <h3>
+                                    No certificar operario
+                                </h3>
+
+                                <button
+                                    className="modal-cerrar-x"
+                                    onClick={
+                                        cerrarModalNoCertificar
+                                    }
+                                    disabled={
+                                        procesandoDecision
+                                    }
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+
+                            <p className="modal-operario-nombre">
+
+                                <strong>
+                                    Operario:
+                                </strong>{" "}
+
+                                {
+                                    asistenciaNoCertificar
+                                        ?.usuario
+                                        ?.nombre
+                                }{" "}
+
+                                {
+                                    asistenciaNoCertificar
+                                        ?.usuario
+                                        ?.apellido
+                                }
+
+                            </p>
+
+
+                            <label
+                                htmlFor="motivoNoCertificacion"
+                                className="modal-label"
+                            >
+                                Motivo de no certificación
+                            </label>
+
+
+                            <textarea
+                                id="motivoNoCertificacion"
+                                className="modal-textarea"
+                                value={
+                                    motivoNoCertificacion
+                                }
+                                onChange={(evento) =>
+                                    setMotivoNoCertificacion(
+                                        evento.target.value
+                                    )
+                                }
+                                placeholder="Ingrese el motivo por el cual el operario no será certificado..."
+                                rows={5}
+                                disabled={
+                                    procesandoDecision
+                                }
+                            />
+
+
+                            <div className="modal-botones">
+
+                                <button
+                                    className="modal-btn-cancelar"
+                                    onClick={
+                                        cerrarModalNoCertificar
+                                    }
+                                    disabled={
+                                        procesandoDecision
+                                    }
+                                >
+                                    Cancelar
+                                </button>
+
+
+                                <button
+                                    className="modal-btn-confirmar"
+                                    onClick={
+                                        confirmarNoCertificar
+                                    }
+                                    disabled={
+                                        procesandoDecision ||
+                                        !motivoNoCertificacion.trim()
+                                    }
+                                >
+                                    {procesandoDecision
+                                        ? "Guardando..."
+                                        : "Confirmar no certificación"}
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 )}
 

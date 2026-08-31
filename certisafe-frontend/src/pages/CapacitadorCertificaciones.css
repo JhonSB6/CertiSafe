@@ -449,10 +449,12 @@ button.menu-capacitador-activo::after {
 
 
 /* =========================================================
-   ESTADO FINALIZADO
+   ESTADOS DEL TALLER
 ========================================================= */
 
-.dashboard-capacitador .taller-estado-finalizado {
+.dashboard-capacitador .taller-estado-finalizado,
+.dashboard-capacitador .taller-estado-programado,
+.dashboard-capacitador .taller-estado-en-curso {
     display: inline-flex;
 
     align-items: center;
@@ -461,13 +463,181 @@ button.menu-capacitador-activo::after {
 
     border-radius: 20px;
 
-    background: #fee2e2;
-
-    color: #991b1b;
-
     font-size: 12px;
 
     font-weight: 800;
+}
+
+
+/* PROGRAMADO */
+
+.dashboard-capacitador .taller-estado-programado {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+
+/* EN CURSO */
+
+.dashboard-capacitador .taller-estado-en-curso {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+/* FINALIZADO */
+
+.dashboard-capacitador .taller-estado-finalizado {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+/* =========================================================
+   ACCIONES DEL TALLER
+========================================================= */
+
+.dashboard-capacitador .taller-acciones {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+
+.dashboard-capacitador .btn-iniciar-taller,
+.dashboard-capacitador .btn-finalizar-taller {
+    width: 100%;
+
+    min-height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 10px 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+/* INICIAR */
+
+.dashboard-capacitador .btn-iniciar-taller {
+    background: #1769aa;
+
+    color: white;
+
+    box-shadow:
+            0 5px 14px rgba(23, 105, 170, 0.18);
+}
+
+
+.dashboard-capacitador .btn-iniciar-taller:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 8px 20px rgba(23, 105, 170, 0.22);
+}
+
+
+/* FINALIZAR */
+
+.dashboard-capacitador .btn-finalizar-taller {
+    background: #dc3545;
+
+    color: white;
+
+    box-shadow:
+            0 5px 14px rgba(220, 53, 69, 0.16);
+}
+
+
+.dashboard-capacitador .btn-finalizar-taller:hover {
+    background: #b02a37;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 8px 20px rgba(220, 53, 69, 0.20);
+}
+
+
+/* =========================================================
+   ESTADO DEL TALLER SIN ACCIONES
+========================================================= */
+
+.dashboard-capacitador .taller-finalizado-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+    padding: 11px 13px;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.dashboard-capacitador .taller-en-curso-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+    padding: 11px 13px;
+
+    border-radius: 9px;
+
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+
+    color: #166534;
+
+    font-size: 13px;
+
+    font-weight: 700;
 }
 
 
@@ -807,6 +977,486 @@ button.menu-capacitador-activo::after {
     border-radius: 16px;
 }
 
+/* =========================================================
+   MODAL - NO CERTIFICAR
+========================================================= */
+
+.dashboard-capacitador .modal-overlay-certificacion {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(11, 32, 53, 0.62);
+
+    backdrop-filter: blur(4px);
+
+    animation: modal-overlay-aparecer 0.2s ease;
+}
+
+
+/* =========================================================
+   CONTENEDOR DEL MODAL
+========================================================= */
+
+.dashboard-capacitador .modal-no-certificar {
+    width: min(520px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    padding: 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.25);
+
+    animation:
+        modal-certificacion-aparecer 0.22s ease;
+}
+
+
+/* =========================================================
+   ANIMACIONES
+========================================================= */
+
+@keyframes modal-overlay-aparecer {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes modal-certificacion-aparecer {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-12px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   HEADER MODAL
+========================================================= */
+
+.dashboard-capacitador .modal-no-certificar-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+.dashboard-capacitador .modal-no-certificar-header h3 {
+    position: relative;
+
+    margin: 0;
+
+    padding-left: 13px;
+
+    color: #123b63;
+
+    font-size: 21px;
+
+    line-height: 1.3;
+
+    font-weight: 800;
+}
+
+
+/* Línea azul de identidad CertiSafe */
+
+.dashboard-capacitador .modal-no-certificar-header h3::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 2px;
+
+    width: 4px;
+
+    height: calc(100% - 4px);
+
+    border-radius: 5px;
+
+    background: #1769aa;
+}
+
+
+/* =========================================================
+   BOTÓN X
+========================================================= */
+
+.dashboard-capacitador .modal-cerrar-x {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 21px;
+
+    line-height: 1;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.dashboard-capacitador .modal-cerrar-x:hover {
+    background: #fee2e2;
+
+    border-color: #fecaca;
+
+    color: #991b1b;
+
+    transform: scale(1.03);
+}
+
+
+.dashboard-capacitador .modal-cerrar-x:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL OPERARIO
+========================================================= */
+
+.dashboard-capacitador .modal-operario-nombre {
+    margin: 0 0 22px;
+
+    padding: 14px 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-left: 4px solid #1769aa;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+.dashboard-capacitador .modal-operario-nombre strong {
+    color: #172033;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.dashboard-capacitador .modal-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #334155;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.dashboard-capacitador .modal-textarea {
+    width: 100%;
+
+    min-height: 120px;
+
+    box-sizing: border-box;
+
+    resize: vertical;
+
+    padding: 13px 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #172033;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.dashboard-capacitador .modal-textarea::placeholder {
+    color: #94a3b8;
+}
+
+
+.dashboard-capacitador .modal-textarea:hover {
+    border-color: #94a3b8;
+}
+
+
+.dashboard-capacitador .modal-textarea:focus {
+    border-color: #1769aa;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 105, 170, 0.10);
+}
+
+
+.dashboard-capacitador .modal-textarea:disabled {
+    background: #f8fafc;
+
+    cursor: not-allowed;
+
+    opacity: 0.75;
+}
+
+
+/* =========================================================
+   BOTONES DEL MODAL
+========================================================= */
+
+.dashboard-capacitador .modal-botones {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 22px;
+}
+
+
+.dashboard-capacitador .modal-botones button {
+    width: 100%;
+
+    min-height: 43px;
+
+    box-sizing: border-box;
+
+    padding: 10px 15px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/* =========================================================
+   CANCELAR
+========================================================= */
+
+.dashboard-capacitador .modal-btn-cancelar {
+    border: 1px solid #cbd5e1;
+
+    background: #f8fafc;
+
+    color: #475569;
+}
+
+
+.dashboard-capacitador .modal-btn-cancelar:hover:not(:disabled) {
+    background: #e2e8f0;
+
+    border-color: #94a3b8;
+
+    color: #334155;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CONFIRMAR
+========================================================= */
+
+.dashboard-capacitador .modal-btn-confirmar {
+    border: 1px solid #dc3545;
+
+    background: #dc3545;
+
+    color: white;
+
+    box-shadow:
+        0 5px 14px rgba(220, 53, 69, 0.16);
+}
+
+
+.dashboard-capacitador .modal-btn-confirmar:hover:not(:disabled) {
+    background: #b02a37;
+
+    border-color: #b02a37;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(220, 53, 69, 0.20);
+}
+
+
+.dashboard-capacitador .modal-btn-confirmar:disabled {
+    background: #cbd5e1;
+
+    border-color: #cbd5e1;
+
+    color: #64748b;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   RESPONSIVE DEL MODAL
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .dashboard-capacitador .modal-overlay-certificacion {
+        padding: 14px;
+    }
+
+    .dashboard-capacitador .modal-no-certificar {
+        padding: 21px;
+
+        border-radius: 14px;
+    }
+
+    .dashboard-capacitador .modal-no-certificar-header {
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .dashboard-capacitador .modal-no-certificar-header h3 {
+        font-size: 19px;
+    }
+
+    .dashboard-capacitador .modal-operario-nombre {
+        margin-bottom: 18px;
+    }
+
+    .dashboard-capacitador .modal-textarea {
+        min-height: 110px;
+    }
+
+    .dashboard-capacitador .modal-botones {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* =========================================================
    TARJETAS RESUMEN
@@ -972,6 +1622,10 @@ button:hover {
     .dashboard-capacitador .header-capacitador {
         margin-bottom: 30px;
     }
+
+    .dashboard-capacitador .taller-acciones {
+        grid-template-columns: 1fr;
+    }
 }
 
 
@@ -1005,5 +1659,17 @@ button:hover {
         padding: 11px 13px;
 
         font-size: 13px;
+    }
+
+    .dashboard-capacitador .modal-certificacion {
+        padding: 21px;
+    }
+
+    .dashboard-capacitador .modal-acciones-certificacion {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-capacitador .modal-certificacion-header h3 {
+        font-size: 19px;
     }
 }
