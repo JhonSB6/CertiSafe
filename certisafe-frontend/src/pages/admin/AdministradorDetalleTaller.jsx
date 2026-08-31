@@ -576,17 +576,14 @@ function AdministradorDetalleTaller({ taller, volver }) {
                                                         `detalle-certificacion ${
                                                             operario.certificacion
                                                                 ?.toLowerCase()
-                                                                .replace(
-                                                                    /\s+/g,
-                                                                    "-"
-                                                                )
+                                                                .replace(/\s+/g, "-")
+                                                                .replace(/_/g, "-")
                                                         }`
                                                     }
                                                 >
-                                                    {
-                                                        operario.certificacion
-                                                        || "—"
-                                                    }
+                                                         {
+                                                            operario.certificacion || "—"
+                                                         }
                                                 </span>
 
                                             </td>

@@ -1,66 +1,146 @@
 /* =========================================================
-   FILTROS DE TALLERES
+   ENCABEZADO DE TALLERES
 ========================================================= */
 
-.filtros-talleres-admin {
-    display: grid;
+.talleres-header {
+    display: flex;
 
-    grid-template-columns:
-        minmax(280px, 1.7fr)
-        minmax(180px, 1fr);
+    align-items: center;
 
-    gap: 16px;
+    justify-content: space-between;
 
-    margin: 25px 0 28px 0;
+    gap: 25px;
 
-    padding: 18px;
+    margin-bottom: 22px;
+}
 
-    background: white;
+.talleres-header h1 {
+    margin: 0 0 7px 0;
 
-    border: 1px solid #e5e7eb;
+    color: #123f68;
 
-    border-radius: 16px;
+    font-size: 30px;
 
-    box-shadow:
-        0 3px 12px rgba(0, 0, 0, 0.04);
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+.talleres-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TOTAL DE TALLERES
+========================================================= */
+
+.talleres-total {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px 18px;
+
+    background: #f4f7fb;
+
+    border: 1px solid #dbe4ee;
+
+    border-radius: 12px;
+
+    white-space: nowrap;
 
     box-sizing: border-box;
 }
 
+.talleres-total strong {
+    color: #123f68;
 
-.filtro-taller-admin {
-    display: flex;
+    font-size: 25px;
 
-    flex-direction: column;
+    font-weight: 800;
 
-    gap: 7px;
+    line-height: 1;
 }
 
-
-.filtro-taller-admin label {
-    color: #475569;
+.talleres-total span {
+    color: #64748b;
 
     font-size: 13px;
 
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FILTRO DE TALLERES
+========================================================= */
+
+.talleres-filtros {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+
+    width: 100%;
+    margin: 25px 0 28px 0;
+    padding: 18px;
+
+    box-sizing: border-box;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    box-shadow:
+            0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   CAMPO DE BÚSQUEDA
+========================================================= */
+
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    flex: 1;
+    min-width: 0;
+}
+
+
+.campo-filtro label {
+    color: #123f68;
+
+    font-size: 13px;
     font-weight: 700;
 }
 
 
-.filtro-taller-admin input,
-.filtro-taller-admin select {
+.campo-filtro input {
     width: 100%;
 
-    min-height: 42px;
+    min-height: 44px;
+
+    padding: 10px 14px;
 
     box-sizing: border-box;
 
-    padding: 9px 12px;
-
     border: 1px solid #cbd5e1;
+    border-radius: 10px;
 
-    border-radius: 9px;
-
-    background: white;
+    background: #f8fafc;
 
     color: #1e293b;
 
@@ -69,19 +149,84 @@
     outline: none;
 
     transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
 }
 
 
-.filtro-taller-admin input:focus,
-.filtro-taller-admin select:focus {
+.campo-filtro input::placeholder {
+    color: #94a3b8;
+}
+
+
+.campo-filtro input:focus {
+    background: white;
+
     border-color: #1769aa;
 
     box-shadow:
-        0 0 0 3px rgba(23, 105, 170, 0.10);
+            0 0 0 3px rgba(23, 105, 170, 0.10);
 }
 
+
+/* =========================================================
+   BOTÓN LIMPIAR
+========================================================= */
+
+.boton-limpiar-filtro-taller {
+    min-height: 44px;
+
+    padding: 10px 18px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    background: white;
+
+    color: #475569;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+
+.boton-limpiar-filtro-taller:hover:not(:disabled) {
+    background: #f1f5f9;
+
+    border-color: #1769aa;
+
+    color: #123f68;
+
+    transform: translateY(-1px);
+}
+
+
+.boton-limpiar-filtro-taller:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+@media (max-width: 700px) {
+
+    .talleres-filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .boton-limpiar-filtro-taller {
+        width: 100%;
+    }
+
+}
 
 /* =========================================================
    CONTENEDOR DE TARJETAS
@@ -290,23 +435,33 @@
 
 
 /* =========================================================
-   CONTENEDOR DE ACCIONES
+   BOTONES DE ACCIONES DEL TALLER
 ========================================================= */
 
-.acciones-taller-admin {
-    display: grid;
+.boton-detalle-taller,
+.boton-editar-taller,
+.boton-programar-taller,
+.boton-eliminar-taller {
+    width: 100%;
 
-    grid-template-columns: 1fr 1fr;
+    min-height: 42px;
 
-    gap: 10px;
+    padding: 10px 14px;
 
-    margin-top: 20px;
+    box-sizing: border-box;
 
-    padding-top: 18px;
+    border-radius: 10px;
 
-    border-top: 1px solid #e5e7eb;
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    cursor: pointer;
 }
-
 
 /* =========================================================
    BOTÓN DETALLE
@@ -406,13 +561,15 @@
 
     padding: 10px 14px;
 
-    border: 1px solid #dc3545;
+    border: none;
 
     border-radius: 10px;
 
-    background: white;
+    background: #9a0b31;
 
-    color: #dc3545;
+    color: white;
+
+    font-family: inherit;
 
     font-size: 13px;
 
@@ -421,22 +578,39 @@
     cursor: pointer;
 
     transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
 }
 
 
 .boton-eliminar-taller:hover {
-    background: #dc3545;
-
-    color: white;
+    background: #7f0828;
 
     transform: translateY(-1px);
 
     box-shadow:
-        0 5px 12px rgba(220, 53, 69, 0.18);
+            0 5px 12px rgba(154, 11, 49, 0.20);
+}
+
+
+.boton-eliminar-taller:active {
+    transform: translateY(0);
+}
+
+
+.boton-eliminar-taller:disabled {
+    background: #cbd5e1;
+
+    color: #64748b;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+
+    opacity: 0.65;
 }
 
 
@@ -928,7 +1102,19 @@
     }
 
     .acciones-taller-admin {
-        grid-template-columns: 1fr;
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+
+        margin-top: 20px;
+
+        padding-top: 18px;
+
+        border-top: 1px solid #e5e7eb;
+
+        box-sizing: border-box;
     }
 
     .detalle-taller-informacion {

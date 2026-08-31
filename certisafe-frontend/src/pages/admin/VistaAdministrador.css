@@ -7,6 +7,68 @@
     box-sizing: border-box;
 }
 
+/* =========================================================
+   ESTADOS - HISTORIAL DE CERTIFICACIONES
+   ========================================================= */
+
+.estado-historial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   VIGENTE
+   ========================================================= */
+
+.estado-historial.estado-vigente {
+    color: #15803d;
+    background-color: #dcfce7;
+    border: 1px solid #86efac;
+}
+
+
+/* =========================================================
+   NO CERTIFICADO
+   ========================================================= */
+
+.estado-historial.estado-no-certificado {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+}
+
+
+/* =========================================================
+   VENCIDA
+   ========================================================= */
+
+.estado-historial.estado-vencida {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+}
+
+
+/* =========================================================
+   PENDIENTE
+   ========================================================= */
+
+.estado-historial.estado-pendiente {
+    color: #a16207;
+    background-color: #fef9c3;
+    border: 1px solid #fde047;
+}
 
 /* =========================================
    ENCABEZADO

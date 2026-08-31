@@ -278,8 +278,7 @@ function CargaMasivaUsuarios() {
                     </h1>
 
                     <p>
-                        Registra solicitudes de usuarios
-                        mediante un archivo Excel.
+                        Registra solicitudes de usuarios mediante un archivo Excel.
                     </p>
 
                 </div>

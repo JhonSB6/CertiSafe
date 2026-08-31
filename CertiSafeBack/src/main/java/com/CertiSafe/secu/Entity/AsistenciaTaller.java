@@ -35,4 +35,7 @@ public class AsistenciaTaller {
     @Enumerated(EnumType.STRING)
     @Column
     private EstadoDecisionCertificacion decisionCertificacion;
+
+    @Column(length = 500)
+    private String motivoNoCertificacion;
 }

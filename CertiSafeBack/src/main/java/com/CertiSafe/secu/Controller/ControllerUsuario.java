@@ -55,6 +55,20 @@ public class ControllerUsuario {
         );
     }
 
+    @PutMapping("/{id}/admin")
+    public ResponseEntity<UsuarioResponse> actualizarUsuarioAdmin(
+            @PathVariable Long id,
+            @RequestBody ActualizarUsuarioAdminRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.actualizarUsuarioAdmin(
+                        id,
+                        request
+                )
+        );
+    }
+
     @PostMapping
     public ResponseEntity<Usuario> guardar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(serviceUsuario.guardar(usuario));

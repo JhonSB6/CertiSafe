@@ -82,14 +82,18 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
     public void noCertificarOperario(
             Long idTaller,
             Long idAsistencia,
-            Long idCapacitador) {
+            Long idCapacitador,
+            String motivo) {
 
-        Taller taller = repositoryTaller.findById(idTaller)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Taller no encontrado con id: " + idTaller));
+        Taller taller =
+                repositoryTaller.findById(idTaller)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Taller no encontrado con id: "
+                                                + idTaller));
 
         if (taller.getEstado() != EstadoTaller.FINALIZADO) {
+
             throw new RuntimeException(
                     "El taller todavía no ha finalizado");
         }
@@ -101,6 +105,12 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
 
             throw new RuntimeException(
                     "El capacitador no está asignado a este taller");
+        }
+
+        if (motivo == null || motivo.trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "Debe ingresar el motivo de la no certificación");
         }
 
         AsistenciaTaller asistencia =
@@ -119,6 +129,7 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
         }
 
         if (asistencia.getEstado() != EstadoAsistencia.PRESENTE) {
+
             throw new RuntimeException(
                     "El operario no tiene asistencia registrada como PRESENTE");
         }
@@ -130,10 +141,48 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
                     "El operario ya fue certificado");
         }
 
+        if (asistencia.getDecisionCertificacion()
+                == EstadoDecisionCertificacion.NO_CERTIFICADO) {
+
+            throw new RuntimeException(
+                    "El operario ya fue marcado como no certificado");
+        }
+
+        // =========================================
+        // GUARDAR DECISIÓN EN ASISTENCIA
+        // =========================================
+
         asistencia.setDecisionCertificacion(
-                EstadoDecisionCertificacion.NO_CERTIFICADO);
+                EstadoDecisionCertificacion.NO_CERTIFICADO
+        );
+
+        asistencia.setMotivoNoCertificacion(
+                motivo.trim()
+        );
 
         repositoryAsistenciaTaller.save(asistencia);
+
+
+        // =========================================
+        // CREAR HISTORIAL
+        // =========================================
+
+        HistorialCertificacion historial =
+                new HistorialCertificacion();
+
+        historial.setCertificacion(null);
+
+        historial.setAsistencia(asistencia);
+
+        historial.setDecision(
+                EstadoDecisionCertificacion.NO_CERTIFICADO
+        );
+
+        historial.setMotivoNoCertificacion(
+                motivo.trim()
+        );
+
+        repositoryHistorialCertificacion.save(historial);
     }
     @Override
     public Certificacion certificarOperario(
@@ -235,6 +284,14 @@ public class ServiceCertificacionimpl implements ServiceCertificacion{
                 new HistorialCertificacion();
 
         historial.setCertificacion(certificacionGuardada);
+
+        historial.setAsistencia(asistencia);
+
+        historial.setDecision(
+                EstadoDecisionCertificacion.CERTIFICADO
+        );
+
+        historial.setMotivoNoCertificacion(null);
 
         repositoryHistorialCertificacion.save(historial);
 

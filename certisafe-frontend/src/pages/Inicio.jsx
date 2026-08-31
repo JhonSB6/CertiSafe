@@ -567,7 +567,12 @@ function Inicio() {
                         Ingresar
                     </button>
 
+              {/* =====================================================
+               funcionalidad de registro de ususario individual
+            ===================================================== */}
 
+
+                    {/*
                     <button
                         className="menu-registro"
                         onClick={() => {
@@ -581,7 +586,7 @@ function Inicio() {
                         }}
                     >
                         Registrarse
-                    </button>
+                    </button> */}
 
                 </nav>
 

@@ -10,6 +10,7 @@ import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
 import com.CertiSafe.secu.Observer.PublisherTaller;
 import com.CertiSafe.secu.Repository.*;
 import com.CertiSafe.secu.Service.ServiceTaller;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class ServiceTallerimpl implements ServiceTaller {
     private final RepositoryCertificacion repositoryCertificacion;
     private final RepositoryNotificacion repositoryNotificacion;
     private final RepositoryAsistenciaTaller repositoryAsistenciaTaller;
+    private final RepositoryHistorialCertificacion repositoryHistorialCertificacion;
     private final PublisherTaller publisherTaller;
 
     @Override
@@ -478,6 +480,7 @@ public class ServiceTallerimpl implements ServiceTaller {
                         estado);
     }
 
+    @Transactional
     @Override
     public void eliminarTaller(Long idTaller) {
 
@@ -490,16 +493,34 @@ public class ServiceTallerimpl implements ServiceTaller {
                                 )
                         );
 
-        /*
-         * Solo se permite eliminar un taller
-         * que todavía esté PROGRAMADO.
-         */
+        // =========================================
+        // VALIDAR ESTADO
+        // =========================================
+
         if (taller.getEstado() != EstadoTaller.PROGRAMADO) {
 
             throw new ReglaNegocioException(
                     "Solo se pueden eliminar talleres en estado PROGRAMADO"
             );
         }
+
+        // =========================================
+        // ELIMINAR INSCRIPCIONES
+        // =========================================
+
+        repositoryInscripcionTaller
+                .deleteByTallerIdtaller(idTaller);
+
+        // =========================================
+        // ELIMINAR NOTIFICACIONES
+        // =========================================
+
+        repositoryNotificacion
+                .deleteByTallerIdtaller(idTaller);
+
+        // =========================================
+        // ELIMINAR TALLER
+        // =========================================
 
         repositoryTaller.delete(taller);
     }
@@ -565,49 +586,88 @@ public class ServiceTallerimpl implements ServiceTaller {
 
                             /*
                              * =====================================
-                             * BUSCAR CERTIFICACIÓN DEL OPERARIO
+                             * BUSCAR ASISTENCIA DEL OPERARIO
                              * =====================================
                              */
 
-                            Long idTipoCertificacion =
-                                    taller.getTipoCertificacion()
-                                            .getIdTipoCertificacion();
-
-
-                            Optional<Certificacion> certificacionEncontrada =
-                                    repositoryCertificacion
-                                            .findByUsuarioIdusuarioAndTipoCertificacionIdTipoCertificacionAndEstado(
-                                                    usuario.getIdusuario(),
-                                                    idTipoCertificacion,
-                                                    EstadoCertificacion.VIGENTE
+                            Optional<AsistenciaTaller> asistenciaEncontrada =
+                                    repositoryAsistenciaTaller
+                                            .findByTallerIdtallerAndUsuarioIdusuario(
+                                                    idTaller,
+                                                    usuario.getIdusuario()
                                             );
 
 
-                            if (certificacionEncontrada.isPresent()) {
+                            /*
+                             * =====================================
+                             * BUSCAR HISTORIAL DE CERTIFICACIÓN
+                             * =====================================
+                             */
 
-                                certificacion = "Sí";
+                            if (asistenciaEncontrada.isPresent()) {
 
-                            } else {
+                                AsistenciaTaller asistencia =
+                                        asistenciaEncontrada.get();
 
-                                /*
-                                 * El motivo solamente debe aparecer
-                                 * cuando corresponda.
-                                 *
-                                 * El caso normal será que el operario
-                                 * no tenga una certificación vigente
-                                 * para este tipo de taller.
-                                 */
+                                Optional<HistorialCertificacion> historialEncontrado =
+                                        repositoryHistorialCertificacion
+                                                .findByAsistenciaIdasistencia(
+                                                        asistencia.getIdasistencia()
+                                                );
 
-                                if (inscripcion.getEstado()
-                                        == EstadoInscripcion.CANCELADA) {
 
-                                    motivo = "Inscripción cancelada";
+                                if (historialEncontrado.isPresent()) {
 
-                                } else {
+                                    HistorialCertificacion historial =
+                                            historialEncontrado.get();
 
-                                    motivo =
-                                            "No cuenta con certificación vigente";
+
+                                    /*
+                                     * =================================
+                                     * NO CERTIFICADO
+                                     * =================================
+                                     */
+
+                                    if (historial.getDecision()
+                                            == EstadoDecisionCertificacion.NO_CERTIFICADO) {
+
+                                        certificacion = "No";
+
+                                        motivo =
+                                                historial.getMotivoNoCertificacion();
+
+                                    }
+
+
+                                    /*
+                                     * =================================
+                                     * CERTIFICADO
+                                     * =================================
+                                     */
+
+                                    else if (historial.getDecision()
+                                            == EstadoDecisionCertificacion.CERTIFICADO) {
+
+                                        certificacion = "Sí";
+
+                                        motivo = "";
+
+                                    }
                                 }
+                            }
+
+
+                            /*
+                             * =========================================
+                             * CASO INSCRIPCIÓN CANCELADA
+                             * =========================================
+                             */
+
+                            if (inscripcion.getEstado()
+                                    == EstadoInscripcion.CANCELADA
+                                    && motivo.isBlank()) {
+
+                                motivo = "Inscripción cancelada";
                             }
 
 

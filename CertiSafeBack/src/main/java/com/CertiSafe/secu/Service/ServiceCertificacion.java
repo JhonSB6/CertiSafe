@@ -18,7 +18,8 @@ public interface ServiceCertificacion {
     void noCertificarOperario(
             Long idTaller,
             Long idAsistencia,
-            Long idCapacitador);
+            Long idCapacitador,
+            String motivo);
 
     List<Certificacion> listarCertificacionesUsuario(Long idUsuario);
 

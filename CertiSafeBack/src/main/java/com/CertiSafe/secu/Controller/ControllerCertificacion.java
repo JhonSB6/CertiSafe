@@ -53,12 +53,14 @@ public class ControllerCertificacion {
     public ResponseEntity<Void> noCertificarOperario(
             @PathVariable Long idTaller,
             @PathVariable Long idAsistencia,
-            @PathVariable Long idCapacitador) {
+            @PathVariable Long idCapacitador,
+            @RequestParam String motivo) {
 
         serviceCertificacion.noCertificarOperario(
                 idTaller,
                 idAsistencia,
-                idCapacitador
+                idCapacitador,
+                motivo
         );
 
         return ResponseEntity.noContent().build();

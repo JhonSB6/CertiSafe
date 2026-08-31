@@ -19,5 +19,8 @@ public interface ServiceAsistenciaTaller {
 
     List<AsistenciaTaller> listarPorTaller(Long idTaller, EstadoAsistencia estado);
 
-    void decidirCertificacion(Long id, EstadoDecisionCertificacion decision);
+    void decidirCertificacion(
+            Long id,
+            EstadoDecisionCertificacion decision,
+            String motivo);
 }

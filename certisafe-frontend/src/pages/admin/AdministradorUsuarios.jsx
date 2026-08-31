@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import AdministradorEditarUsuario from "./AdministradorEditarUsuario";
 
 function AdministradorUsuarios() {
 
@@ -11,6 +12,8 @@ function AdministradorUsuarios() {
     const [filtroEstado, setFiltroEstado] = useState("TODOS");
 
     const [cambiandoEstado, setCambiandoEstado] = useState(null);
+    const [mostrarEditar, setMostrarEditar] = useState(false);
+    const [usuarioEditar, setUsuarioEditar] = useState(null);
 
 
     // =========================================================
@@ -172,6 +175,55 @@ function AdministradorUsuarios() {
         }
     };
 
+
+    // =========================================================
+// ABRIR EDICIÓN DE USUARIO
+// =========================================================
+
+    const abrirEditarUsuario = (usuario) => {
+
+        // El ADMIN se administra desde Perfil.
+        if (usuario.rol === "ADMIN") {
+
+            return;
+        }
+
+        setUsuarioEditar(usuario);
+
+        setMostrarEditar(true);
+    };
+
+
+// =========================================================
+// CERRAR EDICIÓN
+// =========================================================
+
+    const cerrarEditarUsuario = () => {
+
+        setMostrarEditar(false);
+
+        setUsuarioEditar(null);
+    };
+
+
+// =========================================================
+// ACTUALIZAR USUARIO EN LA LISTA
+// =========================================================
+
+    const actualizarUsuarioEnLista = (usuarioActualizado) => {
+
+        setUsuarios(
+            (usuariosActuales) =>
+                usuariosActuales.map((usuario) =>
+                    usuario.idUsuario ===
+                    usuarioActualizado.idUsuario
+                        ? usuarioActualizado
+                        : usuario
+                )
+        );
+
+        cerrarEditarUsuario();
+    };
 
     // =========================================================
     // FILTRAR USUARIOS
@@ -460,9 +512,8 @@ function AdministradorUsuarios() {
                                                 ? "usuario-card usuario-card-activo"
                                                 : "usuario-card usuario-card-inactivo"
                                         }
-                                        key={
-                                            usuario.idUsuario
-                                        }
+                                        key={usuario.idUsuario}
+                                        onClick={() => abrirEditarUsuario(usuario)}
                                     >
 
                                         {/* =================================================
@@ -573,11 +624,13 @@ function AdministradorUsuarios() {
                                                         ? "boton-estado-usuario boton-desactivar"
                                                         : "boton-estado-usuario boton-activar"
                                                 }
-                                                onClick={() =>
-                                                    cambiarEstado(
-                                                        usuario
-                                                    )
-                                                }
+                                                onClick={(e) => {
+
+                                                    e.stopPropagation();
+
+                                                    cambiarEstado(usuario);
+
+                                                }}
                                                 disabled={
                                                     estaCambiando
                                                 }
@@ -607,6 +660,27 @@ function AdministradorUsuarios() {
                         )}
 
                     </div>
+
+                )}
+
+            {/* =========================================================
+    MODAL EDITAR USUARIO
+========================================================= */}
+
+            {mostrarEditar &&
+                usuarioEditar && (
+
+                    <AdministradorEditarUsuario
+                        usuario={usuarioEditar}
+
+                        volver={
+                            cerrarEditarUsuario
+                        }
+
+                        guardarCambios={
+                            actualizarUsuarioEnLista
+                        }
+                    />
 
                 )}
 

@@ -1,10 +1,11 @@
 /* =========================================================
-   DETALLE DEL TALLER
+   DETALLE DEL TALLER - ADMINISTRADOR
 ========================================================= */
 
 .detalle-taller-administrador {
     width: 100%;
     box-sizing: border-box;
+    padding-bottom: 30px;
 }
 
 
@@ -12,33 +13,66 @@
    ENCABEZADO
 ========================================================= */
 
-.encabezado-detalle-taller {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-
+.detalle-taller-encabezado {
+    width: 100%;
     margin-bottom: 28px;
 }
 
-.encabezado-detalle-taller-texto {
-    flex: 1;
+.detalle-taller-encabezado > div {
+    width: 100%;
 }
 
-.encabezado-detalle-taller h1 {
-    margin: 0 0 8px 0;
+.detalle-taller-encabezado h1 {
+    margin: 18px 0 7px 0;
 
     color: #123f68;
 
-    font-size: 32px;
+    font-size: 30px;
+    font-weight: 800;
+
     line-height: 1.2;
 }
 
-.encabezado-detalle-taller p {
+.detalle-taller-encabezado p {
     margin: 0;
 
     color: #64748b;
 
     font-size: 15px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.detalle-boton-volver,
+.detalle-boton-reintentar {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+
+    padding: 10px 17px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
 }
 
 
@@ -46,59 +80,77 @@
    BOTÓN VOLVER
 ========================================================= */
 
-.boton-volver-detalle {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    min-width: 120px;
-    min-height: 42px;
-
-    padding: 10px 18px;
-
+.detalle-boton-volver {
     border: 1px solid #cbd5e1;
-    border-radius: 10px;
 
     background: white;
 
     color: #123f68;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    box-sizing: border-box;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
 }
 
-.boton-volver-detalle:hover {
-    background: #e8eef5;
+.detalle-boton-volver:hover {
+    background: #f1f5f9;
 
     border-color: #1769aa;
 
     transform: translateY(-1px);
+
+    box-shadow:
+            0 4px 10px rgba(18, 63, 104, 0.08);
 }
 
-.boton-volver-detalle:active {
+.detalle-boton-volver:active {
     transform: translateY(0);
+}
+
+.detalle-certificacion.no-certificado {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 12px;
+
+    border-radius: 6px;
+
+    background-color: #fee2e2;
+    color: #b91c1c;
+
+    font-weight: 700;
+    font-size: 12px;
+
+    border: 1px solid #fecaca;
+}
+
+/* =========================================================
+   BOTÓN REINTENTAR
+========================================================= */
+
+.detalle-boton-reintentar {
+    border: none;
+
+    background: #1769aa;
+
+    color: white;
+}
+
+.detalle-boton-reintentar:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 5px 12px rgba(23, 105, 170, 0.20);
 }
 
 
 /* =========================================================
-   SECCIONES
+   SECCIONES PRINCIPALES
 ========================================================= */
 
 .detalle-taller-seccion {
     width: 100%;
 
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 
     padding: 24px;
 
@@ -106,20 +158,49 @@
 
     background: white;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     border-radius: 16px;
 
     box-shadow:
-        0 4px 14px rgba(0, 0, 0, 0.05);
+            0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
-.detalle-taller-seccion h2 {
-    margin: 0 0 20px 0;
+
+/* =========================================================
+   HEADER DE CADA SECCIÓN
+========================================================= */
+
+.detalle-taller-seccion-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detalle-taller-seccion-header h2 {
+    margin: 0;
 
     color: #123f68;
 
-    font-size: 21px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.detalle-taller-seccion-header p {
+    margin: 5px 0 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
 }
 
 
@@ -133,15 +214,17 @@
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
 
-    gap: 18px 25px;
+    gap: 16px;
+
+    width: 100%;
 }
 
 
 /* =========================================================
-   CAMPO DE INFORMACIÓN
+   DATOS INDIVIDUALES
 ========================================================= */
 
-.detalle-taller-campo {
+.detalle-dato {
     display: flex;
 
     flex-direction: column;
@@ -156,29 +239,37 @@
 
     border: 1px solid #e5e7eb;
 
-    border-radius: 10px;
+    border-radius: 11px;
+
+    box-sizing: border-box;
+
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease;
 }
 
-.detalle-taller-campo-completo {
-    grid-column: 1 / -1;
+.detalle-dato:hover {
+    background: #f4f7fb;
+
+    border-color: #d5dee8;
 }
 
-.detalle-taller-campo span {
+.detalle-dato span {
     color: #94a3b8;
 
     font-size: 11px;
-
-    font-weight: 700;
+    font-weight: 800;
 
     text-transform: uppercase;
 
     letter-spacing: 0.5px;
 }
 
-.detalle-taller-campo strong {
+.detalle-dato strong {
     color: #334155;
 
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: 600;
 
     line-height: 1.5;
 
@@ -190,7 +281,11 @@
    DESCRIPCIÓN
 ========================================================= */
 
-.detalle-taller-descripcion {
+.detalle-dato-descripcion {
+    grid-column: 1 / -1;
+}
+
+.detalle-dato-descripcion strong {
     white-space: pre-wrap;
 
     line-height: 1.6;
@@ -198,10 +293,14 @@
 
 
 /* =========================================================
-   ESTADO
+   ESTADO DEL TALLER
 ========================================================= */
 
-.detalle-taller-estado {
+.detalle-estado-programado,
+.detalle-estado-en-curso,
+.detalle-estado-finalizado,
+.detalle-estado-cancelado,
+.detalle-estado {
     display: inline-flex;
 
     align-items: center;
@@ -213,45 +312,55 @@
 
     border-radius: 20px;
 
-    font-size: 12px;
+    font-size: 11px !important;
+    font-weight: 800 !important;
 
-    font-weight: 700;
+    white-space: nowrap;
 }
 
 
 /* PROGRAMADO */
 
-.detalle-taller-estado-programado {
+.detalle-estado-programado {
     background: #dbeafe;
 
-    color: #1d4ed8;
+    color: #1d4ed8 !important;
 }
 
 
 /* EN CURSO */
 
-.detalle-taller-estado-en-curso {
-    background: #dcfce7;
+.detalle-estado-en-curso {
+    background: #fef3c7;
 
-    color: #166534;
+    color: #92400e !important;
 }
 
 
 /* FINALIZADO */
 
-.detalle-taller-estado-finalizado {
+.detalle-estado-finalizado {
     background: #fee2e2;
 
-    color: #991b1b;
+    color: #991b1b !important;
 }
 
 
 /* CANCELADO */
 
-.detalle-taller-estado-cancelado {
-    background: #f1f5f9;
+.detalle-estado-cancelado {
+    background: #e2e8f0;
 
-    color: #475569;
+    color: #475569 !important;
+}
+
+
+/* ESTADO GENÉRICO */
+
+.detalle-estado {
+    background: #e2e8f0;
+
+    color: #475569 !important;
 }
 
 
@@ -263,100 +372,136 @@
     display: grid;
 
     grid-template-columns:
-        repeat(4, minmax(150px, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-    gap: 16px;
+    gap: 14px;
+
+    width: 100%;
 }
 
 
 /* =========================================================
-   TARJETA DEL RESUMEN
+   TARJETAS DEL RESUMEN
 ========================================================= */
 
-.detalle-taller-resumen-card {
-    min-height: 105px;
-
+.detalle-resumen-card {
     display: flex;
 
     flex-direction: column;
 
+    align-items: center;
     justify-content: center;
 
-    align-items: center;
+    min-height: 105px;
 
-    padding: 18px;
+    padding: 17px;
 
-    box-sizing: border-box;
+    background: #f4f7fb;
 
-    background: #f8fafc;
+    border: 1px solid #dbe4ee;
 
-    border: 1px solid #e2e8f0;
-
-    border-radius: 14px;
+    border-radius: 13px;
 
     text-align: center;
 
+    box-sizing: border-box;
+
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
 }
 
-.detalle-taller-resumen-card:hover {
+.detalle-resumen-card:hover {
     transform: translateY(-2px);
 
+    border-color: #cbd5e1;
+
     box-shadow:
-        0 5px 14px rgba(0, 0, 0, 0.06);
+            0 6px 15px rgba(0, 0, 0, 0.06);
 }
 
-.detalle-taller-resumen-card strong {
+.detalle-resumen-card span {
     display: block;
 
     margin-bottom: 7px;
 
     color: #64748b;
 
-    font-size: 12px;
-
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
 
     text-transform: uppercase;
 
     letter-spacing: 0.4px;
 }
 
-.detalle-taller-resumen-card span {
+.detalle-resumen-card strong {
     color: #123f68;
 
     font-size: 27px;
-
     font-weight: 800;
 }
 
 
 /* =========================================================
-   TABLA DE OPERARIOS
+   TOTAL DE OPERARIOS
 ========================================================= */
 
-.detalle-taller-tabla-contenedor {
+.detalle-total-operarios {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 7px 12px;
+
+    background: #eff6ff;
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 20px;
+
+    color: #1d4ed8;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CONTENEDOR TABLA
+========================================================= */
+
+.detalle-tabla-contenedor {
     width: 100%;
 
     overflow-x: auto;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     border-radius: 12px;
 
     background: white;
+
+    box-sizing: border-box;
 }
 
-.detalle-taller-tabla {
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.detalle-tabla-operarios {
     width: 100%;
 
-    min-width: 900px;
+    min-width: 850px;
 
     border-collapse: collapse;
 
-    font-size: 14px;
+    font-size: 13px;
 }
 
 
@@ -364,41 +509,40 @@
    CABECERA TABLA
 ========================================================= */
 
-.detalle-taller-tabla thead {
+.detalle-tabla-operarios thead {
     background: #123f68;
 
     color: white;
 }
 
-.detalle-taller-tabla th {
-    padding: 14px;
+.detalle-tabla-operarios th {
+    padding: 14px 13px;
 
     text-align: left;
 
-    font-size: 13px;
-
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
 
     white-space: nowrap;
 }
 
 
 /* =========================================================
-   FILAS
+   CUERPO TABLA
 ========================================================= */
 
-.detalle-taller-tabla tbody tr {
+.detalle-tabla-operarios tbody tr {
     border-bottom: 1px solid #e5e7eb;
 
     transition:
-        background 0.2s ease;
+            background 0.2s ease;
 }
 
-.detalle-taller-tabla tbody tr:last-child {
+.detalle-tabla-operarios tbody tr:last-child {
     border-bottom: none;
 }
 
-.detalle-taller-tabla tbody tr:hover {
+.detalle-tabla-operarios tbody tr:hover {
     background: #f8fafc;
 }
 
@@ -407,26 +551,28 @@
    CELDAS
 ========================================================= */
 
-.detalle-taller-tabla td {
-    padding: 14px;
+.detalle-tabla-operarios td {
+    padding: 13px;
 
     color: #475569;
 
     vertical-align: middle;
+
+    line-height: 1.4;
 }
 
-.detalle-taller-tabla td:first-child {
+.detalle-tabla-operarios td:first-child {
     color: #123f68;
 
-    font-weight: 600;
+    font-weight: 700;
 }
 
 
 /* =========================================================
-   ESTADO INSCRIPCIÓN
+   ESTADO DE INSCRIPCIÓN
 ========================================================= */
 
-.detalle-taller-inscripcion {
+.detalle-inscripcion {
     display: inline-flex;
 
     align-items: center;
@@ -438,24 +584,33 @@
 
     font-size: 11px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     white-space: nowrap;
 }
 
-.detalle-taller-inscripcion-confirmada {
+
+/* CONFIRMADA */
+
+.detalle-inscripcion.confirmada {
     background: #dcfce7;
 
     color: #166534;
 }
 
-.detalle-taller-inscripcion-pendiente {
+
+/* PENDIENTE */
+
+.detalle-inscripcion.pendiente {
     background: #fef3c7;
 
     color: #92400e;
 }
 
-.detalle-taller-inscripcion-cancelada {
+
+/* CANCELADA */
+
+.detalle-inscripcion.cancelada {
     background: #fee2e2;
 
     color: #991b1b;
@@ -463,10 +618,10 @@
 
 
 /* =========================================================
-   ESTADO CERTIFICACIÓN
+   ESTADO DE CERTIFICACIÓN
 ========================================================= */
 
-.detalle-taller-certificacion {
+.detalle-certificacion {
     display: inline-flex;
 
     align-items: center;
@@ -478,30 +633,42 @@
 
     font-size: 11px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     white-space: nowrap;
 }
 
-.detalle-taller-certificacion-certificado {
+
+/* CERTIFICADO */
+
+.detalle-certificacion.certificado {
     background: #dcfce7;
 
     color: #166534;
 }
 
-.detalle-taller-certificacion-no-certificado {
+
+/* NO CERTIFICADO */
+
+.detalle-certificacion.no-certificado {
     background: #fee2e2;
 
     color: #991b1b;
 }
 
-.detalle-taller-certificacion-pendiente {
+
+/* PENDIENTE */
+
+.detalle-certificacion.pendiente {
     background: #fef3c7;
 
     color: #92400e;
 }
 
-.detalle-taller-certificacion-no-aplica {
+
+/* NO APLICA */
+
+.detalle-certificacion.no-aplica {
     background: #f1f5f9;
 
     color: #64748b;
@@ -512,33 +679,34 @@
    MOTIVO
 ========================================================= */
 
-.detalle-taller-motivo {
+.detalle-tabla-operarios td:last-child {
     max-width: 280px;
 
     color: #64748b;
 
-    font-size: 13px;
+    font-size: 12px;
 
     line-height: 1.4;
-}
 
-.detalle-taller-motivo-vacio {
-    color: #94a3b8;
-
-    font-style: italic;
+    overflow-wrap: anywhere;
 }
 
 
 /* =========================================================
-   MENSAJE SIN OPERARIOS
+   SIN OPERARIOS
 ========================================================= */
 
-.detalle-taller-sin-operarios {
-    padding: 35px 20px;
+.detalle-operarios-vacio {
+    display: flex;
 
-    text-align: center;
+    flex-direction: column;
 
-    color: #64748b;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 190px;
+
+    padding: 30px 20px;
 
     background: #f8fafc;
 
@@ -546,40 +714,89 @@
 
     border-radius: 12px;
 
-    font-size: 14px;
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+.detalle-operarios-vacio > span {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    margin-bottom: 12px;
+
+    background: #e8eef5;
+
+    border-radius: 50%;
+
+    font-size: 24px;
+}
+
+.detalle-operarios-vacio h3 {
+    margin: 0 0 6px 0;
+
+    color: #334155;
+
+    font-size: 16px;
+}
+
+.detalle-operarios-vacio p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
 }
 
 
 /* =========================================================
-   CARGANDO
+   ACCIONES FINALES
+========================================================= */
+
+.detalle-taller-acciones-finales {
+    display: flex;
+
+    justify-content: flex-start;
+
+    width: 100%;
+
+    margin-top: 5px;
+}
+
+.detalle-taller-acciones-finales .detalle-boton-volver {
+    min-width: 170px;
+}
+
+
+/* =========================================================
+   ESTADO CARGANDO
 ========================================================= */
 
 .detalle-taller-cargando {
-    min-height: 250px;
-
     display: flex;
 
     flex-direction: column;
 
     align-items: center;
-
     justify-content: center;
 
-    gap: 12px;
+    min-height: 300px;
+
+    gap: 14px;
 
     color: #64748b;
 
     font-size: 15px;
 }
 
-
-/* =========================================================
-   SPINNER
-========================================================= */
-
 .detalle-taller-spinner {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
 
     border: 3px solid #dbe5ee;
 
@@ -588,7 +805,7 @@
     border-radius: 50%;
 
     animation:
-        girar-detalle-taller 0.8s linear infinite;
+            girar-detalle-taller 0.8s linear infinite;
 }
 
 @keyframes girar-detalle-taller {
@@ -604,21 +821,82 @@
 ========================================================= */
 
 .detalle-taller-error {
-    padding: 20px;
+    width: 100%;
 
-    margin-bottom: 20px;
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    background: #fef2f2;
 
     border: 1px solid #fecaca;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
-    background: #fef2f2;
+    text-align: center;
+}
+
+.detalle-taller-error h2 {
+    margin: 0 0 8px 0;
+
+    color: #991b1b;
+
+    font-size: 20px;
+}
+
+.detalle-taller-error p {
+    margin: 0 0 20px 0;
 
     color: #b91c1c;
 
     font-size: 14px;
+}
+
+.detalle-taller-acciones {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   SIN INFORMACIÓN
+========================================================= */
+
+.detalle-taller-vacio {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 250px;
+
+    padding: 30px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    box-shadow:
+            0 4px 14px rgba(0, 0, 0, 0.05);
 
     text-align: center;
+}
+
+.detalle-taller-vacio p {
+    margin: 0 0 20px 0;
+
+    color: #64748b;
+
+    font-size: 14px;
 }
 
 
@@ -630,7 +908,7 @@
 
     .detalle-taller-resumen {
         grid-template-columns:
-            repeat(2, minmax(150px, 1fr));
+            repeat(2, minmax(0, 1fr));
     }
 
 }
@@ -639,20 +917,10 @@
 @media (max-width: 750px) {
 
     .detalle-taller-administrador {
-        padding: 0;
+        padding-bottom: 20px;
     }
 
-    .encabezado-detalle-taller {
-        flex-direction: column;
-
-        gap: 14px;
-    }
-
-    .boton-volver-detalle {
-        width: 100%;
-    }
-
-    .encabezado-detalle-taller h1 {
+    .detalle-taller-encabezado h1 {
         font-size: 27px;
     }
 
@@ -664,14 +932,33 @@
         grid-template-columns: 1fr;
     }
 
-    .detalle-taller-campo-completo {
+    .detalle-dato-descripcion {
         grid-column: auto;
     }
 
     .detalle-taller-resumen {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 
-        gap: 12px;
+    .detalle-taller-seccion-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .detalle-total-operarios {
+        align-self: flex-start;
+    }
+
+    .detalle-taller-acciones-finales {
+        width: 100%;
+    }
+
+    .detalle-taller-acciones-finales .detalle-boton-volver {
+        width: 100%;
     }
 
 }
@@ -679,16 +966,33 @@
 
 @media (max-width: 500px) {
 
+    .detalle-taller-seccion {
+        padding: 15px;
+    }
+
     .detalle-taller-resumen {
         grid-template-columns: 1fr;
     }
 
-    .detalle-taller-resumen-card {
+    .detalle-resumen-card {
         min-height: 90px;
     }
 
-    .detalle-taller-seccion h2 {
-        font-size: 19px;
+    .detalle-taller-encabezado h1 {
+        font-size: 24px;
+    }
+
+    .detalle-taller-seccion-header h2 {
+        font-size: 18px;
+    }
+
+    .detalle-taller-acciones {
+        flex-direction: column;
+    }
+
+    .detalle-taller-acciones .detalle-boton-volver,
+    .detalle-taller-acciones .detalle-boton-reintentar {
+        width: 100%;
     }
 
 }

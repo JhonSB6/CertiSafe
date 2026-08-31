@@ -192,7 +192,7 @@ function AdministradorSolicitudesUsuario() {
                 ENCABEZADO
             ================================== */}
 
-            <div className="encabezado-solicitudes-usuario">
+            <div className="encabezado-seccion-admin">
 
                 <div>
 
@@ -201,16 +201,13 @@ function AdministradorSolicitudesUsuario() {
                     </h1>
 
                     <p>
-                        Revisa y valida las solicitudes
-                        de registro pendientes.
+                        Revisa y valida las solicitudes de registro pendientes.
                     </p>
 
                 </div>
 
-                <div className="contador-solicitudes">
-
+                <div className="contador-seccion-admin">
                     {solicitudes.length}
-
                 </div>
 
             </div>

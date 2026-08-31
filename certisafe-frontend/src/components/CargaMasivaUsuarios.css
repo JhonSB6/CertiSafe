@@ -4,8 +4,12 @@
 
 .seccion-carga-masiva {
     width: 100%;
+
     padding: 30px;
+
     box-sizing: border-box;
+
+    color: #1e293b;
 }
 
 
@@ -15,20 +19,54 @@
 
 .encabezado-carga-masiva {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
     margin-bottom: 25px;
 }
 
+
 .encabezado-carga-masiva h1 {
-    margin: 0 0 8px 0;
-    font-size: 28px;
+    position: relative;
+
+    margin: 0 0 9px 0;
+
+    color: #123f68;
+
+    font-size: 21px;
     font-weight: 700;
+
+    line-height: 1.3;
 }
 
+
+.encabezado-carga-masiva h1::after {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 3px;
+
+    margin-top: 10px;
+
+    border-radius: 10px;
+
+    background: #1769aa;
+}
+
+
 .encabezado-carga-masiva p {
-    margin: 0;
-    font-size: 15px;
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
@@ -40,24 +78,50 @@
 .panel-subir-carga,
 .panel-resultado-carga {
     width: 100%;
+
     box-sizing: border-box;
+
+    margin-bottom: 18px;
+
+    padding: 22px 25px;
+
     background: #ffffff;
-    border-radius: 14px;
-    padding: 25px;
-    margin-bottom: 22px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    box-shadow:
+            0 4px 15px rgba(0, 0, 0, 0.05);
 }
+
+
+/* =========================================================
+   TÍTULOS DE LOS PANELES
+========================================================= */
 
 .panel-plantilla-carga h2,
 .panel-subir-carga h2 {
-    margin: 0 0 8px 0;
-    font-size: 20px;
+    margin: 0 0 7px 0;
+
+    color: #1e293b;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1.3;
 }
 
-.panel-plantilla-carga p {
+
+.panel-plantilla-carga p,
+.panel-subir-carga > p {
     margin: 0;
-    font-size: 14px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
@@ -67,25 +131,57 @@
 
 .panel-plantilla-carga {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
+    justify-content: space-between;
+
     gap: 20px;
 }
 
+
 .boton-descargar-plantilla {
-    border: none;
+    min-height: 42px;
+
+    padding: 10px 18px;
+
+    border: 1px solid #2563eb;
+
     border-radius: 8px;
-    padding: 11px 18px;
-    cursor: pointer;
-    font-weight: 600;
+
     background: #2563eb;
+
     color: #ffffff;
-    transition: 0.2s ease;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 3px 8px rgba(37, 99, 235, 0.20);
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.1s ease;
 }
 
+
 .boton-descargar-plantilla:hover {
-    transform: translateY(-1px);
-    opacity: 0.9;
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    box-shadow:
+            0 5px 12px rgba(37, 99, 235, 0.25);
+}
+
+
+.boton-descargar-plantilla:active {
+    transform: translateY(1px);
 }
 
 
@@ -95,48 +191,98 @@
 
 .zona-archivo {
     width: 100%;
+
     box-sizing: border-box;
-    margin-top: 20px;
-    padding: 35px 20px;
+
+    margin-top: 18px;
+
+    padding: 32px 20px;
+
     border: 2px dashed #cbd5e1;
-    border-radius: 12px;
+
+    border-radius: 11px;
+
     text-align: center;
+
     background: #f8fafc;
 }
 
+
 .icono-archivo {
-    font-size: 40px;
-    margin-bottom: 10px;
+    margin-bottom: 9px;
+
+    font-size: 34px;
 }
+
 
 .zona-archivo h3 {
-    margin: 0 0 8px 0;
-    font-size: 18px;
+    margin: 0 0 6px 0;
+
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 700;
 }
 
+
 .zona-archivo p {
-    margin: 0 0 20px 0;
-    font-size: 14px;
+    margin: 0 0 18px 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
 /* =========================================================
-   BOTÓN SELECCIONAR
+   BOTÓN SELECCIONAR ARCHIVO
 ========================================================= */
 
 .boton-seleccionar-archivo {
-    display: inline-block;
-    padding: 11px 20px;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 10px 18px;
+
+    border: 1px solid #475569;
+
     border-radius: 8px;
-    cursor: pointer;
-    background: #334155;
+
+    background: #475569;
+
     color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 14px;
     font-weight: 600;
-    transition: 0.2s ease;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.1s ease;
 }
 
+
 .boton-seleccionar-archivo:hover {
-    opacity: 0.9;
+    background: #334155;
+
+    border-color: #334155;
+}
+
+
+.boton-seleccionar-archivo:active {
+    transform: translateY(1px);
 }
 
 
@@ -146,16 +292,34 @@
 
 .archivo-seleccionado {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     margin-top: 15px;
-    padding: 12px 15px;
-    border-radius: 8px;
-    background: #f1f5f9;
+
+    padding: 11px 14px;
+
+    box-sizing: border-box;
+
     border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+
+    color: #475569;
+
+    font-size: 14px;
 }
 
+
 .archivo-seleccionado strong {
+    color: #334155;
+
+    font-size: 14px;
+
     overflow-wrap: anywhere;
 }
 
@@ -165,82 +329,167 @@
 ========================================================= */
 
 .mensaje-error-carga {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
     margin-top: 15px;
-    padding: 12px 15px;
-    border-radius: 8px;
-    background: #fef2f2;
+
+    padding: 12px 14px;
+
+    box-sizing: border-box;
+
     border: 1px solid #fecaca;
-    color: #b91c1c;
-    font-size: 14px;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    color: #991b1b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
 /* =========================================================
-   ACCIONES DE VALIDACIÓN
+   ACCIONES VALIDACIÓN
 ========================================================= */
 
 .acciones-carga {
     display: flex;
+
     justify-content: flex-end;
-    margin-top: 20px;
+
+    margin-top: 18px;
 }
+
 
 .boton-validar-carga {
-    border: none;
+    min-height: 42px;
+
+    padding: 10px 20px;
+
+    border: 1px solid #2563eb;
+
     border-radius: 8px;
-    padding: 11px 20px;
-    cursor: pointer;
+
     background: #2563eb;
+
     color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 14px;
     font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 3px 8px rgba(37, 99, 235, 0.20);
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.1s ease;
 }
 
+
+.boton-validar-carga:hover {
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    box-shadow:
+            0 5px 12px rgba(37, 99, 235, 0.25);
+}
+
+
+.boton-validar-carga:active {
+    transform: translateY(1px);
+}
+
+
 .boton-validar-carga:disabled {
-    opacity: 0.6;
+    opacity: 0.65;
+
     cursor: not-allowed;
+
+    box-shadow: none;
 }
 
 
 /* =========================================================
-   RESULTADO EXITOSO
+   RESULTADO
 ========================================================= */
 
 .resultado-exitoso,
 .resultado-error {
     display: flex;
+
     align-items: flex-start;
-    gap: 15px;
-    padding: 18px;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
     border-radius: 10px;
-    margin-bottom: 25px;
 }
+
 
 .resultado-exitoso {
     background: #f0fdf4;
+
     border: 1px solid #bbf7d0;
 }
 
+
 .resultado-error {
     background: #fef2f2;
+
     border: 1px solid #fecaca;
 }
 
+
 .resultado-exitoso > span,
 .resultado-error > span {
-    font-size: 24px;
+    flex-shrink: 0;
+
+    font-size: 19px;
     font-weight: 700;
 }
 
+
 .resultado-exitoso h2,
 .resultado-error h2 {
-    margin: 0 0 5px 0;
-    font-size: 19px;
+    margin: 0 0 4px 0;
+
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.3;
 }
+
 
 .resultado-exitoso p,
 .resultado-error p {
     margin: 0;
-    font-size: 14px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
@@ -250,38 +499,63 @@
 
 .resumen-carga {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 22px;
 }
 
+
 .resumen-carga > div {
-    padding: 18px;
-    border-radius: 10px;
-    background: #f8fafc;
+    padding: 15px;
+
+    box-sizing: border-box;
+
     border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
     text-align: center;
 }
 
+
 .resumen-carga span {
     display: block;
-    margin-bottom: 6px;
-    font-size: 13px;
+
+    margin-bottom: 5px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
 }
+
 
 .resumen-carga strong {
     display: block;
-    font-size: 24px;
+
+    color: #1e293b;
+
+    font-size: 21px;
+    font-weight: 700;
 }
 
 
 /* =========================================================
-   TÍTULOS RESULTADO
+   TÍTULOS DEL RESULTADO
 ========================================================= */
 
 .panel-resultado-carga h3 {
-    margin: 0 0 15px 0;
-    font-size: 17px;
+    margin: 0 0 13px 0;
+
+    color: #334155;
+
+    font-size: 15px;
+    font-weight: 700;
 }
 
 
@@ -291,27 +565,53 @@
 
 .tabla-usuarios-carga {
     width: 100%;
+
     overflow-x: auto;
+
     border: 1px solid #e2e8f0;
+
     border-radius: 10px;
 }
 
+
 .tabla-usuarios-carga .fila {
     min-width: 700px;
+
     display: grid;
-    grid-template-columns: 1fr 1.5fr 2fr 1.2fr;
+
+    grid-template-columns:
+        1fr
+        1.5fr
+        2fr
+        1.2fr;
+
     gap: 15px;
-    padding: 13px 15px;
-    border-bottom: 1px solid #e2e8f0;
+
+    padding: 12px 15px;
+
     box-sizing: border-box;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
+
 
 .tabla-usuarios-carga .fila:last-child {
     border-bottom: none;
 }
 
+
 .tabla-usuarios-carga .encabezado-tabla {
+    color: #334155;
+
+    font-size: 12px;
     font-weight: 700;
+
     background: #f8fafc;
 }
 
@@ -322,27 +622,53 @@
 
 .tabla-errores-carga {
     width: 100%;
+
     overflow-x: auto;
+
     border: 1px solid #fecaca;
+
     border-radius: 10px;
 }
 
+
 .tabla-errores-carga .fila-error {
     min-width: 750px;
+
     display: grid;
-    grid-template-columns: 70px 130px 1.3fr 2fr;
+
+    grid-template-columns:
+        70px
+        130px
+        1.3fr
+        2fr;
+
     gap: 15px;
-    padding: 13px 15px;
+
+    padding: 12px 15px;
+
     box-sizing: border-box;
+
     border-bottom: 1px solid #fee2e2;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
+
 
 .tabla-errores-carga .fila-error:last-child {
     border-bottom: none;
 }
 
+
 .tabla-errores-carga .encabezado-error {
+    color: #334155;
+
+    font-size: 12px;
     font-weight: 700;
+
     background: #fef2f2;
 }
 
@@ -353,33 +679,109 @@
 
 .acciones-confirmacion {
     display: flex;
+
+    align-items: center;
     justify-content: flex-end;
+
     gap: 12px;
-    margin-top: 25px;
+
+    margin-top: 22px;
 }
+
 
 .boton-cancelar-carga,
 .boton-confirmar-carga,
 .boton-nueva-carga {
-    border: none;
+    min-height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 10px 18px;
+
     border-radius: 8px;
-    padding: 11px 20px;
-    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
     font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.1s ease;
 }
+
+
+/* =========================================================
+   CANCELAR
+========================================================= */
 
 .boton-cancelar-carga {
-    background: #e2e8f0;
+    border: 1px solid #cbd5e1;
+
+    background: #ffffff;
+
+    color: #475569;
 }
+
+
+.boton-cancelar-carga:hover {
+    background: #f1f5f9;
+
+    border-color: #94a3b8;
+
+    color: #1e293b;
+}
+
+
+.boton-cancelar-carga:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   CONFIRMAR
+========================================================= */
 
 .boton-confirmar-carga {
-    background: #16a34a;
+    border: 1px solid #2563eb;
+
+    background: #2563eb;
+
     color: #ffffff;
+
+    box-shadow:
+            0 3px 8px rgba(37, 99, 235, 0.20);
 }
 
+
+.boton-confirmar-carga:hover {
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    box-shadow:
+            0 5px 12px rgba(37, 99, 235, 0.25);
+}
+
+
+.boton-confirmar-carga:active {
+    transform: translateY(1px);
+}
+
+
 .boton-confirmar-carga:disabled {
-    opacity: 0.6;
+    opacity: 0.65;
+
     cursor: not-allowed;
+
+    box-shadow: none;
 }
 
 
@@ -389,13 +791,32 @@
 
 .acciones-error-carga {
     display: flex;
+
     justify-content: flex-end;
-    margin-top: 25px;
+
+    margin-top: 22px;
 }
 
+
 .boton-nueva-carga {
+    border: 1px solid #2563eb;
+
     background: #2563eb;
+
     color: #ffffff;
+
+    box-shadow:
+            0 3px 8px rgba(37, 99, 235, 0.20);
+}
+
+
+.boton-nueva-carga:hover {
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    box-shadow:
+            0 5px 12px rgba(37, 99, 235, 0.25);
 }
 
 
@@ -409,14 +830,23 @@
         padding: 20px;
     }
 
+
     .panel-plantilla-carga {
         flex-direction: column;
+
         align-items: flex-start;
     }
+
+
+    .boton-descargar-plantilla {
+        width: 100%;
+    }
+
 
     .resumen-carga {
         grid-template-columns: 1fr;
     }
+
 
     .acciones-confirmacion,
     .acciones-error-carga,
@@ -424,10 +854,38 @@
         justify-content: stretch;
     }
 
+
     .boton-cancelar-carga,
     .boton-confirmar-carga,
     .boton-nueva-carga,
     .boton-validar-carga {
         width: 100%;
     }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .seccion-carga-masiva {
+        padding: 15px;
+    }
+
+
+    .encabezado-carga-masiva h1 {
+        font-size: 18px;
+    }
+
+
+    .panel-plantilla-carga,
+    .panel-subir-carga,
+    .panel-resultado-carga {
+        padding: 18px;
+    }
+
+
+    .zona-archivo {
+        padding: 25px 15px;
+    }
+
 }

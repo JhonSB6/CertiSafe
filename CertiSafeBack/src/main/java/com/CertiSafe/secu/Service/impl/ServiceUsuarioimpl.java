@@ -1,8 +1,6 @@
 package com.CertiSafe.secu.Service.impl;
 
-import com.CertiSafe.secu.Dto.ActualizarPerfilRequest;
-import com.CertiSafe.secu.Dto.LoginResponse;
-import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
+import com.CertiSafe.secu.Dto.*;
 import com.CertiSafe.secu.Entity.Rol;
 import com.CertiSafe.secu.Entity.SolicitudRegistroUsuario;
 import com.CertiSafe.secu.Enum.EstadoSolicitudRegistro;
@@ -11,7 +9,6 @@ import com.CertiSafe.secu.Repository.RepositoryRol;
 import com.CertiSafe.secu.Repository.RepositorySolicitudRegistroUsuario;
 import com.CertiSafe.secu.Service.ServiceUsuario;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
-import com.CertiSafe.secu.Dto.UsuarioResponse;
 import com.CertiSafe.secu.Entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -133,6 +130,138 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
         return convertirUsuarioResponse(actualizado);
     }
 
+    @Override
+    public UsuarioResponse actualizarUsuarioAdmin(
+            Long id,
+            ActualizarUsuarioAdminRequest request
+    ) {
+
+        Usuario usuario = repositoryUsuario.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
+
+        // =========================================================
+        // VALIDAR NOMBRE
+        // =========================================================
+
+        if (request.getNombre() == null ||
+                request.getNombre().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El nombre es obligatorio"
+            );
+        }
+
+
+        // =========================================================
+        // VALIDAR APELLIDO
+        // =========================================================
+
+        if (request.getApellido() == null ||
+                request.getApellido().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El apellido es obligatorio"
+            );
+        }
+
+
+        // =========================================================
+        // VALIDAR CORREO
+        // =========================================================
+
+        if (request.getCorreo() == null ||
+                request.getCorreo().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "El correo es obligatorio"
+            );
+        }
+
+
+        // =========================================================
+        // VALIDAR ROL
+        // =========================================================
+
+        if (request.getIdRol() == null) {
+
+            throw new RuntimeException(
+                    "El rol es obligatorio"
+            );
+        }
+
+
+        // =========================================================
+        // VALIDAR CORREO DUPLICADO
+        // =========================================================
+
+        Optional<Usuario> usuarioCorreo =
+                repositoryUsuario.findByCorreo(
+                        request.getCorreo().trim()
+                );
+
+        if (usuarioCorreo.isPresent() &&
+                !usuarioCorreo.get()
+                        .getIdusuario()
+                        .equals(id)) {
+
+            throw new RuntimeException(
+                    "El correo ya está registrado por otro usuario"
+            );
+        }
+
+
+        // =========================================================
+        // BUSCAR ROL
+        // =========================================================
+
+        Rol rol = repositoryRol.findById(
+                request.getIdRol()
+        ).orElseThrow(() ->
+                new RuntimeException(
+                        "Rol no encontrado"
+                )
+        );
+
+
+        // =========================================================
+        // ACTUALIZAR SOLAMENTE LOS CAMPOS PERMITIDOS
+        // =========================================================
+
+        usuario.setNombre(
+                request.getNombre().trim()
+        );
+
+        usuario.setApellido(
+                request.getApellido().trim()
+        );
+
+        usuario.setCorreo(
+                request.getCorreo().trim()
+        );
+
+        usuario.setRol(rol);
+
+
+        // =========================================================
+        // GUARDAR
+        // =========================================================
+
+        Usuario actualizado =
+                repositoryUsuario.save(usuario);
+
+
+        // =========================================================
+        // RESPUESTA SEGURA
+        // =========================================================
+
+        return convertirUsuarioResponse(
+                actualizado
+        );
+    }
 
     @Override
     public UsuarioResponse cambiarEstado(

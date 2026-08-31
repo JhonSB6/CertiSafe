@@ -37,4 +37,6 @@ public interface RepositoryInscripcionTaller extends JpaRepository<InscripcionTa
     WHERE i.taller.idtaller = :idTaller
     AND i.estado <> com.CertiSafe.secu.Enum.EstadoInscripcion.CANCELADA""")
     Long countInscripcionesActivas(@Param("idTaller") Long idTaller);
+
+    void deleteByTallerIdtaller(Long idTaller);
 }

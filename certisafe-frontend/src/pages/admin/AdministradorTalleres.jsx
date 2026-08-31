@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import "./AdministradorTalleres.css";
 import AdministradorCrearTaller from "./AdministradorCrearTaller";
 import AdministradorEditarTaller from "./AdministradorEditarTaller";
 import AdministradorProgramarOperarios from "./AdministradorProgramarOperarios";
@@ -430,7 +430,7 @@ function AdministradorTalleres() {
                     </strong>
 
                     <span>
-                        talleres
+                         talleres
                     </span>
 
                 </div>
@@ -838,7 +838,7 @@ function AdministradorTalleres() {
 
                                         }}
                                     >
-                                        👁 Detalle taller
+                                         Detalle taller
                                     </button>
 
 
@@ -863,7 +863,7 @@ function AdministradorTalleres() {
 
                                             }}
                                         >
-                                            ✏ Editar taller
+                                             Editar taller
                                         </button>
 
                                     ) : (
@@ -873,7 +873,7 @@ function AdministradorTalleres() {
                                             disabled
                                             title="El taller ya está en curso, finalizado o cancelado"
                                         >
-                                            🔒 Edición cerrada
+                                             Edición cerrada
                                         </button>
 
                                     )}
@@ -894,7 +894,7 @@ function AdministradorTalleres() {
                                                 )
                                             }
                                         >
-                                            👥 Programar operarios
+                                             Programar operarios
                                         </button>
 
                                     ) : (
@@ -935,7 +935,7 @@ function AdministradorTalleres() {
 
                                                 ? "Eliminando..."
 
-                                                : "🗑 Eliminar taller"
+                                                : " Eliminar taller"
 
                                             }
 

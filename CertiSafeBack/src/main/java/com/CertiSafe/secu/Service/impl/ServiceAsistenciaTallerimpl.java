@@ -1,7 +1,9 @@
 package com.CertiSafe.secu.Service.impl;
 import com.CertiSafe.secu.Entity.AsistenciaTaller;
+import com.CertiSafe.secu.Entity.HistorialCertificacion;
 import com.CertiSafe.secu.Enum.EstadoAsistencia;
 import com.CertiSafe.secu.Enum.EstadoDecisionCertificacion;
+import com.CertiSafe.secu.Repository.RepositoryHistorialCertificacion;
 import com.CertiSafe.secu.Service.ServiceAsistenciaTaller;
 import com.CertiSafe.secu.Repository.RepositoryAsistenciaTaller;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.*;
 
 public class ServiceAsistenciaTallerimpl implements ServiceAsistenciaTaller{
     private final RepositoryAsistenciaTaller repositoryAsistenciaTaller;
+    private final RepositoryHistorialCertificacion repositoryHistorialCertificacion;
 
     @Override
     public List<AsistenciaTaller> listarAsistencias(){
@@ -65,7 +68,8 @@ public class ServiceAsistenciaTallerimpl implements ServiceAsistenciaTaller{
     @Override
     public void decidirCertificacion(
             Long id,
-            EstadoDecisionCertificacion decision) {
+            EstadoDecisionCertificacion decision,
+            String motivo) {
 
         AsistenciaTaller asistencia =
                 repositoryAsistenciaTaller.findById(id)
@@ -89,7 +93,23 @@ public class ServiceAsistenciaTallerimpl implements ServiceAsistenciaTaller{
             );
         }
 
+        if (decision == EstadoDecisionCertificacion.NO_CERTIFICADO) {
+
+            if (motivo == null || motivo.trim().isEmpty()) {
+
+                throw new RuntimeException(
+                        "Debe indicar el motivo de la no certificación"
+                );
+            }
+
+        } else {
+
+            motivo = null;
+        }
+
         asistencia.setDecisionCertificacion(decision);
+
+        asistencia.setMotivoNoCertificacion(motivo);
 
         repositoryAsistenciaTaller.save(asistencia);
     }

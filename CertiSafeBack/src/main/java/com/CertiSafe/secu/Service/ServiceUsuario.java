@@ -1,9 +1,6 @@
 package com.CertiSafe.secu.Service;
 
-import com.CertiSafe.secu.Dto.ActualizarPerfilRequest;
-import com.CertiSafe.secu.Dto.LoginResponse;
-import com.CertiSafe.secu.Dto.UsuarioResponse;
-import com.CertiSafe.secu.Dto.ValidacionDocumentoResponse;
+import com.CertiSafe.secu.Dto.*;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
 
@@ -39,5 +36,10 @@ public interface ServiceUsuario {
     UsuarioResponse actualizarPerfil(Long id, ActualizarPerfilRequest request);
 
     UsuarioResponse cambiarEstado(Long id, EstadoUsuario estado);
+
+    UsuarioResponse actualizarUsuarioAdmin(
+            Long id,
+            ActualizarUsuarioAdminRequest request
+    );
 
 }

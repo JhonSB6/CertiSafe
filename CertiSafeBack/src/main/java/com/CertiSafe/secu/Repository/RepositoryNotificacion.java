@@ -15,4 +15,6 @@ public interface RepositoryNotificacion extends JpaRepository<Notificacion, Long
     boolean existsByTallerIdtallerAndTipo(Long idTaller, EstadoTipoNotificacion tipo);
 
     long countByUsuarioIdusuarioAndLeidaFalse(Long idUsuario);
+
+    void deleteByTallerIdtaller(Long idTaller);
 }

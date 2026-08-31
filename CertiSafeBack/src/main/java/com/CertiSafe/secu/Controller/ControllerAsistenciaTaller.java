@@ -42,13 +42,15 @@ public class ControllerAsistenciaTaller {
     @PatchMapping("/{id}/decision-certificacion")
     public ResponseEntity<?> decidirCertificacion(
             @PathVariable Long id,
-            @RequestParam EstadoDecisionCertificacion decision) {
+            @RequestParam EstadoDecisionCertificacion decision,
+            @RequestParam(required = false) String motivo) {
 
         try {
 
             serviceAsistenciaTaller.decidirCertificacion(
                     id,
-                    decision
+                    decision,
+                    motivo
             );
 
             return ResponseEntity.ok(

@@ -41,6 +41,23 @@
             sans-serif;
 }
 
+.estado-no-certificado {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 12px;
+
+    border-radius: 6px;
+
+    background-color: #fee2e2;
+    color: #b91c1c;
+
+    border: 1px solid #fecaca;
+
+    font-weight: 700;
+    font-size: 12px;
+}
 
 /* =========================================================
    MENÚ LATERAL
