@@ -81,16 +81,26 @@
 
 
 /* =========================================================
-   FILTRO DE TALLERES
+   FILTROS DE TALLERES
 ========================================================= */
 
 .talleres-filtros {
-    display: flex;
-    align-items: flex-end;
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        auto;
+
+    align-items: end;
+
     gap: 14px;
 
     width: 100%;
-    margin: 25px 0 28px 0;
+
+    margin: 25px 0 14px 0;
+
     padding: 18px;
 
     box-sizing: border-box;
@@ -98,6 +108,7 @@
     background: white;
 
     border: 1px solid #e2e8f0;
+
     border-radius: 16px;
 
     box-shadow:
@@ -106,16 +117,16 @@
 
 
 /* =========================================================
-   CAMPO DE BÚSQUEDA
+   CAMPO DEL FILTRO
 ========================================================= */
 
 .campo-filtro {
     display: flex;
+
     flex-direction: column;
 
     gap: 7px;
 
-    flex: 1;
     min-width: 0;
 }
 
@@ -124,44 +135,52 @@
     color: #123f68;
 
     font-size: 13px;
+
     font-weight: 700;
 }
 
 
-.campo-filtro input {
+.campo-filtro select {
     width: 100%;
 
     min-height: 44px;
 
-    padding: 10px 14px;
+    padding: 10px 38px 10px 14px;
 
     box-sizing: border-box;
 
     border: 1px solid #cbd5e1;
+
     border-radius: 10px;
 
-    background: #f8fafc;
+    background-color: #f8fafc;
 
     color: #1e293b;
+
+    font-family: inherit;
 
     font-size: 14px;
 
     outline: none;
 
+    cursor: pointer;
+
     transition:
             border-color 0.2s ease,
             box-shadow 0.2s ease,
-            background 0.2s ease;
+            background-color 0.2s ease;
 }
 
 
-.campo-filtro input::placeholder {
-    color: #94a3b8;
+.campo-filtro select:hover {
+    background-color: white;
+
+    border-color: #94a3b8;
 }
 
 
-.campo-filtro input:focus {
-    background: white;
+.campo-filtro select:focus {
+    background-color: white;
 
     border-color: #1769aa;
 
@@ -171,7 +190,7 @@
 
 
 /* =========================================================
-   BOTÓN LIMPIAR
+   BOTÓN LIMPIAR FILTROS
 ========================================================= */
 
 .boton-limpiar-filtro-taller {
@@ -180,14 +199,20 @@
     padding: 10px 18px;
 
     border: 1px solid #cbd5e1;
+
     border-radius: 10px;
 
     background: white;
 
     color: #475569;
 
+    font-family: inherit;
+
     font-size: 13px;
+
     font-weight: 700;
+
+    white-space: nowrap;
 
     cursor: pointer;
 
@@ -214,11 +239,137 @@
     opacity: 0.45;
 
     cursor: not-allowed;
+
+    transform: none;
 }
+
+
+/* =========================================================
+   RESULTADO DE FILTROS
+========================================================= */
+
+.resultado-filtros-talleres {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin: 0 0 20px 2px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.resultado-filtros-talleres strong {
+    color: #123f68;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MENSAJE SIN RESULTADOS
+========================================================= */
+
+.mensaje-talleres-vacio {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 35px 25px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+}
+
+
+.mensaje-talleres-vacio h3 {
+    margin: 0 0 8px 0;
+
+    color: #123f68;
+
+    font-size: 19px;
+}
+
+
+.mensaje-talleres-vacio p {
+    margin: 0 0 18px 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+.mensaje-talleres-vacio button {
+    min-height: 40px;
+
+    padding: 9px 16px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #1769aa;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
+}
+
+
+.mensaje-talleres-vacio button:hover {
+    background: #0f4f83;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE FILTROS
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .talleres-filtros {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .boton-limpiar-filtro-taller {
+        width: 100%;
+    }
+
+}
+
+
 @media (max-width: 700px) {
 
     .talleres-filtros {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+
         align-items: stretch;
     }
 

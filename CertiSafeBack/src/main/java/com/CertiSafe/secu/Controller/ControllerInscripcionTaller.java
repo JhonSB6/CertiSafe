@@ -98,6 +98,7 @@ public class ControllerInscripcionTaller {
 
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<InscripcionTaller>> listarPorUsuario(
             @PathVariable Long idUsuario) {

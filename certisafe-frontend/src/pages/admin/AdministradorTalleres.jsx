@@ -24,9 +24,16 @@ function AdministradorTalleres() {
 
     const [resumenes, setResumenes] = useState({});
 
-    const [filtroTaller, setFiltroTaller] = useState("");
-
     const [eliminando, setEliminando] = useState(null);
+
+
+    // =========================================================
+    // FILTROS
+    // =========================================================
+
+    const [filtroTipoTaller, setFiltroTipoTaller] = useState("");
+    const [filtroCapacitador, setFiltroCapacitador] = useState("");
+    const [filtroEstado, setFiltroEstado] = useState("");
 
 
     // =========================================================
@@ -56,6 +63,7 @@ function AdministradorTalleres() {
 
             const ahora = new Date();
 
+
             // =================================================
             // ORDENAR TALLERES
             // =================================================
@@ -73,6 +81,7 @@ function AdministradorTalleres() {
                 const futuroA = fechaA >= ahora;
                 const futuroB = fechaB >= ahora;
 
+
                 // ==========================================
                 // PRIMERO LOS TALLERES FUTUROS
                 // ==========================================
@@ -85,6 +94,7 @@ function AdministradorTalleres() {
                     return 1;
                 }
 
+
                 // ==========================================
                 // PRÓXIMOS: MÁS CERCANO PRIMERO
                 // ==========================================
@@ -93,17 +103,18 @@ function AdministradorTalleres() {
                     return fechaA - fechaB;
                 }
 
+
                 // ==========================================
                 // PASADOS: MÁS RECIENTE PRIMERO
                 // ==========================================
 
                 return fechaB - fechaA;
+
             });
 
+
             // =================================================
-            // IMPORTANTE:
-            // No volver a hacer setTalleres(datos)
-            // porque eliminaría el orden anterior.
+            // GUARDAR TALLERES
             // =================================================
 
             setTalleres(talleresOrdenados);
@@ -130,7 +141,7 @@ function AdministradorTalleres() {
 
                         nuevosResumenes[
                             taller.idtaller
-                        ] = resumen;
+                            ] = resumen;
 
                     }
 
@@ -172,6 +183,139 @@ function AdministradorTalleres() {
         cargarTalleres();
 
     }, []);
+
+
+    // =========================================================
+    // OPCIONES DE FILTRO
+    // =========================================================
+
+    const tiposTaller = [
+        ...new Map(
+            talleres
+                .filter(
+                    (taller) =>
+                        taller.tipoCertificacion?.nombre
+                )
+                .map(
+                    (taller) => [
+                        taller.tipoCertificacion.nombre,
+                        taller.tipoCertificacion.nombre
+                    ]
+                )
+        ).values()
+    ].sort((a, b) =>
+        a.localeCompare(b)
+    );
+
+
+    const capacitadores = [
+        ...new Map(
+            talleres
+                .filter(
+                    (taller) =>
+                        taller.capacitador
+                )
+                .map(
+                    (taller) => {
+
+                        const nombreCompleto =
+                            `${taller.capacitador.nombre} ${taller.capacitador.apellido}`;
+
+                        return [
+                            taller.capacitador.idusuario,
+                            {
+                                id:
+                                taller.capacitador.idusuario,
+                                nombre:
+                                nombreCompleto
+                            }
+                        ];
+
+                    }
+                )
+        ).values()
+    ].sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+    );
+
+
+    const estadosTaller = [
+        ...new Set(
+            talleres
+                .map(
+                    (taller) =>
+                        taller.estado
+                )
+                .filter(Boolean)
+        )
+    ].sort();
+
+
+    // =========================================================
+    // FILTRAR TALLERES
+    // =========================================================
+
+    const talleresFiltrados = talleres.filter(
+        (taller) => {
+
+            // =================================================
+            // FILTRO TIPO DE TALLER
+            // =================================================
+
+            const coincideTipo =
+                !filtroTipoTaller ||
+                taller.tipoCertificacion?.nombre ===
+                filtroTipoTaller;
+
+
+            // =================================================
+            // FILTRO CAPACITADOR
+            // =================================================
+
+            const coincideCapacitador =
+                !filtroCapacitador ||
+                String(
+                    taller.capacitador?.idusuario
+                ) ===
+                String(filtroCapacitador);
+
+
+            // =================================================
+            // FILTRO ESTADO
+            // =================================================
+
+            const coincideEstado =
+                !filtroEstado ||
+                taller.estado === filtroEstado;
+
+
+            return (
+                coincideTipo &&
+                coincideCapacitador &&
+                coincideEstado
+            );
+
+        }
+    );
+
+
+    // =========================================================
+    // LIMPIAR FILTROS
+    // =========================================================
+
+    const limpiarFiltros = () => {
+
+        setFiltroTipoTaller("");
+        setFiltroCapacitador("");
+        setFiltroEstado("");
+
+    };
+
+
+    const hayFiltrosActivos =
+        filtroTipoTaller ||
+        filtroCapacitador ||
+        filtroEstado;
 
 
     // =========================================================
@@ -232,6 +376,7 @@ function AdministradorTalleres() {
                 }
 
                 throw new Error(mensaje);
+
             }
 
             await cargarTalleres();
@@ -253,56 +398,8 @@ function AdministradorTalleres() {
             setEliminando(null);
 
         }
+
     };
-
-
-    // =========================================================
-    // FILTRO DE TALLERES
-    // =========================================================
-
-    const talleresFiltrados = talleres.filter((taller) => {
-
-        const texto =
-            filtroTaller
-                .toLowerCase()
-                .trim();
-
-        if (!texto) {
-            return true;
-        }
-
-        const nombre =
-            taller.nombre?.toLowerCase() || "";
-
-        const descripcion =
-            taller.descripcion?.toLowerCase() || "";
-
-        const certificacion =
-            taller
-                .tipoCertificacion
-                ?.nombre
-                ?.toLowerCase() || "";
-
-        const capacitador =
-            taller.capacitador
-                ? `${taller.capacitador.nombre} ${taller.capacitador.apellido}`.toLowerCase()
-                : "";
-
-        const estado =
-            taller.estado?.toLowerCase() || "";
-
-        const fecha =
-            taller.fecha?.toLowerCase() || "";
-
-        return (
-            nombre.includes(texto) ||
-            descripcion.includes(texto) ||
-            certificacion.includes(texto) ||
-            capacitador.includes(texto) ||
-            estado.includes(texto) ||
-            fecha.includes(texto)
-        );
-    });
 
 
     // =========================================================
@@ -404,6 +501,7 @@ function AdministradorTalleres() {
 
         <section className="seccion-administrador">
 
+
             {/* =================================================
                 ENCABEZADO
             ================================================= */}
@@ -423,6 +521,7 @@ function AdministradorTalleres() {
 
                 </div>
 
+
                 <div className="talleres-total">
 
                     <strong>
@@ -430,7 +529,7 @@ function AdministradorTalleres() {
                     </strong>
 
                     <span>
-                         talleres
+                        talleres
                     </span>
 
                 </div>
@@ -453,41 +552,186 @@ function AdministradorTalleres() {
 
 
             {/* =================================================
-                FILTRO
+                FILTROS
             ================================================= */}
 
             <div className="talleres-filtros">
 
+
+                {/* =============================================
+                    TIPO DE TALLER
+                ============================================= */}
+
                 <div className="campo-filtro">
 
-                    <label htmlFor="filtroTaller">
-                        Buscar taller
+                    <label htmlFor="filtroTipoTaller">
+                        Tipo de taller
                     </label>
 
-                    <input
-                        id="filtroTaller"
-                        type="text"
-                        placeholder="Buscar por nombre, certificación, capacitador, estado o fecha..."
-                        value={filtroTaller}
+                    <select
+                        id="filtroTipoTaller"
+                        value={filtroTipoTaller}
                         onChange={(e) =>
-                            setFiltroTaller(e.target.value)
+                            setFiltroTipoTaller(
+                                e.target.value
+                            )
                         }
-                    />
+                    >
+
+                        <option value="">
+                            Todos los tipos
+                        </option>
+
+                        {tiposTaller.map(
+                            (tipo) => (
+
+                                <option
+                                    key={tipo}
+                                    value={tipo}
+                                >
+                                    {tipo}
+                                </option>
+
+                            )
+                        )}
+
+                    </select>
 
                 </div>
 
 
+                {/* =============================================
+                    CAPACITADOR
+                ============================================= */}
+
+                <div className="campo-filtro">
+
+                    <label htmlFor="filtroCapacitador">
+                        Capacitador
+                    </label>
+
+                    <select
+                        id="filtroCapacitador"
+                        value={filtroCapacitador}
+                        onChange={(e) =>
+                            setFiltroCapacitador(
+                                e.target.value
+                            )
+                        }
+                    >
+
+                        <option value="">
+                            Todos los capacitadores
+                        </option>
+
+                        {capacitadores.map(
+                            (capacitador) => (
+
+                                <option
+                                    key={capacitador.id}
+                                    value={capacitador.id}
+                                >
+                                    {capacitador.nombre}
+                                </option>
+
+                            )
+                        )}
+
+                    </select>
+
+                </div>
+
+
+                {/* =============================================
+                    ESTADO
+                ============================================= */}
+
+                <div className="campo-filtro">
+
+                    <label htmlFor="filtroEstado">
+                        Estado del taller
+                    </label>
+
+                    <select
+                        id="filtroEstado"
+                        value={filtroEstado}
+                        onChange={(e) =>
+                            setFiltroEstado(
+                                e.target.value
+                            )
+                        }
+                    >
+
+                        <option value="">
+                            Todos los estados
+                        </option>
+
+                        {estadosTaller.map(
+                            (estado) => (
+
+                                <option
+                                    key={estado}
+                                    value={estado}
+                                >
+                                    {estado}
+                                </option>
+
+                            )
+                        )}
+
+                    </select>
+
+                </div>
+
+
+                {/* =============================================
+                    LIMPIAR
+                ============================================= */}
+
                 <button
                     className="boton-limpiar-filtro-taller"
-                    onClick={() =>
-                        setFiltroTaller("")
-                    }
-                    disabled={!filtroTaller}
+                    onClick={limpiarFiltros}
+                    disabled={!hayFiltrosActivos}
                 >
-                    Limpiar
+                    Limpiar filtros
                 </button>
 
             </div>
+
+
+            {/* =================================================
+                RESULTADOS DEL FILTRO
+            ================================================= */}
+
+            {!cargando &&
+                !error &&
+                talleres.length > 0 && (
+
+                    <div className="resultado-filtros-talleres">
+
+                        <span>
+                            Mostrando
+                        </span>
+
+                        <strong>
+                            {talleresFiltrados.length}
+                        </strong>
+
+                        <span>
+                            de
+                        </span>
+
+                        <strong>
+                            {talleres.length}
+                        </strong>
+
+                        <span>
+                            talleres
+                        </span>
+
+                    </div>
+
+                )}
 
 
             {/* =================================================
@@ -548,15 +792,13 @@ function AdministradorTalleres() {
 
                         <p>
                             No hay talleres que coincidan
-                            con "{filtroTaller}".
+                            con los filtros seleccionados.
                         </p>
 
                         <button
-                            onClick={() =>
-                                setFiltroTaller("")
-                            }
+                            onClick={limpiarFiltros}
                         >
-                            Limpiar búsqueda
+                            Limpiar filtros
                         </button>
 
                     </div>
@@ -574,380 +816,389 @@ function AdministradorTalleres() {
 
                     <div className="tarjetas-talleres-admin">
 
-                        {talleresFiltrados.map((taller) => (
+                        {talleresFiltrados.map(
+                            (taller) => (
 
-                            <article
-                                className="taller-admin-card"
-                                key={taller.idtaller}
-                            >
-
-                                {/* =================================================
-                                    NOMBRE
-                                ================================================= */}
-
-                                <h2>
-                                    {taller.nombre}
-                                </h2>
+                                <article
+                                    className="taller-admin-card"
+                                    key={taller.idtaller}
+                                >
 
 
-                                {/* =================================================
-                                    DESCRIPCIÓN
-                                ================================================= */}
+                                    {/* =============================================
+                                        NOMBRE
+                                    ============================================= */}
 
-                                <p>
-                                    {taller.descripcion}
-                                </p>
-
-
-                                {/* =================================================
-                                    FECHA
-                                ================================================= */}
-
-                                <p>
-
-                                    <strong>
-                                        Fecha:
-                                    </strong>{" "}
-
-                                    {taller.fecha}
-
-                                </p>
+                                    <h2>
+                                        {taller.nombre}
+                                    </h2>
 
 
-                                {/* =================================================
-                                    HORARIO
-                                ================================================= */}
+                                    {/* =============================================
+                                        DESCRIPCIÓN
+                                    ============================================= */}
 
-                                <p>
-
-                                    <strong>
-                                        Horario:
-                                    </strong>{" "}
-
-                                    {taller.horaInicio}
-
-                                    {" - "}
-
-                                    {taller.horaFin}
-
-                                </p>
+                                    <p>
+                                        {taller.descripcion}
+                                    </p>
 
 
-                                {/* =================================================
-                                    AFORO
-                                ================================================= */}
+                                    {/* =============================================
+                                        FECHA
+                                    ============================================= */}
 
-                                <p>
+                                    <p>
 
-                                    <strong>
-                                        Aforo:
-                                    </strong>{" "}
+                                        <strong>
+                                            Fecha:
+                                        </strong>{" "}
 
-                                    {taller.aforo}
+                                        {taller.fecha}
 
-                                </p>
-
-
-                                {/* =================================================
-                                    CERTIFICACIÓN
-                                ================================================= */}
-
-                                <p>
-
-                                    <strong>
-                                        Certificación:
-                                    </strong>{" "}
-
-                                    {
-                                        taller
-                                            .tipoCertificacion
-                                            ?.nombre
-                                    }
-
-                                </p>
+                                    </p>
 
 
-                                {/* =================================================
-                                    ESTADO
-                                ================================================= */}
+                                    {/* =============================================
+                                        HORARIO
+                                    ============================================= */}
 
-                                <p>
+                                    <p>
 
-                                    <strong>
-                                        Estado:
-                                    </strong>{" "}
+                                        <strong>
+                                            Horario:
+                                        </strong>{" "}
 
-                                    <span
-                                        className={
-                                            taller.estado ===
-                                            "PROGRAMADO"
+                                        {taller.horaInicio}
 
-                                                ? "estado-taller-programado"
+                                        {" - "}
 
-                                                : taller.estado ===
-                                                "EN_CURSO"
+                                        {taller.horaFin}
 
-                                                    ? "estado-taller-en-curso"
+                                    </p>
+
+
+                                    {/* =============================================
+                                        AFORO
+                                    ============================================= */}
+
+                                    <p>
+
+                                        <strong>
+                                            Aforo:
+                                        </strong>{" "}
+
+                                        {taller.aforo}
+
+                                    </p>
+
+
+                                    {/* =============================================
+                                        CERTIFICACIÓN
+                                    ============================================= */}
+
+                                    <p>
+
+                                        <strong>
+                                            Certificación:
+                                        </strong>{" "}
+
+                                        {
+                                            taller
+                                                .tipoCertificacion
+                                                ?.nombre
+                                        }
+
+                                    </p>
+
+
+                                    {/* =============================================
+                                        ESTADO
+                                    ============================================= */}
+
+                                    <p>
+
+                                        <strong>
+                                            Estado:
+                                        </strong>{" "}
+
+                                        <span
+                                            className={
+                                                taller.estado ===
+                                                "PROGRAMADO"
+
+                                                    ? "estado-taller-programado"
 
                                                     : taller.estado ===
-                                                    "FINALIZADO"
+                                                    "EN_CURSO"
 
-                                                        ? "estado-taller-finalizado"
+                                                        ? "estado-taller-en-curso"
 
                                                         : taller.estado ===
-                                                        "CANCELADO"
+                                                        "FINALIZADO"
 
-                                                            ? "estado-taller-cancelado"
+                                                            ? "estado-taller-finalizado"
 
-                                                            : "estado-taller"
+                                                            : taller.estado ===
+                                                            "CANCELADO"
+
+                                                                ? "estado-taller-cancelado"
+
+                                                                : "estado-taller"
+                                            }
+                                        >
+                                            {taller.estado}
+                                        </span>
+
+                                    </p>
+
+
+                                    {/* =============================================
+                                        CAPACITADOR
+                                    ============================================= */}
+
+                                    <p>
+
+                                        <strong>
+                                            Capacitador:
+                                        </strong>{" "}
+
+                                        {taller.capacitador
+
+                                            ? `${taller.capacitador.nombre} ${taller.capacitador.apellido}`
+
+                                            : "Sin asignar"
+
                                         }
-                                    >
-                                        {taller.estado}
-                                    </span>
 
-                                </p>
-
-
-                                {/* =================================================
-                                    CAPACITADOR
-                                ================================================= */}
-
-                                <p>
-
-                                    <strong>
-                                        Capacitador:
-                                    </strong>{" "}
-
-                                    {taller.capacitador
-
-                                        ? `${taller.capacitador.nombre} ${taller.capacitador.apellido}`
-
-                                        : "Sin asignar"
-
-                                    }
-
-                                </p>
-
-
-                                {/* =================================================
-                                    RESUMEN AFORO
-                                ================================================= */}
-
-                                {resumenes[taller.idtaller] && (
-
-                                    <div className="resumen-aforo">
-
-                                        <p>
-
-                                            <strong>
-                                                Aforo:
-                                            </strong>{" "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].aforo
-                                            }
-
-                                        </p>
-
-
-                                        <p>
-
-                                            <strong>
-                                                Programados:
-                                            </strong>{" "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].programados
-                                            }
-
-                                            {" / "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].aforo
-                                            }
-
-                                        </p>
-
-
-                                        <p>
-
-                                            <strong>
-                                                Confirmados:
-                                            </strong>{" "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].confirmados
-                                            }
-
-                                            {" / "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].aforo
-                                            }
-
-                                        </p>
-
-
-                                        <p>
-
-                                            <strong>
-                                                Pendientes:
-                                            </strong>{" "}
-
-                                            {
-                                                resumenes[
-                                                    taller.idtaller
-                                                ].pendientes
-                                            }
-
-                                        </p>
-
-                                    </div>
-
-                                )}
-
-
-                                {/* =================================================
-                                    ACCIONES
-                                ================================================= */}
-
-                                <div className="acciones-taller-admin">
+                                    </p>
 
 
                                     {/* =============================================
-                                        DETALLE TALLER
+                                        RESUMEN AFORO
                                     ============================================= */}
 
-                                    <button
-                                        className="boton-detalle-taller"
-                                        onClick={() => {
+                                    {resumenes[
+                                        taller.idtaller
+                                        ] && (
 
-                                            setTallerDetalle(taller);
+                                        <div className="resumen-aforo">
 
-                                            setMostrarDetalle(true);
+                                            <p>
 
-                                        }}
-                                    >
-                                         Detalle taller
-                                    </button>
+                                                <strong>
+                                                    Aforo:
+                                                </strong>{" "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].aforo
+                                                }
+
+                                            </p>
+
+
+                                            <p>
+
+                                                <strong>
+                                                    Programados:
+                                                </strong>{" "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].programados
+                                                }
+
+                                                {" / "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].aforo
+                                                }
+
+                                            </p>
+
+
+                                            <p>
+
+                                                <strong>
+                                                    Confirmados:
+                                                </strong>{" "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].confirmados
+                                                }
+
+                                                {" / "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].aforo
+                                                }
+
+                                            </p>
+
+
+                                            <p>
+
+                                                <strong>
+                                                    Pendientes:
+                                                </strong>{" "}
+
+                                                {
+                                                    resumenes[
+                                                        taller.idtaller
+                                                        ].pendientes
+                                                }
+
+                                            </p>
+
+                                        </div>
+
+                                    )}
 
 
                                     {/* =============================================
-                                        EDITAR TALLER
+                                        ACCIONES
                                     ============================================= */}
 
-                                    {taller.estado ===
-                                    "PROGRAMADO" ? (
+                                    <div className="acciones-taller-admin">
+
+
+                                        {/* =============================================
+                                            DETALLE TALLER
+                                        ============================================= */}
 
                                         <button
-                                            className="boton-editar-taller"
+                                            className="boton-detalle-taller"
                                             onClick={() => {
 
-                                                setTallerEditar(
+                                                setTallerDetalle(
                                                     taller
                                                 );
 
-                                                setMostrarEditar(
+                                                setMostrarDetalle(
                                                     true
                                                 );
 
                                             }}
                                         >
-                                             Editar taller
+                                            Detalle taller
                                         </button>
 
-                                    ) : (
 
-                                        <button
-                                            className="boton-editar-taller boton-deshabilitado"
-                                            disabled
-                                            title="El taller ya está en curso, finalizado o cancelado"
-                                        >
-                                             Edición cerrada
-                                        </button>
+                                        {/* =============================================
+                                            EDITAR TALLER
+                                        ============================================= */}
 
-                                    )}
+                                        {taller.estado ===
+                                        "PROGRAMADO" ? (
 
+                                            <button
+                                                className="boton-editar-taller"
+                                                onClick={() => {
 
-                                    {/* =============================================
-                                        PROGRAMAR OPERARIOS
-                                    ============================================= */}
+                                                    setTallerEditar(
+                                                        taller
+                                                    );
 
-                                    {taller.estado ===
-                                    "PROGRAMADO" ? (
+                                                    setMostrarEditar(
+                                                        true
+                                                    );
 
-                                        <button
-                                            className="boton-programar-taller"
-                                            onClick={() =>
-                                                setTallerSeleccionado(
-                                                    taller
-                                                )
-                                            }
-                                        >
-                                             Programar operarios
-                                        </button>
+                                                }}
+                                            >
+                                                Editar taller
+                                            </button>
 
-                                    ) : (
+                                        ) : (
 
-                                        <button
-                                            className="boton-programar-taller boton-deshabilitado"
-                                            disabled
-                                            title="La programación de operarios está cerrada"
-                                        >
-                                            🔒 Programación cerrada
-                                        </button>
+                                            <button
+                                                className="boton-editar-taller boton-deshabilitado"
+                                                disabled
+                                                title="El taller ya está en curso, finalizado o cancelado"
+                                            >
+                                                Edición cerrada
+                                            </button>
 
-                                    )}
+                                        )}
 
 
-                                    {/* =============================================
-                                        ELIMINAR TALLER
-                                    ============================================= */}
+                                        {/* =============================================
+                                            PROGRAMAR OPERARIOS
+                                        ============================================= */}
 
-                                    {taller.estado ===
-                                    "PROGRAMADO" && (
+                                        {taller.estado ===
+                                        "PROGRAMADO" ? (
 
-                                        <button
-                                            className="boton-eliminar-taller"
-                                            disabled={
-                                                eliminando ===
-                                                taller.idtaller
-                                            }
-                                            onClick={() =>
-                                                eliminarTaller(
-                                                    taller
-                                                )
-                                            }
-                                        >
+                                            <button
+                                                className="boton-programar-taller"
+                                                onClick={() =>
+                                                    setTallerSeleccionado(
+                                                        taller
+                                                    )
+                                                }
+                                            >
+                                                Programar operarios
+                                            </button>
 
-                                            {eliminando ===
-                                            taller.idtaller
+                                        ) : (
 
-                                                ? "Eliminando..."
+                                            <button
+                                                className="boton-programar-taller boton-deshabilitado"
+                                                disabled
+                                                title="La programación de operarios está cerrada"
+                                            >
+                                                🔒 Programación cerrada
+                                            </button>
 
-                                                : " Eliminar taller"
+                                        )}
 
-                                            }
 
-                                        </button>
+                                        {/* =============================================
+                                            ELIMINAR TALLER
+                                        ============================================= */}
 
-                                    )}
+                                        {taller.estado ===
+                                            "PROGRAMADO" && (
 
-                                </div>
+                                                <button
+                                                    className="boton-eliminar-taller"
+                                                    disabled={
+                                                        eliminando ===
+                                                        taller.idtaller
+                                                    }
+                                                    onClick={() =>
+                                                        eliminarTaller(
+                                                            taller
+                                                        )
+                                                    }
+                                                >
 
-                            </article>
+                                                    {eliminando ===
+                                                    taller.idtaller
 
-                        ))}
+                                                        ? "Eliminando..."
+
+                                                        : "Eliminar taller"
+
+                                                    }
+
+                                                </button>
+
+                                            )}
+
+                                    </div>
+
+                                </article>
+
+                            )
+                        )}
 
                     </div>
 
