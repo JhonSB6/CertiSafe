@@ -14,6 +14,4 @@ public interface ServiceRol {
 
     Rol actualizar(Long id, Rol rol);
 
-    //void eliminar(Long id); // VALIDAR SI ES NECESARIO ELIMINAR EL ROL
-
 }

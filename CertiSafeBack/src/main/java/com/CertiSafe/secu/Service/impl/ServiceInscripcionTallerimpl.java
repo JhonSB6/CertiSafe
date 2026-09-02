@@ -17,6 +17,8 @@ import com.CertiSafe.secu.Enum.EstadoCertificacion;
 import com.CertiSafe.secu.Enum.EstadoTipoProgramacion;
 import java.sql.Date;
 
+import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.List;
 
@@ -27,6 +29,44 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
     private final RepositoryTaller repositoryTaller;
     private final RepositoryUsuario repositoryUsuario;
     private final RepositoryCertificacion repositoryCertificacion;
+    private static final long MARGEN_TALLERES_MINUTOS = 30;
+
+    private void validarDisponibilidadHorarioOperario(
+            Long idUsuario,
+            Taller taller) {
+
+        LocalTime horaInicioConMargen =
+                taller.getHoraInicio()
+                        .minusMinutes(MARGEN_TALLERES_MINUTOS);
+
+        LocalTime horaFinConMargen =
+                taller.getHoraFin()
+                        .plusMinutes(MARGEN_TALLERES_MINUTOS);
+
+        List<EstadoTaller> estadosQueBloquean =
+                Arrays.asList(
+                        EstadoTaller.PROGRAMADO,
+                        EstadoTaller.EN_CURSO
+                );
+
+        List<InscripcionTaller> conflictos =
+                inscripcionRepository.buscarConflictosHorarioOperario(
+                        idUsuario,
+                        taller.getFecha(),
+                        horaInicioConMargen,
+                        horaFinConMargen,
+                        estadosQueBloquean
+                );
+
+        if (!conflictos.isEmpty()) {
+
+            throw new RuntimeException(
+                    "El operario ya tiene otro taller confirmado "
+                            + "en un horario incompatible. "
+                            + "Debe existir un margen mínimo de 30 minutos "
+                            + "entre talleres.");
+        }
+    }
 
     @Override
     public List<InscripcionTaller> listarPorUsuario(Long idUsuario) {
@@ -89,6 +129,10 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
             throw new AforoCompletoException(
                     "Aforo Completo");
         }
+        validarDisponibilidadHorarioOperario(
+                inscripcion.getUsuario().getIdusuario(),
+                taller
+        );
 
         inscripcion.setEstado(EstadoInscripcion.CONFIRMADA);
 
@@ -182,6 +226,11 @@ public class ServiceInscripcionTallerimpl implements ServiceInscripcionTaller {
             throw new RuntimeException(
                     "El operario ya tiene una inscripción activa en este taller");
         }
+
+        validarDisponibilidadHorarioOperario(
+                idUsuario,
+                taller
+        );
 
         InscripcionTaller inscripcion = new InscripcionTaller();
 

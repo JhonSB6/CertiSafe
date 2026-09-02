@@ -4,6 +4,8 @@ import com.CertiSafe.secu.Dto.*;
 import com.CertiSafe.secu.Entity.Usuario;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,12 @@ public interface ServiceUsuario {
     UsuarioResponse actualizarUsuarioAdmin(
             Long id,
             ActualizarUsuarioAdminRequest request
+    );
+
+    List<Usuario> listarCapacitadoresDisponibles(
+            LocalDate fecha,
+            LocalTime horaInicio,
+            LocalTime horaFin
     );
 
 }

@@ -11,6 +11,10 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // =========================================================
+    // DOCUMENTO NO VÁLIDO
+    // =========================================================
+
     @ExceptionHandler(DocumentoNoValidoException.class)
     public ResponseEntity<String> manejarDocumentoNoValido(
             DocumentoNoValidoException exception) {
@@ -20,11 +24,23 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    // =========================================================
+    // REGLA DE NEGOCIO
+    // =========================================================
+
     @ExceptionHandler(ReglaNegocioException.class)
     public ResponseEntity<Map<String, String>> manejarReglaNegocio(
-            ReglaNegocioException ex) { Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("mensaje", ex.getMessage());
+            ReglaNegocioException exception) {
 
-        return ResponseEntity .status(HttpStatus.CONFLICT) .body(respuesta);
-     }
+        Map<String, String> respuesta = new HashMap<>();
+
+        respuesta.put(
+                "mensaje",
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(respuesta);
+    }
 }

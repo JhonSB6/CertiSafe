@@ -9,12 +9,10 @@ import com.CertiSafe.secu.Enum.EstadoUsuario;
 import com.CertiSafe.secu.Repository.RepositoryRol;
 import com.CertiSafe.secu.Repository.RepositoryTaller;
 import com.CertiSafe.secu.Repository.RepositoryTipoCertificacion;
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import com.CertiSafe.secu.Repository.RepositoryUsuario;
 
 import java.time.LocalDate;

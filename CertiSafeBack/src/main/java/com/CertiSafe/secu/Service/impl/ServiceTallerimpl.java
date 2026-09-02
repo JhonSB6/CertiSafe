@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
+import java.util.Arrays;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,165 @@ public class ServiceTallerimpl implements ServiceTaller {
     private final RepositoryAsistenciaTaller repositoryAsistenciaTaller;
     private final RepositoryHistorialCertificacion repositoryHistorialCertificacion;
     private final PublisherTaller publisherTaller;
+    private static final long DURACION_MINIMA_MINUTOS = 30;
+    private static final long DURACION_MAXIMA_HORAS = 8;
+    private static final long MARGEN_TALLERES_MINUTOS = 30;
+
+    private void validarFechaHoraYDuracion(Taller taller) {
+
+        if (taller.getFecha() == null) {
+            throw new ReglaNegocioException(
+                    "La fecha del taller es obligatoria");
+        }
+
+        if (taller.getHoraInicio() == null) {
+            throw new ReglaNegocioException(
+                    "La hora de inicio del taller es obligatoria");
+        }
+
+        if (taller.getHoraFin() == null) {
+            throw new ReglaNegocioException(
+                    "La hora de finalización del taller es obligatoria");
+        }
+
+        LocalDateTime inicio = LocalDateTime.of(
+                taller.getFecha(),
+                taller.getHoraInicio());
+
+        LocalDateTime fin = LocalDateTime.of(
+                taller.getFecha(),
+                taller.getHoraFin());
+
+        LocalDateTime ahora = LocalDateTime.now();
+
+        if (!inicio.isAfter(ahora)) {
+            throw new ReglaNegocioException(
+                    "El taller debe programarse para una fecha u hora futura");
+        }
+
+        if (!fin.isAfter(inicio)) {
+            throw new ReglaNegocioException(
+                    "La hora de finalización debe ser mayor que la hora de inicio");
+        }
+
+        long duracionMinutos =
+                Duration.between(inicio, fin).toMinutes();
+
+        if (duracionMinutos < DURACION_MINIMA_MINUTOS) {
+            throw new ReglaNegocioException(
+                    "La duración mínima del taller es de 30 minutos");
+        }
+
+        if (duracionMinutos > DURACION_MAXIMA_HORAS * 60) {
+            throw new ReglaNegocioException(
+                    "La duración máxima del taller es de 8 horas");
+        }
+    }
+
+    private void validarDisponibilidadCapacitador(
+            Long idCapacitador,
+            LocalDate fecha,
+            LocalTime horaInicio,
+            LocalTime horaFin,
+            Long idTallerExcluir) {
+
+        LocalTime horaInicioConMargen =
+                horaInicio.minusMinutes(MARGEN_TALLERES_MINUTOS);
+
+        LocalTime horaFinConMargen =
+                horaFin.plusMinutes(MARGEN_TALLERES_MINUTOS);
+
+        List<EstadoTaller> estadosQueBloquean =
+                Arrays.asList(
+                        EstadoTaller.PROGRAMADO,
+                        EstadoTaller.EN_CURSO
+                );
+
+        List<Taller> conflictos =
+                repositoryTaller.buscarConflictosCapacitador(
+                        idCapacitador,
+                        fecha,
+                        horaInicioConMargen,
+                        horaFinConMargen,
+                        estadosQueBloquean,
+                        idTallerExcluir
+                );
+
+        if (conflictos.isEmpty()) {
+            return;
+        }
+
+        /*
+         * Revisamos todos los talleres encontrados para identificar
+         * exactamente el motivo del conflicto.
+         */
+        for (Taller conflicto : conflictos) {
+
+            LocalTime inicioConflicto =
+                    conflicto.getHoraInicio();
+
+            LocalTime finConflicto =
+                    conflicto.getHoraFin();
+
+            /*
+             * Verificar si existe solapamiento real entre horarios.
+             */
+            boolean haySolapamiento =
+                    horaInicio.isBefore(finConflicto)
+                            && horaFin.isAfter(inicioConflicto);
+
+            String nombreCapacitador =
+                    conflicto.getCapacitador().getNombre()
+                            + " "
+                            + conflicto.getCapacitador().getApellido();
+
+            String estadoTaller =
+                    conflicto.getEstado().name();
+
+            /*
+             * =====================================================
+             * CONFLICTO DIRECTO DE HORARIO
+             * =====================================================
+             */
+
+            if (haySolapamiento) {
+
+                throw new ReglaNegocioException(
+                        "No es posible crear el taller porque el "
+                                + "capacitador "
+                                + nombreCapacitador
+                                + " ya tiene un taller en estado "
+                                + estadoTaller
+                                + " dentro de esa franja horaria "
+                                + "("
+                                + inicioConflicto
+                                + " - "
+                                + finConflicto
+                                + ")."
+                );
+            }
+
+            /*
+             * =====================================================
+             * CONFLICTO POR MARGEN DE 30 MINUTOS
+             * =====================================================
+             */
+
+            throw new ReglaNegocioException(
+                    "No es posible crear el taller porque el "
+                            + "capacitador "
+                            + nombreCapacitador
+                            + " debe tener un margen mínimo de "
+                            + "30 minutos entre talleres. "
+                            + "Su otro taller está programado de "
+                            + inicioConflicto
+                            + " a "
+                            + finConflicto
+                            + "."
+            );
+        }
+    }
+
 
     @Override
     public List<Taller> listarTalleres() {
@@ -44,10 +204,19 @@ public class ServiceTallerimpl implements ServiceTaller {
     @Override
     public Taller guardar(Taller taller) {
 
+        // =========================================================
+        // VALIDAR FECHA, HORA Y DURACIÓN
+        // =========================================================
+
+        validarFechaHoraYDuracion(taller);
+
+        // =========================================================
+        // VALIDAR CAPACITADOR
+        // =========================================================
+
         if (taller.getCapacitador() == null) {
-            throw new RuntimeException(
-                    "El taller debe tener un capacitador"
-            );
+            throw new ReglaNegocioException(
+                    "El taller debe tener un capacitador");
         }
 
         Long idCapacitador =
@@ -56,42 +225,114 @@ public class ServiceTallerimpl implements ServiceTaller {
         Usuario capacitador =
                 repositoryUsuario.findById(idCapacitador)
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "El capacitador no existe"
-                                ));
+                                new ReglaNegocioException(
+                                        "El capacitador no existe"));
 
         if (capacitador.getEstado() != EstadoUsuario.ACTIVO) {
-            throw new RuntimeException(
-                    "El capacitador se encuentra inactivo"
-            );
+            throw new ReglaNegocioException(
+                    "El capacitador se encuentra inactivo");
         }
 
         if (!capacitador.getRol().getNombre()
                 .equalsIgnoreCase("CAPACITADOR")) {
 
-            throw new RuntimeException(
-                    "El usuario seleccionado no tiene rol de capacitador"
-            );
+            throw new ReglaNegocioException(
+                    "El usuario seleccionado no tiene rol de capacitador");
         }
 
+        // =========================================================
+        // VALIDAR DISPONIBILIDAD DEL CAPACITADOR
+        // =========================================================
+
+        validarDisponibilidadCapacitador(
+                capacitador.getIdusuario(),
+                taller.getFecha(),
+                taller.getHoraInicio(),
+                taller.getHoraFin(),
+                null
+        );
+
+        // =========================================================
+        // EL TALLER SIEMPRE NACE PROGRAMADO
+        // =========================================================
+
         taller.setCapacitador(capacitador);
+        taller.setEstado(EstadoTaller.PROGRAMADO);
 
         return repositoryTaller.save(taller);
     }
 
+
     @Override
     public Taller actualizar(Long id, Taller taller) {
 
-        Taller tallerExistente = repositoryTaller.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Taller no encontrado con id: " + id));
+        Taller tallerExistente =
+                repositoryTaller.findById(id)
+                        .orElseThrow(() ->
+                                new ReglaNegocioException(
+                                        "Taller no encontrado con id: " + id));
+
+        // =========================================================
+        // SOLO SE PUEDEN EDITAR TALLERES PROGRAMADOS
+        // =========================================================
 
         if (tallerExistente.getEstado() != EstadoTaller.PROGRAMADO) {
-            throw new RuntimeException(
-                    "Solo se pueden editar talleres en estado PROGRAMADO"
-            );
+            throw new ReglaNegocioException(
+                    "Solo se pueden editar talleres en estado PROGRAMADO");
         }
+
+        // =========================================================
+        // VALIDAR FECHA, HORA Y DURACIÓN
+        // =========================================================
+
+        validarFechaHoraYDuracion(taller);
+
+        // =========================================================
+        // VALIDAR CAPACITADOR
+        // =========================================================
+
+        if (taller.getCapacitador() == null) {
+            throw new ReglaNegocioException(
+                    "El taller debe tener un capacitador");
+        }
+
+        Long idCapacitador =
+                taller.getCapacitador().getIdusuario();
+
+        Usuario capacitador =
+                repositoryUsuario.findById(idCapacitador)
+                        .orElseThrow(() ->
+                                new ReglaNegocioException(
+                                        "El capacitador no existe"));
+
+        if (capacitador.getEstado() != EstadoUsuario.ACTIVO) {
+            throw new ReglaNegocioException(
+                    "El capacitador se encuentra inactivo");
+        }
+
+        if (!capacitador.getRol().getNombre()
+                .equalsIgnoreCase("CAPACITADOR")) {
+
+            throw new ReglaNegocioException(
+                    "El usuario seleccionado no tiene rol de capacitador");
+        }
+
+        // =========================================================
+        // VALIDAR DISPONIBILIDAD
+        // EXCLUYENDO EL MISMO TALLER
+        // =========================================================
+
+        validarDisponibilidadCapacitador(
+                capacitador.getIdusuario(),
+                taller.getFecha(),
+                taller.getHoraInicio(),
+                taller.getHoraFin(),
+                id
+        );
+
+        // =========================================================
+        // ACTUALIZAR DATOS
+        // =========================================================
 
         tallerExistente.setNombre(taller.getNombre());
         tallerExistente.setDescripcion(taller.getDescripcion());
@@ -101,6 +342,7 @@ public class ServiceTallerimpl implements ServiceTaller {
         tallerExistente.setAforo(taller.getAforo());
         tallerExistente.setTipoCertificacion(
                 taller.getTipoCertificacion());
+        tallerExistente.setCapacitador(capacitador);
 
         return repositoryTaller.save(tallerExistente);
     }

@@ -639,7 +639,7 @@ function Inicio() {
                                 Conocer certificaciones
                             </button>
 
-
+                            {/* Botón para crear cuenta
                             <button
                                 className="hero-boton-secundario"
                                 onClick={() => {
@@ -649,7 +649,7 @@ function Inicio() {
                                 }}
                             >
                                 Crear cuenta
-                            </button>
+                            </button> */}
 
                         </div>
 

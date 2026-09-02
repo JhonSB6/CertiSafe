@@ -4,6 +4,7 @@ import com.CertiSafe.secu.Dto.*;
 import com.CertiSafe.secu.Entity.Rol;
 import com.CertiSafe.secu.Entity.SolicitudRegistroUsuario;
 import com.CertiSafe.secu.Enum.EstadoSolicitudRegistro;
+import com.CertiSafe.secu.Enum.EstadoTaller;
 import com.CertiSafe.secu.Enum.EstadoUsuario;
 import com.CertiSafe.secu.Repository.RepositoryRol;
 import com.CertiSafe.secu.Repository.RepositorySolicitudRegistroUsuario;
@@ -15,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -380,6 +384,33 @@ public class ServiceUsuarioimpl implements ServiceUsuario {
 
         return repositoryUsuario.findByRolNombreAndEstado(
                 "CAPACITADOR",
+                EstadoUsuario.ACTIVO
+        );
+    }
+    @Override
+    public List<Usuario> listarCapacitadoresDisponibles(
+            LocalDate fecha,
+            LocalTime horaInicio,
+            LocalTime horaFin
+    ) {
+
+        LocalTime horaInicioConMargen =
+                horaInicio.minusMinutes(30);
+
+        LocalTime horaFinConMargen =
+                horaFin.plusMinutes(30);
+
+        List<EstadoTaller> estadosQueBloquean =
+                Arrays.asList(
+                        EstadoTaller.PROGRAMADO,
+                        EstadoTaller.EN_CURSO
+                );
+
+        return repositoryUsuario.buscarCapacitadoresDisponibles(
+                fecha,
+                horaInicioConMargen,
+                horaFinConMargen,
+                estadosQueBloquean,
                 EstadoUsuario.ACTIVO
         );
     }

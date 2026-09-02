@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,6 +146,22 @@ public class ControllerUsuario {
                 serviceUsuario.listarCapacitadores()
         );
     }
+    @GetMapping("/capacitadores/disponibles")
+    public ResponseEntity<List<Usuario>> listarCapacitadoresDisponibles(
+            @RequestParam LocalDate fecha,
+            @RequestParam LocalTime horaInicio,
+            @RequestParam LocalTime horaFin
+    ) {
+
+        return ResponseEntity.ok(
+                serviceUsuario.listarCapacitadoresDisponibles(
+                        fecha,
+                        horaInicio,
+                        horaFin
+                )
+        );
+    }
+
     @PutMapping("/{id}/perfil")
     public ResponseEntity<UsuarioResponse> actualizarPerfil(
             @PathVariable Long id,
@@ -166,5 +185,7 @@ public class ControllerUsuario {
                 serviceUsuario.obtenerPerfil(id)
         );
     }
+
+
 
 }

@@ -20,7 +20,7 @@ function AdministradorCrearTaller({ volver }) {
     const [mensaje, setMensaje] = useState("");
     const [error, setError] = useState("");
     const [guardando, setGuardando] = useState(false);
-
+    const [cargandoCapacitadores, setCargandoCapacitadores] = useState(false);
 
     // ==========================================
     // CARGAR TIPOS DE CERTIFICACIÓN
@@ -29,9 +29,7 @@ function AdministradorCrearTaller({ volver }) {
     useEffect(() => {
 
         const cargarTiposCertificacion = async () => {
-
             try {
-
                 const respuesta = await fetch(
                     "http://localhost:8080/api/tipos-certificacion"
                 );
@@ -47,7 +45,6 @@ function AdministradorCrearTaller({ volver }) {
                 setTiposCertificacion(datos);
 
             } catch (error) {
-
                 console.error(error);
 
                 setError(
@@ -55,40 +52,102 @@ function AdministradorCrearTaller({ volver }) {
                 );
             }
         };
-        const cargarCapacitadores = async () => {
-
-            try {
-
-                const respuesta = await fetch(
-                    "http://localhost:8080/usuarios/capacitadores"
-                );
-
-                if (!respuesta.ok) {
-                    throw new Error(
-                        "No fue posible cargar los capacitadores"
-                    );
-                }
-
-                const datos = await respuesta.json();
-
-                setCapacitadores(datos);
-
-            } catch (error) {
-
-                console.error(error);
-
-                setError(
-                    "No fue posible cargar los capacitadores."
-                );
-            }
-        };
-
-        cargarCapacitadores();
 
         cargarTiposCertificacion();
 
     }, []);
+    // ==========================================
+// CARGAR CAPACITADORES DISPONIBLES
+// ==========================================
 
+    const cargarCapacitadoresDisponibles = async () => {
+
+        // =========================================================
+        // VALIDAR DATOS NECESARIOS
+        // =========================================================
+
+        if (!fecha || !horaInicio || !horaFin) {
+            setCapacitadores([]);
+            setCapacitador("");
+            setCargandoCapacitadores(false);
+            return;
+        }
+
+        // =========================================================
+        // VALIDAR HORARIO
+        // =========================================================
+
+        if (horaFin <= horaInicio) {
+            setCapacitadores([]);
+            setCapacitador("");
+            setCargandoCapacitadores(false);
+            return;
+        }
+
+        setCargandoCapacitadores(true);
+
+        try {
+
+            const respuesta = await fetch(
+                `http://localhost:8080/usuarios/capacitadores/disponibles` +
+                `?fecha=${fecha}` +
+                `&horaInicio=${horaInicio}` +
+                `&horaFin=${horaFin}`
+            );
+
+            if (!respuesta.ok) {
+                throw new Error(
+                    "No fue posible consultar los capacitadores disponibles."
+                );
+            }
+
+            const datos = await respuesta.json();
+
+            setCapacitadores(datos);
+
+            // Si el capacitador seleccionado anteriormente
+            // ya no está disponible, se elimina la selección.
+            if (
+                capacitador &&
+                !datos.some(
+                    (usuario) =>
+                        String(usuario.idusuario) ===
+                        String(capacitador)
+                )
+            ) {
+                setCapacitador("");
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error al consultar capacitadores disponibles:",
+                error
+            );
+
+            setCapacitadores([]);
+            setCapacitador("");
+
+            setError(
+                "No fue posible consultar los capacitadores disponibles."
+            );
+
+        } finally {
+
+            setCargandoCapacitadores(false);
+        }
+    };
+
+
+// ==========================================
+// ACTUALIZAR CAPACITADORES AL CAMBIAR HORARIO
+// ==========================================
+
+    useEffect(() => {
+
+        cargarCapacitadoresDisponibles();
+
+    }, [fecha, horaInicio, horaFin]);
 
     // ==========================================
     // CREAR NUEVA CERTIFICACIÓN
@@ -170,12 +229,14 @@ function AdministradorCrearTaller({ volver }) {
             );
             return;
         }
+
         if (!capacitador) {
             setError(
                 "Selecciona un capacitador."
             );
             return;
         }
+
         if (horaFin <= horaInicio) {
             setError(
                 "La hora de finalización debe ser posterior a la hora de inicio."
@@ -209,6 +270,7 @@ function AdministradorCrearTaller({ volver }) {
                             idTipoCertificacion:
                                 Number(tipoCertificacion)
                         },
+
                         capacitador: {
                             idusuario: Number(capacitador)
                         }
@@ -217,11 +279,41 @@ function AdministradorCrearTaller({ volver }) {
                 }
             );
 
+            // =====================================================
+            // RESPUESTA CON ERROR DEL BACKEND
+            // =====================================================
+
             if (!respuesta.ok) {
-                throw new Error(
-                    "No fue posible crear el taller"
-                );
+
+                let mensajeError =
+                    "No fue posible crear el taller.";
+
+                try {
+
+                    const datosError =
+                        await respuesta.json();
+
+                    if (datosError?.mensaje) {
+
+                        mensajeError =
+                            datosError.mensaje;
+
+                    }
+
+                } catch (errorLectura) {
+
+                    console.error(
+                        "Error al leer la respuesta del servidor:",
+                        errorLectura
+                    );
+                }
+
+                throw new Error(mensajeError);
             }
+
+            // =====================================================
+            // TALLER CREADO CORRECTAMENTE
+            // =====================================================
 
             await respuesta.json();
 
@@ -237,12 +329,17 @@ function AdministradorCrearTaller({ volver }) {
             setAforo("");
             setTipoCertificacion("");
             setCapacitador("");
+            setCapacitadores([]);
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Error al crear taller:",
+                error
+            );
 
             setError(
+                error.message ||
                 "No fue posible crear el taller."
             );
 
@@ -454,14 +551,28 @@ function AdministradorCrearTaller({ volver }) {
 
                     <select
                         value={capacitador}
-                        onChange={(e) =>
-                            setCapacitador(e.target.value)
-                        }
+                        onChange={(e) => setCapacitador(e.target.value)}
                         required
+                        disabled={
+                            !fecha ||
+                            !horaInicio ||
+                            !horaFin ||
+                            horaFin <= horaInicio ||
+                            cargandoCapacitadores
+                        }
                     >
 
                         <option value="">
-                            Selecciona un capacitador
+                            {!fecha || !horaInicio || !horaFin
+                                ? "Primero selecciona fecha y horario"
+                                : horaFin <= horaInicio
+                                    ? "Corrige el horario"
+                                    : cargandoCapacitadores
+                                        ? "Consultando disponibilidad..."
+                                        : capacitadores.length === 0
+                                            ? "No hay capacitadores disponibles"
+                                            : "Selecciona un capacitador"
+                            }
                         </option>
 
                         {capacitadores.map((usuario) => (
@@ -476,6 +587,18 @@ function AdministradorCrearTaller({ volver }) {
                         ))}
 
                     </select>
+
+                    {!cargandoCapacitadores &&
+                        fecha &&
+                        horaInicio &&
+                        horaFin &&
+                        horaFin > horaInicio &&
+                        capacitadores.length === 0 && (
+                            <small>
+                                No hay capacitadores disponibles para la fecha y horario seleccionados.
+                            </small>
+                        )
+                    }
 
                 </div>
 
